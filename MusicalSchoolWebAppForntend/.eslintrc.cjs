@@ -2,13 +2,30 @@
 require("@rushstack/eslint-patch/modern-module-resolution");
 
 module.exports = {
-  "root": true,
-  "extends": [
-    "plugin:vue/vue3-essential",
-    "eslint:recommended",
-    "@vue/eslint-config-prettier"
+  env: {
+    browser: true,
+    node: true,
+    es2021: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'airbnb-base',
+    'plugin:vue/vue3-recommended',
   ],
-  "parserOptions": {
-    "ecmaVersion": "latest"
-  }
-}
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    ecmaVersion: 12,
+    sourceType: 'module',
+  },
+  plugins: [
+    'vue',
+  ],
+  rules: {},
+  settings: {
+    'import/resolver': {
+      nuxt: {
+        extensions: ['.js', '.vue'],
+      },
+    },
+  },
+};

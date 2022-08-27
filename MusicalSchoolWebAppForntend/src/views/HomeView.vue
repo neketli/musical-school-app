@@ -1,3 +1,13 @@
 <template>
-  <div class="text-3xl font-bold underline">Hello world!</div>
+  <div />
 </template>
+
+<script>
+export default {
+  created() {
+    console.log("i love tanya");
+  },
+};
+</script>
+
+<style lang="scss"></style>

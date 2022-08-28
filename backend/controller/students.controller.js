@@ -40,7 +40,7 @@ class StudentsController {
       birthdate,
       parents_phone,
     } = req.body;
-    const departament = await db.query(
+    const student = await db.query(
       `UPDATE students SET
 	  	first_name = $2,
 		last_name = $3,
@@ -49,10 +49,10 @@ class StudentsController {
 		birthdate = $6,
 		parents_phone = $7
 	   WHERE id = $1 RETURNING * `,
-      [first_name, last_name, patronymic, phone, birthdate, parents_phone]
+      [id, first_name, last_name, patronymic, phone, birthdate, parents_phone]
     );
 
-    res.json(departament.rows[0]);
+    res.json(student.rows[0]);
   }
   async deleteStudents(req, res) {
     const { id } = req.params;

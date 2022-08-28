@@ -356,7 +356,6 @@ CREATE TABLE journals (
 	FOREIGN KEY (id_subject) REFERENCES subjects (id)
 );
 
-
 CREATE TABLE students_groups (
     id_student bigint NOT NULL,
     id_group bigint NOT NULL,
@@ -383,106 +382,93 @@ CREATE TABLE temp_classrooms (
     id_departament bigint NOT NULL,
     number smallint NOT NULL,
     type character varying(50) NOT NULL,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES classrooms (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_departaments (
-    id SERIAL PRIMARY KEY,
+    id bigint NOT NULL,
     title character varying(50) NOT NULL,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES departaments (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
+	
 );
 
 CREATE TABLE temp_groups (
-    id SERIAL PRIMARY KEY,
+    id bigint NOT NULL,
     id_speciality bigint NOT NULL,
     form bit varying(10) NOT NULL,
     year integer NOT NULL,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES groups (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
+	
 );
 
 CREATE TABLE temp_journals (
-    id SERIAL PRIMARY KEY,
+    id bigint NOT NULL,
     id_student bigint NOT NULL,
     grade smallint NOT NULL,
     date date NOT NULL,
     type character varying(50) NOT NULL,
     id_subject bigint NOT NULL,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES journals (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
+	
 );
 
 CREATE TABLE temp_plans (
-    id SERIAL PRIMARY KEY,
+    id bigint NOT NULL,
     number integer,
     year integer,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES plans (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
+	
 );
 
 
 CREATE TABLE temp_speciality (
-    id SERIAL PRIMARY KEY,
+    id bigint NOT NULL,
     title character varying(50) NOT NULL,
     id_departament bigint NOT NULL,
     instrument character varying(40) NOT NULL,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES speciality (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
+	
 );
 
 CREATE TABLE temp_students (
-    id SERIAL PRIMARY KEY,
+    id bigint NOT NULL,
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
     patronymic character varying(50) NOT NULL,
     phone character varying(20),
     parents_phone character varying(20) NOT NULL,
 	birthdate date NOT NULL,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES students (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
+	
 );
 
 CREATE TABLE temp_students_groups (
 	id SERIAL PRIMARY KEY,
     id_student bigint NOT NULL,
-    id_group bigint NOT NULL,
-	action character varying(8) NOT NULL
+    id_group bigint NOT NULL
 );
 
 CREATE TABLE temp_subjects (
-    id SERIAL PRIMARY KEY,
+    id bigint NOT NULL,
     title character varying(50) NOT NULL,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES subjects (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
+	
 );
 
 CREATE TABLE temp_subjects_plans (
     id_subject bigint NOT NULL,
     id_plan bigint NOT NULL,
-    id SERIAL PRIMARY KEY,
-	action character varying(8) NOT NULL
+    id SERIAL PRIMARY KEY
 );
-
 
 CREATE TABLE temp_subjects_teachers (
     id SERIAL PRIMARY KEY,
     id_subject bigint NOT NULL,
-    id_teacher bigint NOT NULL,
-	action character varying(8) NOT NULL
+    id_teacher bigint NOT NULL
 );
 
 CREATE TABLE temp_teachers (
-    id SERIAL PRIMARY KEY,
+    id bigint NOT NULL,
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
     patronymic character varying(50),
@@ -490,9 +476,8 @@ CREATE TABLE temp_teachers (
     position character varying(50) NOT NULL,
 	birthdate date NOT NULL, 
     phone character varying(20) NOT NULL,
-    id_entry integer NOT NULL,
-	FOREIGN KEY (id_entry) REFERENCES teachers (id),
-	action character varying(8) NOT NULL
+    id_entry SERIAL PRIMARY KEY
+	
 );
 
 CREATE TABLE users (
@@ -504,11 +489,9 @@ CREATE TABLE users (
 
 CREATE TRIGGER temp_classrooms_delete AFTER DELETE ON classrooms REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION build_temp_classrooms();
 
-
 CREATE TRIGGER temp_classrooms_insert AFTER INSERT ON classrooms REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION build_temp_classrooms();
 
 CREATE TRIGGER temp_classrooms_update AFTER UPDATE ON classrooms REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION build_temp_classrooms();
-
 
 CREATE TRIGGER temp_departaments_delete AFTER DELETE ON departaments REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION build_temp_departaments();
 

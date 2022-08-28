@@ -1,0 +1,12 @@
+DROP TABLE temp_classrooms;
+DROP TABLE temp_departaments;
+DROP TABLE temp_groups;
+DROP TABLE temp_journals;
+DROP TABLE temp_plans;
+DROP TABLE temp_speciality;
+DROP TABLE temp_students;
+DROP TABLE temp_students_groups;
+DROP TABLE temp_subjects;
+DROP TABLE temp_subjects_plans;
+DROP TABLE temp_subjects_teachers;
+DROP TABLE temp_teachers;

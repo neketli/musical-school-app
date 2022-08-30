@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-slate-100 flex justify-center items-center h-[100%]">
+  <div class="bg-sky-50 flex justify-center items-center h-[100%]">
     <div class="container h-full sm:h-auto transition-all">
       <div
         class="flex flex-col justify-center items-center mx-auto text-center bg-white shadow-sm hover:shadow-md rounded-lg overflow-hidden py-16 px-10 gap-10 sm:px-12 md:px-[60px] h-full w-full sm:h-auto sm:max-w-[525px] transition-all"
@@ -16,12 +16,11 @@
         </form>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
-import BaseInput from "@/components/BaseInput.vue";
-import BaseButton from "@/components/BaseButton.vue";
+import { BaseInput, BaseButton } from "@/components";
 
 export default {
   components: {
@@ -37,6 +36,7 @@ export default {
   methods: {
     auth() {
       console.log(this.login, this.password);
+      this.$router.push("/");
     },
   },
 };

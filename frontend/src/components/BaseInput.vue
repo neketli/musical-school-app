@@ -7,7 +7,7 @@
       v-model="value"
       :type="type"
       :placeholder="placeholder"
-      class="w-full py-3 px-5 rounded-md border border-gray-300 hover:shadow-sm focus:shadow-md active:shadow-md bg-white text-base text-body-color placeholder-gray-300 outline-none focus:border-gray-500 hover:border-gray-400 transition-all"
+      class="w-full py-3 px-5 rounded-md border border-gray-300 hover:shadow-sm focus:shadow-md active:shadow-md bg-white text-base text-body-color placeholder-gray-300 outline-none focus:border-sky-500 hover:border-gray-400 transition-all"
     />
   </div>
 </template>

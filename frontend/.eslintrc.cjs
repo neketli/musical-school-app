@@ -27,6 +27,15 @@ module.exports = {
         math: "always",
       },
     ],
+
+    "vue/v-on-event-hyphenation": [
+      "error",
+      "never",
+      {
+        autofix: false,
+        ignore: [],
+      },
+    ],
   },
   settings: {
     "import/resolver": {

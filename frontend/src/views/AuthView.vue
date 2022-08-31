@@ -34,12 +34,17 @@ export default {
     };
   },
   methods: {
-    auth() {
-      console.log(this.login, this.password);
+    async auth() {
+      try {
+        await this.$store.dispatch("login", {
+          login: this.login,
+          password: this.password,
+        });
+      } catch (error) {
+        console.log(error);
+      }
       this.$router.push("/");
     },
   },
 };
 </script>
-
-<style lang="scss"></style>

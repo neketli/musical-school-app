@@ -27,13 +27,25 @@ module.exports = {
         math: "always",
       },
     ],
-
     "vue/v-on-event-hyphenation": [
       "error",
       "never",
       {
         autofix: false,
         ignore: [],
+      },
+    ],
+    "vue/attribute-hyphenation": [
+      "error",
+      "never",
+      {
+        ignore: [],
+      },
+    ],
+    "vue/multi-word-component-names": [
+      "error",
+      {
+        ignores: ["index"],
       },
     ],
   },

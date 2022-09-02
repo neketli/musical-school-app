@@ -20,4 +20,4 @@ const jwtAuthMiddleware = (req, res, next) => {
     }
 }
 
-export default jwtAuthMiddleware;
+module.exports = jwtAuthMiddleware;

@@ -17,6 +17,8 @@ const studentsGroupsRouter = require('./routes/students_groups.routes')
 const subjectsPlansRouter = require('./routes/subjects_plans.routes')
 const subjectsTeachersRouter = require('./routes/subjects_teachers.routes')
 
+const authRouter = require('./routes/auth.routes');
+
 const PORT = process.env.PORT || 8080
 
 const app = express()
@@ -36,6 +38,9 @@ app.use('/api', usersRouter)
 app.use('/api', studentsGroupsRouter)
 app.use('/api', subjectsPlansRouter)
 app.use('/api', subjectsTeachersRouter)
+
+app.use('/api', authRouter)
+
 
 // eslint-disable-next-line no-console
 app.listen(PORT, () => console.log(`server started on port: ${ PORT }`))

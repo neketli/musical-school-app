@@ -7,13 +7,13 @@ class AuthController {
 		const { login, password } = req.body
 		const user = usersController.getAllUsers
 			.find(user => user.login === login && user.password === password)
-
 		if (!user) {
 			res.status(403).send('Username or password incorrect')
-			throw new Error()
+			// throw new Error()
+			return
 		}
 		const token = jwt.sign({
-			username: user.username,
+			login: user.login,
 			user_group: user.user_group,
 		}, process.env.JWT_KEY);
 

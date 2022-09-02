@@ -1,9 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const db = require('../db')
 const usersController = require('../controller/users.controller')
-
-const accessTokenSecret = 'secret'
 
 class AuthController {
 	async login (req, res) {
@@ -15,14 +12,14 @@ class AuthController {
 			res.status(403).send('Username or password incorrect')
 			throw new Error()
 		}
-		const accessToken = jwt.sign({
+		const token = jwt.sign({
 			username: user.username,
 			user_group: user.user_group,
-		}, accessTokenSecret)
+		}, process.env.JWT_KEY);
 
 		res.json({
-			accessToken,
-		})
+			token,
+		});
 	}
 }
 

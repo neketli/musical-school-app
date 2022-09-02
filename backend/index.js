@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+require('dotenv').config()
 
 // Routes
 const departamentRouter = require('./routes/departaments.routes')
@@ -36,4 +37,5 @@ app.use('/api', studentsGroupsRouter)
 app.use('/api', subjectsPlansRouter)
 app.use('/api', subjectsTeachersRouter)
 
+// eslint-disable-next-line no-console
 app.listen(PORT, () => console.log(`server started on port: ${ PORT }`))

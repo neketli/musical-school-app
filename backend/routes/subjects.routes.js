@@ -1,11 +1,13 @@
 const Router = require('express')
 const router = new Router()
 const departamentController = require('../controller/subjects.controller')
+const jwtAuthMiddleware = require('../middleware/auth')
 
-router.post('/subjects', departamentController.createSubjects)
-router.get('/subjects/:id', departamentController.getSubjects)
-router.get('/subjects', departamentController.getAllSubjectss)
-router.put('/subjects/:id', departamentController.updateSubjects)
-router.delete('/subjects/:id', departamentController.deleteSubjects)
+
+router.post('/subjects', jwtAuthMiddleware, departamentController.createSubjects)
+router.get('/subjects/:id', jwtAuthMiddleware, departamentController.getSubjects)
+router.get('/subjects', jwtAuthMiddleware, departamentController.getAllSubjectss)
+router.put('/subjects/:id', jwtAuthMiddleware, departamentController.updateSubjects)
+router.delete('/subjects/:id', jwtAuthMiddleware, departamentController.deleteSubjects)
 
 module.exports = router

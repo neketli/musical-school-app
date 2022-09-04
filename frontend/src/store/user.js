@@ -3,7 +3,7 @@ import axios from "axios";
 // store user logic
 export default {
   state: () => ({
-    user: {},
+    user: JSON.parse(localStorage.getItem("user")) || {},
     token: localStorage.getItem("token") || "",
     status: "",
   }),
@@ -16,6 +16,11 @@ export default {
       state.user = user;
       state.token = token;
       localStorage.setItem("token", token);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ login: user.login, user_group: user.user_group })
+      );
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     },
     authError(state) {
       state.status = "error";
@@ -24,7 +29,6 @@ export default {
       state.user = {};
       state.token = "";
       state.status = "";
-      localStorage.removeItem("token");
     },
   },
   actions: {
@@ -36,7 +40,7 @@ export default {
       commit("authRequest");
       try {
         const res = await axios({
-          url: "http://localhost:3000/login",
+          url: `${process.env.BASE_URL}/auth`,
           data: user,
           method: "POST",
         });
@@ -45,7 +49,10 @@ export default {
         commit("authError");
       }
     },
-    logout({ commit }) {
+    async logout({ commit }) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      delete axios.defaults.headers.common["Authorization"];
       commit("logout");
     },
   },

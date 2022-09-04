@@ -1,4 +1,5 @@
 import axios from "axios";
+import CryptoJS from "crypto-js";
 
 // store user logic
 export default {
@@ -16,6 +17,10 @@ export default {
       state.user = user;
       state.token = token;
       localStorage.setItem("token", token);
+      console.log();
+      console.log(
+        JSON.stringify({ login: user.login, user_group: user.user_group })
+      );
       localStorage.setItem(
         "user",
         JSON.stringify({ login: user.login, user_group: user.user_group })
@@ -33,22 +38,27 @@ export default {
   },
   actions: {
     async login({ commit }, user) {
-      if (user.login === user.password) {
-        commit("authSuccess", { user, token: user.login });
-        return;
-      }
       commit("authRequest");
       try {
-        const res = await axios({
-          url: `${process.env.BASE_URL}/auth`,
-          data: user,
-          method: "POST",
-        });
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_URL}/login`,
+          {
+            ...user,
+            password: CryptoJS.MD5(user.password).toString(),
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        );
         commit("authSuccess", res.data);
       } catch (error) {
         commit("authError");
       }
     },
+    async register({ commit }, user) {},
     async logout({ commit }) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");

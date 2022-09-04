@@ -16,22 +16,36 @@ export default {
   data() {
     return {
       activeTab: { value: 1, link: "/" },
-      tableColumns: ["hi", "hello", "bonjour"],
+      tableColumns: [
+        {
+          label: "id",
+          value: "id",
+        },
+        {
+          label: "login",
+          value: "login",
+        },
+        {
+          label: "password",
+          value: "password",
+        },
+        {
+          label: "user_group",
+          value: "user_group",
+        },
+      ],
       tableData: [
         {
-          hi: 1,
-          hello: 2,
-          bonjour: 1,
+          id: 1,
+          login: "1",
+          password: "1",
+          user_group: "1",
         },
         {
-          hi: 2,
-          hello: 2,
-          bonjour: 2,
-        },
-        {
-          hi: 3,
-          hello: 3,
-          bonjour: 3,
+          id: 2,
+          login: "2",
+          password: "2",
+          user_group: "2",
         },
       ],
     };

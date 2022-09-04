@@ -28,6 +28,7 @@
 
 <script>
 import { BaseHeader, BaseSidebar } from "@/components";
+import { mapActions } from "vuex";
 
 export default {
   components: {
@@ -47,8 +48,10 @@ export default {
     };
   },
   methods: {
-    logOut() {
-      console.log("LogOut");
+    ...mapActions(["logout"]),
+    async logOut() {
+      await this.logout();
+      this.$router.push("/auth");
     },
   },
 };

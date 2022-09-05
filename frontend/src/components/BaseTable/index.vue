@@ -30,6 +30,8 @@
             :isEditable="isEditable"
             :rowData="row"
             @onSave="save"
+            @onCancel="cancel"
+            @onRemove="remove"
           />
         </template>
         <BaseButton
@@ -63,7 +65,7 @@ export default {
       default: false,
     },
   },
-  emits: { onSave: null, onAdd: null },
+  emits: { onSave: null, onAdd: null, 'onRemove': null },
   data() {
     return {
       dataSource: [],
@@ -80,9 +82,19 @@ export default {
       const newRow = {};
       this.columns.forEach((item) => {
         newRow[item.value] = "";
+        if (item.value === 'id') {
+          newRow[item.value] = '?'//this.dataSource[this.dataSource.length - 1].id + 1;
+        }
       });
       this.dataSource.push(newRow);
     },
+    cancel() {
+      this.dataSource.pop();
+    },
+    remove(id) {
+      this.$emit('onRemove', id);
+      this.dataSource = this.dataSource.filter(item => item.id != id);
+    }
   },
 };
 </script>

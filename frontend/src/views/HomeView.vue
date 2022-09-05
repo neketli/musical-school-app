@@ -1,16 +1,21 @@
 <template>
   <BaseLayout @setFilter="setFilter">
     <BaseTable
+      v-if="!isLoading"
       :columns="tableColumns"
       :data="tableData"
       isEditable
+      @onSave="save"
+      @onRemove="remove"
     />
   </BaseLayout>
 </template>
 
 <script>
-import BaseLayout from "@/layouts/BaseLayout.vue";
+import { mapGetters } from "vuex";
 import { BaseTable } from "@/components";
+import BaseLayout from "@/layouts/BaseLayout.vue";
+import UserService from "@/services/users";
 
 export default {
   components: {
@@ -19,46 +24,40 @@ export default {
   },
   data() {
     return {
-      activeTab: { value: 1, link: "/" },
-      tableColumns: [
-        {
-          label: "id",
-          value: "id",
-        },
-        {
-          label: "login",
-          value: "login",
-        },
-        {
-          label: "password",
-          value: "password",
-        },
-        {
-          label: "user_group",
-          value: "user_group",
-        },
-      ],
-      tableData: [
-        {
-          id: 1,
-          login: "1",
-          password: "1",
-          user_group: "1",
-        },
-        {
-          id: 2,
-          login: "2",
-          password: "2",
-          user_group: "2",
-        },
-      ],
+      sidebarData: [],
+      headerData: [],
+      activeFilters: {},
+      tableColumns: [],
+      tableData: [],
+
+      isLoading: true,
     };
   },
+  computed: {
+    ...mapGetters(["getUserInfo"]),
+  },
+  async created() {
+    if (this.getUserInfo.user_group === "admin") {
+      this.tableColumns = UserService.getColumns();
+      this.tableData = await UserService.getUsers();
+      this.isLoading = false;
+    }
+  },
   methods: {
-    auth() {
-      console.log(this.login, this.password);
-      this.$router.push("/");
+    setFilter(value) {
+      this.activeFilters = value;
     },
+    async save(row) {
+      if (this.tableData.some(item => item.id === row.id) && row.id !== '?') {
+        UserService.editUser(row);
+      }
+      else {
+        UserService.addUser(row);
+      }
+    },
+    async remove(id) {
+      UserService.removeUser(id);
+    }
   },
 };
 </script>

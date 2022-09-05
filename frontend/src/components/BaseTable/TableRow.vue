@@ -9,9 +9,13 @@
         class="px-5 py-3"
       >
         <BaseInput
+          v-if="key !== 'id'"
           :key="key"
           v-model="row[key]"
         />
+        <template v-else>
+          {{ row[key] }}
+        </template>
       </td>
     </template>
     <template v-else>
@@ -40,6 +44,13 @@
           @click="cancel"
         >
           <i class="fa fa-times" />
+        </BaseButton>
+        <BaseButton
+          v-if="!isButtonDisabled"
+          class="text-red-400 mx-2"
+          @click="remove"
+        >
+          <i class="fa fa-trash-o" />
         </BaseButton>
       </template>
       <template v-else>
@@ -71,7 +82,7 @@ export default {
       default: false,
     },
   },
-  emits: { onSave: null },
+  emits: { onSave: null,'onRemove': null, 'onCancel': null },
   data() {
     return {
       editMode: false,
@@ -83,9 +94,15 @@ export default {
     rowKeys() {
       return Object.keys(this.row);
     },
+    isButtonDisabled() {
+      return Object.values(this.row).some((item) => !item)
+    }
   },
   created() {
     this.row = this.rowData;
+    if (Object.values(this.row).some((item) => !item)) {
+      this.toggleEditMode();
+    }
   },
   methods: {
     toggleEditMode() {
@@ -93,13 +110,20 @@ export default {
       this.editMode = !this.editMode;
     },
     save() {
-      this.toggleEditMode();
+      if (this.isButtonDisabled) return
       this.$emit("onSave", this.row);
+      this.toggleEditMode();
     },
     cancel() {
+      if (this.isButtonDisabled) {
+        this.$emit('onCancel')
+      }
       this.row = this.oldRow;
       this.toggleEditMode();
     },
+    remove() {
+      this.$emit('onRemove', this.row.id);
+    }
   },
 };
 </script>

@@ -56,7 +56,7 @@ class UserService {
       newUser
     );
     this.users = this.users.map(
-      (usr) => (usr = usr.id === newUser.id ? newUser : usr)
+      (item) => (item = item.id === newUser.id ? newUser : item)
     );
     return newUser;
   }

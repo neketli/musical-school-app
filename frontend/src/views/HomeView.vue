@@ -48,16 +48,15 @@ export default {
       this.activeFilters = value;
     },
     async save(row) {
-      if (this.tableData.some(item => item.id === row.id) && row.id !== '?') {
+      if (this.tableData.some((item) => item.id === row.id) && row.id !== "?") {
         UserService.editUser(row);
-      }
-      else {
+      } else {
         UserService.addUser(row);
       }
     },
     async remove(id) {
       UserService.removeUser(id);
-    }
+    },
   },
 };
 </script>

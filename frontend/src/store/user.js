@@ -58,7 +58,21 @@ export default {
         commit("authError");
       }
     },
-    async register({ commit }, user) {},
+    async addUser(_, user) {
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/users`,
+          {
+            ...user,
+            password: CryptoJS.MD5(user.password).toString(),
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        );
+    },
     async logout({ commit }) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");

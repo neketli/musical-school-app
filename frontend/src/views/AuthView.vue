@@ -10,7 +10,11 @@
         <form class="flex flex-col gap-6">
           <BaseInput v-model="login" placeholder="Логин" />
           <BaseInput v-model="password" type="password" placeholder="Пароль" />
-          <BaseButton class="max-w-xs mx-[auto]" @click="auth">
+          <BaseButton
+            class="max-w-xs mx-[auto]"
+            @keyup.enter="auth"
+            @click="auth"
+          >
             Войти
           </BaseButton>
         </form>

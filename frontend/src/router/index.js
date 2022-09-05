@@ -9,6 +9,9 @@ const router = createRouter({
       path: "/auth",
       name: "auth",
       component: AuthView,
+      meta: {
+        notAuthorized: true,
+      },
     },
     {
       path: "/",
@@ -29,7 +32,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isLogged) {
-      next();
+      to.path === "/auth" ? next("/") : next();
       return;
     }
     next("/auth");

@@ -1,29 +1,34 @@
 <template>
-  <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+  <div class="overflow-x-auto relative bg-white shadow-md sm:rounded-lg">
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead
         class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr>
           <th v-for="item in columns" :key="item" scope="col" class="py-3 px-6">
-            {{ item }}
+            {{ item.label }}
           </th>
+          <th scope="col" class="py-3 px-6 text-right">Action</th>
         </tr>
       </thead>
       <tbody>
-        <template v-for="row in data" :key="row.id">
+        <template v-for="row in dataSource" :key="row.id">
           <TableRow :isEditable="isEditable" :rowData="row" @onSave="save" />
         </template>
+        <BaseButton @click="add" class="text-green-400 mx-5 my-3"
+          ><i class="fa fa-plus"
+        /></BaseButton>
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
+import { BaseButton } from "@/components";
 import TableRow from "./TableRow.vue";
 
 export default {
-  components: { TableRow },
+  components: { BaseButton, TableRow },
   props: {
     data: {
       type: Array,
@@ -38,10 +43,25 @@ export default {
       default: false,
     },
   },
-  emits: { onSave: null },
+  emits: { onSave: null, onAdd: null },
+  data() {
+    return {
+      dataSource: [],
+    };
+  },
+  created() {
+    this.dataSource = this.data;
+  },
   methods: {
     save(row) {
       this.$emit("onSave", row);
+    },
+    add() {
+      const newRow = {};
+      this.columns.forEach((item) => {
+        newRow[item.value] = "";
+      });
+      this.dataSource.push(newRow);
     },
   },
 };

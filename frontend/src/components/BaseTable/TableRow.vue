@@ -13,7 +13,7 @@
       </td>
     </template>
     <!-- Edit mode buttons -->
-    <div v-if="isEditable" class="flex gap-5 px-5 py-3">
+    <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
       <template v-if="editMode">
         <BaseButton @click="save" class="text-green-400 mx-2"
           ><i class="fa fa-check"

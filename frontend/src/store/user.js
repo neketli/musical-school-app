@@ -17,10 +17,6 @@ export default {
       state.user = user;
       state.token = token;
       localStorage.setItem("token", token);
-      console.log();
-      console.log(
-        JSON.stringify({ login: user.login, user_group: user.user_group })
-      );
       localStorage.setItem(
         "user",
         JSON.stringify({ login: user.login, user_group: user.user_group })
@@ -57,21 +53,6 @@ export default {
       } catch (error) {
         commit("authError");
       }
-    },
-    async addUser(_, user) {
-        await axios.post(
-          `${import.meta.env.VITE_API_URL}/users`,
-          {
-            ...user,
-            password: CryptoJS.MD5(user.password).toString(),
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
-        );
     },
     async logout({ commit }) {
       localStorage.removeItem("token");

@@ -1,6 +1,10 @@
 <template>
-  <BaseLayout>
-    <BaseTable :columns="tableColumns" :data="tableData" isEditable />
+  <BaseLayout @setFilter="setFilter">
+    <BaseTable
+      :columns="tableColumns"
+      :data="tableData"
+      isEditable
+    />
   </BaseLayout>
 </template>
 

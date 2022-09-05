@@ -1,6 +1,9 @@
 {
   "name": "musicalschoolwebapp",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "repository": "https://github.com/neketli/vue-musical-school-app",
+  "author": "neketli",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

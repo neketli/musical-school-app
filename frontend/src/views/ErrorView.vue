@@ -1,7 +1,11 @@
 <template>
-  <div class="w-full sticky bg-gray-800 h-16 flex px-4 items-center">logo</div>
+  <div class="w-full sticky bg-gray-800 h-16 flex px-4 items-center">
+    logo
+  </div>
   <div class="h-full flex flex-col gap-10 items-center justify-center">
-    <p class="text-5xl text-blue-900">Упс...</p>
+    <p class="text-5xl text-blue-900">
+      Упс...
+    </p>
     <div class="text-6xl -ml-16 text-blue-900">
       <i class="fa fa-search" /> 4 <span class="text-black">0</span> 4
     </div>

@@ -82,7 +82,7 @@ export default {
       default: false,
     },
   },
-  emits: { onSave: null,'onRemove': null, 'onCancel': null },
+  emits: { onSave: null, onRemove: null, onCancel: null },
   data() {
     return {
       editMode: false,
@@ -95,11 +95,11 @@ export default {
       return Object.keys(this.row);
     },
     isButtonDisabled() {
-      return Object.values(this.row).some((item) => !item)
-    }
+      return Object.values(this.row).some((item) => !item);
+    },
   },
   created() {
-    this.row = this.rowData;
+    this.row = { ...this.rowData };
     if (Object.values(this.row).some((item) => !item)) {
       this.toggleEditMode();
     }
@@ -110,20 +110,20 @@ export default {
       this.editMode = !this.editMode;
     },
     save() {
-      if (this.isButtonDisabled) return
-      this.$emit("onSave", this.row);
+      if (this.isButtonDisabled) return;
+      this.$emit("onSave", { ...this.row });
       this.toggleEditMode();
     },
     cancel() {
       if (this.isButtonDisabled) {
-        this.$emit('onCancel')
+        this.$emit("onCancel");
       }
-      this.row = this.oldRow;
+      this.row = { ...this.oldRow };
       this.toggleEditMode();
     },
     remove() {
-      this.$emit('onRemove', this.row.id);
-    }
+      this.$emit("onRemove", this.row.id);
+    },
   },
 };
 </script>

@@ -38,25 +38,26 @@ class UserService {
   }
 
   async addUser(user) {
-    const newUser = {
+    const userInfo = {
       ...user,
       password: CryptoJS.MD5(user.password).toString(),
     };
-    await axios.post(`${import.meta.env.VITE_API_URL}/users`, newUser);
-    this.users.push(newUser);
-    return newUser;
+    const newUser = await axios.post(`${import.meta.env.VITE_API_URL}/users`, userInfo);
+    this.users.push(newUser.data);
+    return newUser.data;
   }
   async editUser(user) {
+    const oldPass = !!this.users.filter(item => {item.password === user.password}).length
     const newUser = {
       ...user,
-      password: CryptoJS.MD5(user.password).toString(),
+      password: oldPass ? user.password : CryptoJS.MD5(user.password).toString(),
     };
     await axios.put(
       `${import.meta.env.VITE_API_URL}/users/${user.id}`,
       newUser
     );
     this.users = this.users.map(
-      (usr) => (usr = usr.id === newUser.id ? newUser : usr)
+      (item) => (item = item.id === newUser.id ? newUser : item)
     );
     return newUser;
   }

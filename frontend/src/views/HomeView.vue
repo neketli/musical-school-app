@@ -7,13 +7,35 @@
       isEditable
       @onSave="save"
       @onRemove="remove"
+      @onAdd="showModal"
     />
+
+    <BaseModal
+      v-model="isModalShow"
+      @confirm="add"
+      @cancel="cancel"
+    >
+      <template #title>
+        Добавить
+      </template>
+
+      <div class="flex flex-col gap-4">
+        <template v-for="column in tableColumns">
+          <BaseInput
+            v-if="column.value !== 'id'"
+            :key="column.label"
+            v-model="newItem[column.value]"
+            :label="column.label"
+          />
+        </template>
+      </div>
+    </BaseModal>
   </BaseLayout>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import { BaseTable } from "@/components";
+import { BaseTable, BaseModal, BaseInput } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import UserService from "@/services/users";
 
@@ -21,6 +43,8 @@ export default {
   components: {
     BaseLayout,
     BaseTable,
+    BaseModal,
+    BaseInput,
   },
   data() {
     return {
@@ -29,8 +53,10 @@ export default {
       activeFilters: {},
       tableColumns: [],
       tableData: [],
+      newItem: {},
 
       isLoading: true,
+      isModalShow: false,
     };
   },
   computed: {
@@ -40,6 +66,7 @@ export default {
     if (this.getUserInfo.user_group === "admin") {
       this.tableColumns = UserService.getColumns();
       this.tableData = await UserService.getUsers();
+      this.clearnewItem();
       this.isLoading = false;
     }
   },
@@ -48,15 +75,39 @@ export default {
       this.activeFilters = value;
     },
     async save(row) {
-      if (this.tableData.some(item => item.id === row.id) && row.id !== '?') {
-        UserService.editUser(row);
+      this.isLoading = true;
+      await UserService.editUser(row);
+      this.tableData = await UserService.getUsers();
+      this.isLoading = false;
+    },
+    showModal() {
+      this.isModalShow = true;
+    },
+    async add() {
+      if (Object.values(this.newItem).filter(item => !item).length) {
+        return
       }
-      else {
-        UserService.addUser(row);
-      }
+      this.isLoading = true;
+      await UserService.addUser(this.newItem);
+      this.tableData = await UserService.getUsers();
+      this.clearnewItem();
+      this.isLoading = false;
+      this.isModalShow = false;
     },
     async remove(id) {
-      UserService.removeUser(id);
+      await UserService.removeUser(id);
+      this.tableData = await UserService.getUsers();
+    },
+    clearnewItem() {
+      this.tableColumns.forEach(element => {
+        if (element.value !== 'id') {
+          this.newItem[element.value] = "" 
+        }
+      });
+    },
+    cancel() {
+      this.clearnewItem();
+      this.isModalShow = false;
     }
   },
 };

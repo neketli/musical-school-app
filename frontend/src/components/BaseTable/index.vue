@@ -79,14 +79,7 @@ export default {
       this.$emit("onSave", row);
     },
     add() {
-      const newRow = {};
-      this.columns.forEach((item) => {
-        newRow[item.value] = "";
-        if (item.value === 'id') {
-          newRow[item.value] = '?'//this.dataSource[this.dataSource.length - 1].id + 1;
-        }
-      });
-      this.dataSource.push(newRow);
+      this.$emit('onAdd');
     },
     cancel() {
       this.dataSource.pop();

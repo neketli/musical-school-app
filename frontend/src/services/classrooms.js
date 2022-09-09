@@ -21,14 +21,14 @@ class ClassroomsService {
         value: "type",
       },
       {
-        label: "Отдел",
+        label: "id отдела",
         value: "id_departament",
       },
     ];
     return this.columns;
   }
 
-  async getClassrooms() {
+  async getData() {
     if (!this.classrooms.length) {
       const classrooms = await axios.get(
         `${import.meta.env.VITE_API_URL}/classrooms`
@@ -38,12 +38,16 @@ class ClassroomsService {
     return this.classrooms;
   }
 
-  async addClassroom(classroom) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/classrooms`, classroom);
-    this.classrooms.push(classroom);
-    return classroom;
+  async addData(classroom) {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/classrooms`,
+      classroom
+    );
+    this.classrooms.push(response.data);
+    return response.data;
   }
-  async editClassroom(classroom) {
+
+  async editData(classroom) {
     await axios.put(
       `${import.meta.env.VITE_API_URL}/classrooms/${classroom.id}`,
       classroom
@@ -54,7 +58,7 @@ class ClassroomsService {
     return classroom;
   }
 
-  async removeClassroom(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/classrooms/${id}`);
     this.classrooms = this.classrooms.filter(
       (classroom) => classroom.id !== id

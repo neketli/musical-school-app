@@ -20,15 +20,11 @@ class PlansService {
         label: "Учебный год",
         value: "year",
       },
-      {
-        label: "Специальность",
-        value: "id_speciality",
-      },
     ];
     return this.columns;
   }
 
-  async getPlans() {
+  async getData() {
     if (!this.plans.length) {
       const plans = await axios.get(`${import.meta.env.VITE_API_URL}/plans`);
       this.plans = plans.data;
@@ -36,12 +32,16 @@ class PlansService {
     return this.plans;
   }
 
-  async addPlan(plan) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/plans`, plan);
-    this.plans.push(plan);
-    return plan;
+  async addData(plan) {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/plans`,
+      plan
+    );
+    this.plans.push(response.data);
+    return response.data;
   }
-  async editPlan(plan) {
+  
+  async editData(plan) {
     await axios.put(`${import.meta.env.VITE_API_URL}/plans/${plan.id}`, plan);
     this.plans = this.plans.map(
       (item) => (item = item.id === plan.id ? plan : item)
@@ -49,7 +49,7 @@ class PlansService {
     return plan;
   }
 
-  async removePlan(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/plans/${id}`);
     this.plans = this.plans.filter((plan) => plan.id !== id);
   }

@@ -3,14 +3,17 @@
     <div class="h-full flex justify-between items-center px-4">
       <!-- Nav links -->
       <div class="flex gap-5 items-center">
-        <div class="text-white text-2xl flex gap-2 items-center">
+        <router-link
+          to="/"
+          class="text-white text-2xl flex gap-2 items-center"
+        >
           <img
             src="@/assets/img/logo.png"
             class="w-12 h-12"
             alt="musical chool logo"
           />
           Musical School
-        </div>
+        </router-link>
         <template v-if="data">
           <router-link
             v-for="item in data"

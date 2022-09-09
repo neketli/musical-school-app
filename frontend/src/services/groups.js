@@ -21,14 +21,14 @@ class GroupsService {
         value: "year",
       },
       {
-        label: "Специальность",
+        label: "id специальности",
         value: "id_speciality",
       },
     ];
     return this.columns;
   }
 
-  async getGroups() {
+  async getData() {
     if (!this.groups.length) {
       const groups = await axios.get(`${import.meta.env.VITE_API_URL}/groups`);
       this.groups = groups.data;
@@ -36,12 +36,16 @@ class GroupsService {
     return this.groups;
   }
 
-  async addGroup(group) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/groups`, group);
-    this.groups.push(group);
-    return group;
+  async addData(group) {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/groups`,
+      group
+    );
+    this.groups.push(response.data);
+    return response.data;
   }
-  async editGroup(group) {
+
+  async editData(group) {
     await axios.put(
       `${import.meta.env.VITE_API_URL}/groups/${group.id}`,
       group
@@ -52,7 +56,7 @@ class GroupsService {
     return group;
   }
 
-  async removeGroup(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/groups/${id}`);
     this.groups = this.groups.filter((group) => group.id !== id);
   }

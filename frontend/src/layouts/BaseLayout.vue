@@ -4,7 +4,6 @@
       v-model="activeTab"
       :data="headerData"
       @onLogOut="logOut"
-      @input="setFilter"
     />
     <div class="flex container py-10">
       <BaseSidebar
@@ -42,8 +41,8 @@ export default {
 emits: {'setFilter': null},
   data() {
     return {
-      activeTab: { value: 1, link: "/" },
-      activeFilter: { value: 1, link: "/" },
+      activeTab: this.headerData ? this.headerData[0] : { },
+      activeFilter: this.sidebarData ? this.sidebarData[0] : {},
     };
   },
   methods: {
@@ -53,7 +52,7 @@ emits: {'setFilter': null},
       this.$router.push("/auth");
     },
     setFilter() {
-      this.$emit('setFilter', {activeTab: this.activeTab, activeFilter: this.activeFilter})
+      this.$emit('setFilter',this.activeFilter)
     }
   },
 };

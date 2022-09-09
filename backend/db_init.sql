@@ -14,7 +14,7 @@ CREATE TABLE plans (
 
 CREATE TABLE classrooms (
     id SERIAL PRIMARY KEY,
-    number smallint NOT NULL,
+    number int NOT NULL,
     type character varying(50) NOT NULL,
     id_departament bigint NOT NULL,
 	FOREIGN KEY (id_departament) REFERENCES departaments (id)
@@ -94,18 +94,24 @@ CREATE TABLE subjects_teachers (
 	FOREIGN KEY (id_teacher) REFERENCES teachers (id)
 );
 
+-- TEMP TABLES
+
 CREATE TABLE temp_classrooms (
     id bigint NOT NULL,
-    id_departament bigint NOT NULL,
-    number smallint NOT NULL,
+    number int NOT NULL,
     type character varying(50) NOT NULL,
-    id_entry SERIAL PRIMARY KEY
+    id_departament bigint NOT NULL,
+    
+	operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 );
 
 CREATE TABLE temp_departaments (
     id bigint NOT NULL,
     title character varying(50) NOT NULL,
-    id_entry SERIAL PRIMARY KEY
+
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 	
 );
 
@@ -114,7 +120,9 @@ CREATE TABLE temp_groups (
     id_speciality bigint NOT NULL,
     form bit varying(10) NOT NULL,
     year integer NOT NULL,
-    id_entry SERIAL PRIMARY KEY
+
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 	
 );
 
@@ -125,7 +133,8 @@ CREATE TABLE temp_journals (
     date date NOT NULL,
     type character varying(50) NOT NULL,
     id_subject bigint NOT NULL,
-    id_entry SERIAL PRIMARY KEY
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 	
 );
 
@@ -133,8 +142,8 @@ CREATE TABLE temp_plans (
     id bigint NOT NULL,
     number integer,
     year integer,
-    id_entry SERIAL PRIMARY KEY
-	
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 );
 
 
@@ -143,7 +152,8 @@ CREATE TABLE temp_speciality (
     title character varying(50) NOT NULL,
     id_departament bigint NOT NULL,
     instrument character varying(40) NOT NULL,
-    id_entry SERIAL PRIMARY KEY
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 	
 );
 
@@ -155,33 +165,39 @@ CREATE TABLE temp_students (
     phone character varying(20),
     parents_phone character varying(20) NOT NULL,
 	birthdate date NOT NULL,
-    id_entry SERIAL PRIMARY KEY
+
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 	
 );
 
 CREATE TABLE temp_students_groups (
-	id SERIAL PRIMARY KEY,
     id_student bigint NOT NULL,
-    id_group bigint NOT NULL
+    id_group bigint NOT NULL,
+	operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 );
 
 CREATE TABLE temp_subjects (
     id bigint NOT NULL,
     title character varying(50) NOT NULL,
-    id_entry SERIAL PRIMARY KEY
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 	
 );
 
 CREATE TABLE temp_subjects_plans (
     id_subject bigint NOT NULL,
     id_plan bigint NOT NULL,
-    id SERIAL PRIMARY KEY
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 );
 
 CREATE TABLE temp_subjects_teachers (
-    id SERIAL PRIMARY KEY,
     id_subject bigint NOT NULL,
-    id_teacher bigint NOT NULL
+    id_teacher bigint NOT NULL,
+	operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 );
 
 CREATE TABLE temp_teachers (
@@ -193,7 +209,8 @@ CREATE TABLE temp_teachers (
     position character varying(50) NOT NULL,
 	birthdate date NOT NULL, 
     phone character varying(20) NOT NULL,
-    id_entry SERIAL PRIMARY KEY
+    operation         char(6)   NOT NULL,
+    stamp             timestamp NOT NULL
 	
 );
 
@@ -206,26 +223,24 @@ CREATE TABLE users (
 
 -- TRIGGERS BUILD FUNCTIONS
 
-CREATE FUNCTION build_temp_classrooms() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-	IF TG_OP = 'INSERT' THEN
-		INSERT INTO temp_classrooms
-		SELECT nt.*, 'INSERT', now() FROM new_table nt;
+CREATE OR REPLACE FUNCTION build_temp_classrooms() RETURNS TRIGGER AS $$
+	BEGIN
+		IF TG_OP = 'INSERT' THEN
+			INSERT INTO temp_classrooms
+			SELECT NEW.*, 'INSERT', now();
+		ELSIF TG_OP = 'UPDATE' THEN
+			INSERT INTO temp_classrooms
+			SELECT NEW.*, 'INSERT', now();
+		ELSIF TG_OP = 'DELETE' THEN
+			INSERT INTO temp_classrooms
+			SELECT OLD.*,'DELETE',now();
+		END IF;
+		RETURN NULL;
+	END;
+$$ LANGUAGE plpgsql;
 
-	ELSEIF TG_OP = 'UPDATE' THEN
-		INSERT INTO temp_classrooms
-		SELECT nt.*, 'UPDATE', now() FROM new_table nt; 
+create TRIGGER classrooms_audit AFTER INSERT OR UPDATE OR DELETE ON classrooms for EACH ROW EXECUTE PROCEDURE build_temp_classrooms();
 
-	ELSEIF TG_OP = 'DELETE' THEN
-		INSERT INTO temp_classrooms
-		SELECT ot.*,'DELETE',now() FROM old_table ot;
-		
-	END IF;
-	RETURN NULL;
-END;
-$$;
 
 CREATE FUNCTION build_temp_departaments() RETURNS trigger
     LANGUAGE plpgsql

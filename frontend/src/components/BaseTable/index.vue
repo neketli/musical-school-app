@@ -36,6 +36,7 @@
           />
         </template>
         <BaseButton
+          v-if="isEditable"
           class="text-green-400 mx-5 my-3"
           @click="add"
         >

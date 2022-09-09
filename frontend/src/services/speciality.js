@@ -21,14 +21,14 @@ class SpecialitysService {
         value: "instrument",
       },
       {
-        label: "Специальность",
-        value: "id_speciality",
+        label: "id отдела",
+        value: "id_departament",
       },
     ];
     return this.columns;
   }
 
-  async getSpecialitys() {
+  async getData() {
     if (!this.specialities.length) {
       const specialities = await axios.get(
         `${import.meta.env.VITE_API_URL}/speciality`
@@ -38,12 +38,16 @@ class SpecialitysService {
     return this.specialities;
   }
 
-  async addSpeciality(speciality) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/speciality`, speciality);
-    this.specialities.push(speciality);
-    return speciality;
+  async addData(speciality) {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/speciality`,
+      speciality
+    );
+    this.specialities.push(response.data);
+    return response.data;
   }
-  async editSpeciality(speciality) {
+
+  async editData(speciality) {
     await axios.put(
       `${import.meta.env.VITE_API_URL}/speciality/${speciality.id}`,
       speciality
@@ -54,7 +58,7 @@ class SpecialitysService {
     return speciality;
   }
 
-  async removeSpeciality(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/speciality/${id}`);
     this.specialities = this.specialities.filter(
       (speciality) => speciality.id !== id

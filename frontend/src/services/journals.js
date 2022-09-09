@@ -25,18 +25,18 @@ class JournalsService {
         value: "grade",
       },
       {
-        label: "id_student",
+        label: "id ученика",
         value: "id_student",
       },
       {
-        label: "id_group",
-        value: "id_group",
+        label: "id предмета",
+        value: "id_subject",
       },
     ];
     return this.columns;
   }
 
-  async getJournals() {
+  async getData() {
     if (!this.journals.length) {
       const journals = await axios.get(
         `${import.meta.env.VITE_API_URL}/journals`
@@ -46,12 +46,16 @@ class JournalsService {
     return this.journals;
   }
 
-  async addJournal(journal) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/journals`, journal);
-    this.journals.push(journal);
-    return journal;
+  async addData(journal) {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/journals`,
+      journal
+    );
+    this.journals.push(response.data);
+    return response.data;
   }
-  async editJournal(journal) {
+
+  async editData(journal) {
     await axios.put(
       `${import.meta.env.VITE_API_URL}/journals/${journal.id}`,
       journal
@@ -62,7 +66,7 @@ class JournalsService {
     return journal;
   }
 
-  async removeJournal(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/journals/${id}`);
     this.journals = this.journals.filter((journal) => journal.id !== id);
   }

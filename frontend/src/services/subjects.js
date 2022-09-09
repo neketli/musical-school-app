@@ -20,7 +20,7 @@ class SubjectsService {
     return this.columns;
   }
 
-  async getSubjects() {
+  async getData() {
     if (!this.subjects.length) {
       const subjects = await axios.get(
         `${import.meta.env.VITE_API_URL}/subjects`
@@ -30,12 +30,16 @@ class SubjectsService {
     return this.subjects;
   }
 
-  async addSubject(subject) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/subjects`, subject);
-    this.subjects.push(subject);
-    return subject;
+  async addData(subject) {
+    const newSubject = await axios.post(
+      `${import.meta.env.VITE_API_URL}/subjects`,
+      subject
+    );
+    this.subjects.push(newSubject.data);
+    return newSubject.data;
   }
-  async editSubject(subject) {
+
+  async editData(subject) {
     await axios.put(
       `${import.meta.env.VITE_API_URL}/subjects/${subject.id}`,
       subject
@@ -46,7 +50,7 @@ class SubjectsService {
     return subject;
   }
 
-  async removeSubject(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/subjects/${id}`);
     this.subjects = this.subjects.filter((subject) => subject.id !== id);
   }

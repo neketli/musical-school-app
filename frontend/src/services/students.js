@@ -40,7 +40,7 @@ class StudentsService {
     return this.columns;
   }
 
-  async getStudents() {
+  async getData() {
     if (!this.students.length) {
       const students = await axios.get(
         `${import.meta.env.VITE_API_URL}/students`
@@ -50,12 +50,16 @@ class StudentsService {
     return this.students;
   }
 
-  async addStudent(student) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/students`, student);
-    this.students.push(student);
-    return student;
+  async addData(student) {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/students`,
+      student
+    );
+    this.students.push(response.data);
+    return response.data;
   }
-  async editStudent(student) {
+
+  async editData(student) {
     await axios.put(
       `${import.meta.env.VITE_API_URL}/students/${student.id}`,
       student
@@ -66,7 +70,7 @@ class StudentsService {
     return student;
   }
 
-  async removeStudent(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/students/${id}`);
     this.students = this.students.filter((student) => student.id !== id);
   }

@@ -20,7 +20,7 @@ class DepartamentsService {
     return this.columns;
   }
 
-  async getDepartaments() {
+  async getData() {
     if (!this.departaments.length) {
       const departaments = await axios.get(
         `${import.meta.env.VITE_API_URL}/departaments`
@@ -30,15 +30,16 @@ class DepartamentsService {
     return this.departaments;
   }
 
-  async addDepartament(departament) {
-    await axios.post(
+  async addData(departaments) {
+    const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/departaments`,
-      departament
+      departaments
     );
-    this.departaments.push(departament);
-    return departament;
+    this.departaments.push(response.data);
+    return response.data;
   }
-  async editDepartament(departament) {
+
+  async editData(departament) {
     await axios.put(
       `${import.meta.env.VITE_API_URL}/departaments/${departament.id}`,
       departament
@@ -49,7 +50,7 @@ class DepartamentsService {
     return departament;
   }
 
-  async removeDepartament(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/departaments/${id}`);
     this.departaments = this.departaments.filter(
       (departament) => departament.id !== id

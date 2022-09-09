@@ -1,7 +1,7 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
-class UserService {
+class UsersService {
   constructor() {
     this.users = [];
     this.columns = [];
@@ -29,7 +29,7 @@ class UserService {
     return this.columns;
   }
 
-  async getUsers() {
+  async getData() {
     if (!this.users.length) {
       const users = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
       this.users = users.data;
@@ -37,20 +37,28 @@ class UserService {
     return this.users;
   }
 
-  async addUser(user) {
+  async addData(user) {
     const userInfo = {
       ...user,
       password: CryptoJS.MD5(user.password).toString(),
     };
-    const newUser = await axios.post(`${import.meta.env.VITE_API_URL}/users`, userInfo);
+    const newUser = await axios.post(
+      `${import.meta.env.VITE_API_URL}/users`,
+      userInfo
+    );
     this.users.push(newUser.data);
     return newUser.data;
   }
-  async editUser(user) {
-    const oldPass = !!this.users.filter(item => {item.password === user.password}).length
+  
+  async editData(user) {
+    const oldPass = !!this.users.filter((item) => {
+      item.password === user.password;
+    }).length;
     const newUser = {
       ...user,
-      password: oldPass ? user.password : CryptoJS.MD5(user.password).toString(),
+      password: oldPass
+        ? user.password
+        : CryptoJS.MD5(user.password).toString(),
     };
     await axios.put(
       `${import.meta.env.VITE_API_URL}/users/${user.id}`,
@@ -62,10 +70,10 @@ class UserService {
     return newUser;
   }
 
-  async removeUser(id) {
+  async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/users/${id}`);
     this.users = this.users.filter((user) => user.id !== id);
   }
 }
 
-export default new UserService();
+export default new UsersService();

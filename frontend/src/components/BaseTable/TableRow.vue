@@ -1,12 +1,12 @@
 <template>
   <tr
-    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+    class="overflow-x-auto bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
   >
     <template v-if="editMode">
       <td
         v-for="key in rowKeys"
         :key="key"
-        class="px-5 py-3"
+        class="px-5 py-3 min-w-[100px]"
       >
         <BaseInput
           v-if="key !== 'id'"

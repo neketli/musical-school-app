@@ -161,11 +161,10 @@ export default {
     ...mapGetters(["getUserInfo"]),
   },
   async created() {
-    this.sidebarData = TABLES;
-    this.sidebarData = this.sidebarData.filter(
-      (item) =>
-        item.editAccess.includes(this.getUserInfo.user_group) ||
-        item.readAccess.includes(this.getUserInfo.user_group)
+    this.sidebarData = TABLES.filter(
+      (item) => 
+        item?.editAccess?.includes(this.getUserInfo.user_group) ||
+        item?.readAccess?.includes(this.getUserInfo.user_group)      
     );
     this.setFilter(this.sidebarData[0]);
     await this.initActiveTable();

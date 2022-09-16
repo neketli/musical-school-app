@@ -11,6 +11,7 @@
         v-model="activeFilter"
         :data="sidebarData"
         @input="setFilter"
+        @setSubTab="setSubTab"
       />
       <div class="content w-full px-10">
         <slot />
@@ -38,7 +39,7 @@ export default {
       default: () => [],
     },
   },
-emits: {'setFilter': null},
+emits: {'setFilter': null, 'setSubTab': null},
   data() {
     return {
       activeTab: this.headerData ? this.headerData[0] : { },
@@ -53,6 +54,9 @@ emits: {'setFilter': null},
     },
     setFilter() {
       this.$emit('setFilter',this.activeFilter)
+    },
+    setSubTab(value) {
+      this.$emit('setSubTab', value)
     }
   },
 };

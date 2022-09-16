@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { AuthView, HomeView, ErrorView } from "@/views";
+import { AuthView, HomeView, SetupView, ErrorView } from "@/views";
 import store from "@/store";
 
 const router = createRouter({
@@ -17,6 +17,14 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/setup",
+      name: "setup",
+      component: SetupView,
       meta: {
         requiresAuth: true,
       },

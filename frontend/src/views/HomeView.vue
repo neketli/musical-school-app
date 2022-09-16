@@ -2,6 +2,7 @@
   <BaseLayout
     :sidebarData="sidebarData"
     @setFilter="setFilter"
+    @setSubTab="setSubTab"
   >
     <div class="text-xl font-bold my-5 mx-3">
       {{ filter.label }}
@@ -89,6 +90,9 @@ const TABLES = [
     icon: "fa-bookmark-o",
     editAccess: ["admin", "director", "head_teacher"],
     readAccess: ["teacher", "student"],
+
+    supLabel: "Указать планы",
+    subValue: "subjects_plans",
   },
   {
     value: "classrooms",
@@ -103,6 +107,9 @@ const TABLES = [
     icon: "fa-users",
     editAccess: ["admin", "director", "head_teacher"],
     readAccess: ["teacher", "student"],
+    
+    supLabel: 'Указать учеников',
+    subValue: 'students_groups',
   },
   {
     value: "journals",
@@ -130,6 +137,9 @@ const TABLES = [
     icon: "fa-user-o",
     editAccess: ["admin", "director", "head_teacher"],
     readAccess: ["teacher", "student"],
+
+    supLabel: 'Указать предметы',
+    subValue: 'subjects_teachers',
   },
 ];
 
@@ -162,9 +172,9 @@ export default {
   },
   async created() {
     this.sidebarData = TABLES.filter(
-      (item) => 
-        item?.editAccess?.includes(this.getUserInfo.user_group) ||
-        item?.readAccess?.includes(this.getUserInfo.user_group)      
+      (item) =>
+        item?.editAccess?.includes(this.getUserInfo.role) ||
+        item?.readAccess?.includes(this.getUserInfo.role)
     );
     this.setFilter(this.sidebarData[0]);
     await this.initActiveTable();
@@ -176,6 +186,10 @@ export default {
       this.setService(value.value);
       await this.initActiveTable();
       this.clearNewItem();
+    },
+
+    async setSubTab(value) {
+      await this.$router.push(`/setup#${value.subValue}`);
     },
 
     async save(row) {
@@ -225,7 +239,6 @@ export default {
 
     async initActiveTable() {
       this.isLoading = true;
-
       this.tableColumns = this.activeService.getColumns();
       this.tableData = await this.activeService.getData();
 
@@ -239,70 +252,70 @@ export default {
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "users")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "departaments") {
         this.activeService = DepartamentsService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "departaments")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "speciality") {
         this.activeService = SpecialityService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "speciality")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "subjects") {
         this.activeService = SubjectsService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "subjects")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "classrooms") {
         this.activeService = ClassroomsService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "classrooms")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "groups") {
         this.activeService = GroupsService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "groups")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "journals") {
         this.activeService = JournalsService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "journals")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "plans") {
         this.activeService = PlansService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "plans")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "students") {
         this.activeService = StudentsService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "students")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "teachers") {
         this.activeService = TeachersService;
 
         this.canEdit = this.sidebarData
-          .filter((item) => item.value === "students")[0]
-          .editAccess.includes(this.getUserInfo.user_group);
+          .filter((item) => item.value === "teachers")[0]
+          .editAccess.includes(this.getUserInfo.role);
       }
     },
   },

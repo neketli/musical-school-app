@@ -9,6 +9,10 @@ import SubjectsService from "./subjects";
 import TeachersService from "./teachers";
 import UsersService from "./users";
 
+import SGService from "./students_groups";
+import SPService from "./subjects_plans";
+import STService from "./subjects_teachers";
+
 export {
   ClassroomsService,
   DepartamentsService,
@@ -20,4 +24,7 @@ export {
   SubjectsService,
   TeachersService,
   UsersService,
+  SGService,
+  SPService,
+  STService
 };

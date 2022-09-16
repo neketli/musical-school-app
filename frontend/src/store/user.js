@@ -19,7 +19,7 @@ export default {
       localStorage.setItem("token", token);
       localStorage.setItem(
         "user",
-        JSON.stringify({ login: user.login, user_group: user.user_group })
+        JSON.stringify({ login: user.login, role: user.role })
       );
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     },

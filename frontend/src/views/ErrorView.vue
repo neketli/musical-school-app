@@ -1,7 +1,5 @@
 <template>
-  <div class="w-full sticky bg-gray-800 h-16 flex px-4 items-center">
-    logo
-  </div>
+  <BaseHeader />
   <div class="h-full flex flex-col gap-10 items-center justify-center">
     <p class="text-5xl text-blue-900">
       Упс...
@@ -22,11 +20,12 @@
 </template>
 
 <script>
-import { BaseButton } from "@/components";
+import { BaseButton, BaseHeader } from "@/components";
 
 export default {
   components: {
     BaseButton,
+    BaseHeader
   },
   methods: {
     back() {

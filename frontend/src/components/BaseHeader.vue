@@ -51,7 +51,7 @@ export default {
   props: {
     data: {
       type: Array,
-      required: true,
+      default: () => [],
     },
     modelValue: {
       type: Object,

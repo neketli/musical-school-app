@@ -17,7 +17,7 @@ CREATE TABLE classrooms (
     number int NOT NULL,
     type character varying(50) NOT NULL,
     id_departament bigint NOT NULL,
-	FOREIGN KEY (id_departament) REFERENCES departaments (id)
+	FOREIGN KEY (id_departament) REFERENCES departaments (id) ON DELETE CASCADE
 );
 
 CREATE TABLE speciality (
@@ -25,7 +25,7 @@ CREATE TABLE speciality (
     title character varying(50) NOT NULL,
     instrument character varying(40) NOT NULL,
     id_departament bigint NOT NULL,
-	FOREIGN KEY (id_departament) REFERENCES departaments (id)
+	FOREIGN KEY (id_departament) REFERENCES departaments (id) ON DELETE CASCADE
 );
 
 CREATE TABLE groups (
@@ -33,7 +33,7 @@ CREATE TABLE groups (
     form character varying(10) NOT NULL,
     year integer NOT NULL,
     id_speciality bigint NOT NULL,
-	FOREIGN KEY (id_speciality) REFERENCES speciality (id)
+	FOREIGN KEY (id_speciality) REFERENCES speciality (id) ON DELETE CASCADE
 );
 
 CREATE TABLE students (
@@ -69,29 +69,32 @@ CREATE TABLE journals (
     grade smallint NOT NULL,
     id_student bigint NOT NULL,
     id_subject bigint NOT NULL,
-	FOREIGN KEY (id_student) REFERENCES students (id),
-	FOREIGN KEY (id_subject) REFERENCES subjects (id)
+	FOREIGN KEY (id_student) REFERENCES students (id) ON DELETE CASCADE,
+	FOREIGN KEY (id_subject) REFERENCES subjects (id) ON DELETE CASCADE
 );
 
 CREATE TABLE students_groups (
+    id SERIAL PRIMARY KEY,
     id_student bigint NOT NULL,
     id_group bigint NOT NULL,
-	FOREIGN KEY (id_student) REFERENCES students (id),
-	FOREIGN KEY (id_group) REFERENCES groups (id)
+	FOREIGN KEY (id_student) REFERENCES students (id) ON DELETE CASCADE,
+	FOREIGN KEY (id_group) REFERENCES groups (id) ON DELETE CASCADE
 );
 
 CREATE TABLE subjects_plans (
+    id SERIAL PRIMARY KEY,
     id_subject bigint NOT NULL,
     id_plan bigint NOT NULL,
-	FOREIGN KEY (id_subject) REFERENCES subjects (id),
-	FOREIGN KEY (id_plan) REFERENCES plans (id)
+	FOREIGN KEY (id_subject) REFERENCES subjects (id) ON DELETE CASCADE,
+	FOREIGN KEY (id_plan) REFERENCES plans (id) ON DELETE CASCADE
 );
 
 CREATE TABLE subjects_teachers (
+    id SERIAL PRIMARY KEY,
     id_subject bigint NOT NULL,
     id_teacher bigint NOT NULL,
-	FOREIGN KEY (id_subject) REFERENCES subjects (id),
-	FOREIGN KEY (id_teacher) REFERENCES teachers (id)
+	FOREIGN KEY (id_subject) REFERENCES subjects (id) ON DELETE CASCADE,
+	FOREIGN KEY (id_teacher) REFERENCES teachers (id) ON DELETE CASCADE
 );
 
 
@@ -196,6 +199,9 @@ CREATE TABLE temp_journals (
 );
 
 CREATE TABLE temp_students_groups (
+    i SERIAL PRIMARY KEY,
+
+    id bigint NOT NULL,
     id_student bigint NOT NULL,
     id_group bigint NOT NULL,
 
@@ -206,7 +212,10 @@ CREATE TABLE temp_students_groups (
 
 
 CREATE TABLE temp_subjects_plans (
-    id_subject bigint NOT NULL,
+    i SERIAL PRIMARY KEY,
+
+    id bigint NOT NULL,
+	id_subject bigint NOT NULL,
     id_plan bigint NOT NULL,
 
     operation         char(6)   NOT NULL,
@@ -214,12 +223,17 @@ CREATE TABLE temp_subjects_plans (
 );
 
 CREATE TABLE temp_subjects_teachers (
+	i SERIAL PRIMARY KEY,
+
+    id bigint NOT NULL,
     id_subject bigint NOT NULL,
     id_teacher bigint NOT NULL,
 
 	operation         char(6)   NOT NULL,
     stamp             timestamp NOT NULL
 );
+
+-- USERS
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,

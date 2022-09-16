@@ -23,7 +23,7 @@ class UsersService {
       },
       {
         label: "Группа",
-        value: "user_group",
+        value: "role",
       },
     ];
     return this.columns;
@@ -49,7 +49,7 @@ class UsersService {
     this.users.push(newUser.data);
     return newUser.data;
   }
-  
+
   async editData(user) {
     const oldPass = !!this.users.filter((item) => {
       item.password === user.password;

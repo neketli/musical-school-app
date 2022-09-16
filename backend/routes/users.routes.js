@@ -3,7 +3,7 @@ const router = new Router();
 const usersController = require("../controller/users.controller");
 const jwtAuthMiddleware = require("../middleware/auth");
 
-router.post("/users", jwtAuthMiddleware, usersController.createUsers);
+router.post("/users", usersController.createUsers);
 router.get("/users/:id", jwtAuthMiddleware, usersController.getUsers);
 router.get("/users", jwtAuthMiddleware, usersController.getAllUsers);
 router.put("/users/:id", jwtAuthMiddleware, usersController.updateUsers);

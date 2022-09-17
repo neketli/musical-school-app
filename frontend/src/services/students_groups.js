@@ -4,6 +4,7 @@ class SGService {
   constructor() {
     this.data = [];
     this.columns = [];
+    this.label = "Добавить учеников в группы";
   }
 
   getColumns() {
@@ -25,13 +26,13 @@ class SGService {
   }
 
   async getData() {
-    if (!this.students_groups.length) {
+    if (!this.data.length) {
       const students_groups = await axios.get(
         `${import.meta.env.VITE_API_URL}/students_groups`
       );
-      this.students_groups = students_groups.data;
+      this.data = students_groups.data;
     }
-    return this.students_groups;
+    return this.data;
   }
 
   async addData(students_groups) {
@@ -39,7 +40,7 @@ class SGService {
       `${import.meta.env.VITE_API_URL}/students_groups`,
       students_groups
     );
-    this.students_groups.push(newData.data);
+    this.data.push(newData.data);
     return newData.data;
   }
 
@@ -48,7 +49,7 @@ class SGService {
       `${import.meta.env.VITE_API_URL}/students_groups/${students_groups.id}`,
       students_groups
     );
-    this.students_groups = this.students_groups.map(
+    this.data = this.data.map(
       (item) => (item = item.id === students_groups.id ? students_groups : item)
     );
     return students_groups;
@@ -56,7 +57,9 @@ class SGService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/students_groups/${id}`);
-    this.students_groups = this.students_groups.filter((students_groups) => students_groups.id !== id);
+    this.data = this.data.filter(
+      (students_groups) => students_groups.id !== id
+    );
   }
 }
 

@@ -2,8 +2,9 @@ import axios from "axios";
 
 class SubjectsService {
   constructor() {
-    this.subjects = [];
+    this.data = [];
     this.columns = [];
+    this.label = "Предметы";
   }
 
   getColumns() {
@@ -21,13 +22,13 @@ class SubjectsService {
   }
 
   async getData() {
-    if (!this.subjects.length) {
+    if (!this.data.length) {
       const subjects = await axios.get(
         `${import.meta.env.VITE_API_URL}/subjects`
       );
-      this.subjects = subjects.data;
+      this.data = subjects.data;
     }
-    return this.subjects;
+    return this.data;
   }
 
   async addData(subject) {
@@ -35,7 +36,7 @@ class SubjectsService {
       `${import.meta.env.VITE_API_URL}/subjects`,
       subject
     );
-    this.subjects.push(newSubject.data);
+    this.data.push(newSubject.data);
     return newSubject.data;
   }
 
@@ -44,7 +45,7 @@ class SubjectsService {
       `${import.meta.env.VITE_API_URL}/subjects/${subject.id}`,
       subject
     );
-    this.subjects = this.subjects.map(
+    this.data = this.data.map(
       (item) => (item = item.id === subject.id ? subject : item)
     );
     return subject;
@@ -52,7 +53,7 @@ class SubjectsService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/subjects/${id}`);
-    this.subjects = this.subjects.filter((subject) => subject.id !== id);
+    this.data = this.data.filter((subject) => subject.id !== id);
   }
 }
 

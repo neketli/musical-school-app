@@ -37,6 +37,7 @@ app.use("/api", journalsRouter);
 app.use("/api", classroomsRouter);
 app.use("/api", plansRouter);
 app.use("/api", usersRouter);
+
 app.use("/api", studentsGroupsRouter);
 app.use("/api", subjectsPlansRouter);
 app.use("/api", subjectsTeachersRouter);

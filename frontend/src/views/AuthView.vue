@@ -8,15 +8,8 @@
           Музыкальная школа
         </div>
         <form class="flex flex-col gap-6">
-          <BaseInput
-            v-model="login"
-            placeholder="Логин"
-          />
-          <BaseInput
-            v-model="password"
-            type="password"
-            placeholder="Пароль"
-          />
+          <BaseInput v-model="login" placeholder="Логин" />
+          <BaseInput v-model="password" type="password" placeholder="Пароль" />
           <BaseButton
             class="max-w-xs mx-[auto]"
             @keyup.enter="auth"
@@ -52,7 +45,7 @@ export default {
           password: this.password,
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
       this.$router.push("/");
     },

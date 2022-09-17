@@ -4,6 +4,7 @@ class STService {
   constructor() {
     this.data = [];
     this.columns = [];
+    this.label = "Добавить предметы для учителей";
   }
 
   getColumns() {
@@ -25,13 +26,13 @@ class STService {
   }
 
   async getData() {
-    if (!this.subjects_teachers.length) {
+    if (!this.data.length) {
       const subjects_teachers = await axios.get(
         `${import.meta.env.VITE_API_URL}/subjects_teachers`
       );
-      this.subjects_teachers = subjects_teachers.data;
+      this.data = subjects_teachers.data;
     }
-    return this.subjects_teachers;
+    return this.data;
   }
 
   async addData(subjects_teachers) {
@@ -39,24 +40,31 @@ class STService {
       `${import.meta.env.VITE_API_URL}/subjects_teachers`,
       subjects_teachers
     );
-    this.subjects_teachers.push(newData.data);
+    this.data.push(newData.data);
     return newData.data;
   }
 
   async editData(subjects_teachers) {
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/subjects_teachers/${subjects_teachers.id}`,
+      `${import.meta.env.VITE_API_URL}/subjects_teachers/${
+        subjects_teachers.id
+      }`,
       subjects_teachers
     );
-    this.subjects_teachers = this.subjects_teachers.map(
-      (item) => (item = item.id === subjects_teachers.id ? subjects_teachers : item)
+    this.data = this.data.map(
+      (item) =>
+        (item = item.id === subjects_teachers.id ? subjects_teachers : item)
     );
     return subjects_teachers;
   }
 
   async removeData(id) {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/subjects_teachers/${id}`);
-    this.subjects_teachers = this.subjects_teachers.filter((subjects_teachers) => subjects_teachers.id !== id);
+    await axios.delete(
+      `${import.meta.env.VITE_API_URL}/subjects_teachers/${id}`
+    );
+    this.data = this.data.filter(
+      (subjects_teachers) => subjects_teachers.id !== id
+    );
   }
 }
 

@@ -15,11 +15,6 @@ class StudentsController {
       [first_name, last_name, patronymic, phone, birthdate, parents_phone]
     );
 
-    await db.query(
-      `INSERT INTO students_groups (parents_phone) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [first_name, last_name, patronymic, phone, birthdate, parents_phone]
-    );
-
     res.json(newStudent.rows[0]);
   }
   async getStudents(req, res) {

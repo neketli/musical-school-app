@@ -1,10 +1,6 @@
 <template>
   <div class="bg-sky-50 relative min-h-full">
-    <BaseHeader
-      v-model="activeTab"
-      :data="headerData"
-      @onLogOut="logOut"
-    />
+    <BaseHeader v-model="activeTab" :data="headerData" @onLogOut="logOut" />
     <div class="flex container py-10">
       <BaseSidebar
         v-if="sidebarData"
@@ -39,10 +35,10 @@ export default {
       default: () => [],
     },
   },
-emits: {'setFilter': null, 'setSubTab': null},
+  emits: { setFilter: null, setSubTab: null },
   data() {
     return {
-      activeTab: this.headerData ? this.headerData[0] : { },
+      activeTab: this.headerData ? this.headerData[0] : {},
       activeFilter: this.sidebarData ? this.sidebarData[0] : {},
     };
   },
@@ -53,11 +49,11 @@ emits: {'setFilter': null, 'setSubTab': null},
       this.$router.push("/auth");
     },
     setFilter() {
-      this.$emit('setFilter',this.activeFilter)
+      this.$emit("setFilter", this.activeFilter);
     },
     setSubTab(value) {
-      this.$emit('setSubTab', value)
-    }
+      this.$emit("setSubTab", value);
+    },
   },
 };
 </script>

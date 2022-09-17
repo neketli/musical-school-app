@@ -2,8 +2,9 @@ import axios from "axios";
 
 class SpecialitysService {
   constructor() {
-    this.specialities = [];
+    this.data = [];
     this.columns = [];
+    this.label = "Специальности";
   }
 
   getColumns() {
@@ -29,13 +30,13 @@ class SpecialitysService {
   }
 
   async getData() {
-    if (!this.specialities.length) {
+    if (!this.data.length) {
       const specialities = await axios.get(
         `${import.meta.env.VITE_API_URL}/speciality`
       );
-      this.specialities = specialities.data;
+      this.data = specialities.data;
     }
-    return this.specialities;
+    return this.data;
   }
 
   async addData(speciality) {
@@ -43,7 +44,7 @@ class SpecialitysService {
       `${import.meta.env.VITE_API_URL}/speciality`,
       speciality
     );
-    this.specialities.push(response.data);
+    this.data.push(response.data);
     return response.data;
   }
 
@@ -52,7 +53,7 @@ class SpecialitysService {
       `${import.meta.env.VITE_API_URL}/speciality/${speciality.id}`,
       speciality
     );
-    this.specialities = this.specialities.map(
+    this.data = this.data.map(
       (item) => (item = item.id === speciality.id ? speciality : item)
     );
     return speciality;
@@ -60,9 +61,7 @@ class SpecialitysService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/speciality/${id}`);
-    this.specialities = this.specialities.filter(
-      (speciality) => speciality.id !== id
-    );
+    this.data = this.data.filter((speciality) => speciality.id !== id);
   }
 }
 

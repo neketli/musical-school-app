@@ -2,8 +2,9 @@ import axios from "axios";
 
 class GroupsService {
   constructor() {
-    this.groups = [];
+    this.data = [];
     this.columns = [];
+    this.label = "Группы";
   }
 
   getColumns() {
@@ -29,11 +30,11 @@ class GroupsService {
   }
 
   async getData() {
-    if (!this.groups.length) {
+    if (!this.data.length) {
       const groups = await axios.get(`${import.meta.env.VITE_API_URL}/groups`);
-      this.groups = groups.data;
+      this.data = groups.data;
     }
-    return this.groups;
+    return this.data;
   }
 
   async addData(group) {
@@ -41,7 +42,7 @@ class GroupsService {
       `${import.meta.env.VITE_API_URL}/groups`,
       group
     );
-    this.groups.push(response.data);
+    this.data.push(response.data);
     return response.data;
   }
 
@@ -50,7 +51,7 @@ class GroupsService {
       `${import.meta.env.VITE_API_URL}/groups/${group.id}`,
       group
     );
-    this.groups = this.groups.map(
+    this.data = this.data.map(
       (item) => (item = item.id === group.id ? group : item)
     );
     return group;
@@ -58,7 +59,7 @@ class GroupsService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/groups/${id}`);
-    this.groups = this.groups.filter((group) => group.id !== id);
+    this.data = this.data.filter((group) => group.id !== id);
   }
 }
 

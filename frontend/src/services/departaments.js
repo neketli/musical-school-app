@@ -2,8 +2,9 @@ import axios from "axios";
 
 class DepartamentsService {
   constructor() {
-    this.departaments = [];
+    this.data = [];
     this.columns = [];
+    this.label = "Отделы";
   }
 
   getColumns() {
@@ -21,13 +22,13 @@ class DepartamentsService {
   }
 
   async getData() {
-    if (!this.departaments.length) {
+    if (!this.data.length) {
       const departaments = await axios.get(
         `${import.meta.env.VITE_API_URL}/departaments`
       );
-      this.departaments = departaments.data;
+      this.data = departaments.data;
     }
-    return this.departaments;
+    return this.data;
   }
 
   async addData(departaments) {
@@ -35,7 +36,7 @@ class DepartamentsService {
       `${import.meta.env.VITE_API_URL}/departaments`,
       departaments
     );
-    this.departaments.push(response.data);
+    this.data.push(response.data);
     return response.data;
   }
 
@@ -44,7 +45,7 @@ class DepartamentsService {
       `${import.meta.env.VITE_API_URL}/departaments/${departament.id}`,
       departament
     );
-    this.departaments = this.departaments.map(
+    this.data = this.data.map(
       (item) => (item = item.id === departament.id ? departament : item)
     );
     return departament;
@@ -52,9 +53,7 @@ class DepartamentsService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/departaments/${id}`);
-    this.departaments = this.departaments.filter(
-      (departament) => departament.id !== id
-    );
+    this.data = this.data.filter((departament) => departament.id !== id);
   }
 }
 

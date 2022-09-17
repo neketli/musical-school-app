@@ -2,8 +2,9 @@ import axios from "axios";
 
 class ClassroomsService {
   constructor() {
-    this.classrooms = [];
+    this.data = [];
     this.columns = [];
+    this.label = "Кабинеты";
   }
 
   getColumns() {
@@ -29,13 +30,13 @@ class ClassroomsService {
   }
 
   async getData() {
-    if (!this.classrooms.length) {
+    if (!this.data.length) {
       const classrooms = await axios.get(
         `${import.meta.env.VITE_API_URL}/classrooms`
       );
-      this.classrooms = classrooms.data;
+      this.data = classrooms.data;
     }
-    return this.classrooms;
+    return this.data;
   }
 
   async addData(classroom) {
@@ -43,7 +44,7 @@ class ClassroomsService {
       `${import.meta.env.VITE_API_URL}/classrooms`,
       classroom
     );
-    this.classrooms.push(response.data);
+    this.data.push(response.data);
     return response.data;
   }
 
@@ -52,7 +53,7 @@ class ClassroomsService {
       `${import.meta.env.VITE_API_URL}/classrooms/${classroom.id}`,
       classroom
     );
-    this.classrooms = this.classrooms.map(
+    this.data = this.data.map(
       (item) => (item = item.id === classroom.id ? classroom : item)
     );
     return classroom;
@@ -60,9 +61,7 @@ class ClassroomsService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/classrooms/${id}`);
-    this.classrooms = this.classrooms.filter(
-      (classroom) => classroom.id !== id
-    );
+    this.data = this.data.filter((classroom) => classroom.id !== id);
   }
 }
 

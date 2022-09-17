@@ -2,8 +2,9 @@ import axios from "axios";
 
 class PlansService {
   constructor() {
-    this.plans = [];
+    this.data = [];
     this.columns = [];
+    this.label = "Планы";
   }
 
   getColumns() {
@@ -25,11 +26,11 @@ class PlansService {
   }
 
   async getData() {
-    if (!this.plans.length) {
+    if (!this.data.length) {
       const plans = await axios.get(`${import.meta.env.VITE_API_URL}/plans`);
-      this.plans = plans.data;
+      this.data = plans.data;
     }
-    return this.plans;
+    return this.data;
   }
 
   async addData(plan) {
@@ -37,13 +38,13 @@ class PlansService {
       `${import.meta.env.VITE_API_URL}/plans`,
       plan
     );
-    this.plans.push(response.data);
+    this.data.push(response.data);
     return response.data;
   }
-  
+
   async editData(plan) {
     await axios.put(`${import.meta.env.VITE_API_URL}/plans/${plan.id}`, plan);
-    this.plans = this.plans.map(
+    this.data = this.data.map(
       (item) => (item = item.id === plan.id ? plan : item)
     );
     return plan;
@@ -51,7 +52,7 @@ class PlansService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/plans/${id}`);
-    this.plans = this.plans.filter((plan) => plan.id !== id);
+    this.data = this.data.filter((plan) => plan.id !== id);
   }
 }
 

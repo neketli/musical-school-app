@@ -1,26 +1,37 @@
 <template>
-  <BaseLayout
-    :sidebarData="sidebarData"
-    @setFilter="setFilter"
-    @setSubtab="setSubTab"
-  >
-    <div class="text-xl font-bold my-5 mx-3">
-      {{ filter.label }}
-    </div>
+  <BaseLayout :sidebarData="sidebarData" @setFilter="setFilter">
+    <h2 class="text-xl font-bold my-5 mx-3">
+      {{ activeService.label }}
+    </h2>
 
     <BaseTable
       v-if="!isLoading"
       :columns="tableColumns"
       :data="tableData"
-      :isEditable="canEdit"
+      isEditable
       @onSave="save"
       @onRemove="remove"
       @onAdd="showModal"
     />
-    <BaseSkelet
-      v-else
-      :size="200"
-    />
+    <BaseSkelet v-else :size="200" />
+
+    <div class="flex mt-10 gap-10">
+      <BaseTable
+        v-if="!isLoading"
+        :columns="service1.getColumns()"
+        :data="service1.data || []"
+        :title="service1.label"
+      />
+      <BaseSkelet v-else :size="200" />
+
+      <BaseTable
+        v-if="!isLoading"
+        :columns="service2.getColumns()"
+        :data="service2.data || []"
+        :title="service2.label"
+      />
+      <BaseSkelet v-else :size="200" />
+    </div>
 
     <BaseModal
       v-if="isModalShow"
@@ -28,19 +39,21 @@
       @confirm="add"
       @cancel="cancel"
     >
-      <template #title>
-        Добавить
-      </template>
+      <template #title> Добавить </template>
 
       <div class="flex flex-col gap-4">
-        <template v-for="column in tableColumns">
-          <BaseInput
-            v-if="column.value !== 'id'"
-            :key="column.label"
-            v-model="newItem[column.value]"
-            :label="column.label"
-          />
-        </template>
+        <!-- 1 sevice -->
+        <span class="text-gray-500">{{ service1.label }}</span>
+        <vSelect
+          v-model="newItem[tableColumns[1]?.value]"
+          :options="firstSelect"
+        />
+        <!-- 2 sevice -->
+        <span class="text-gray-500">{{ service2.label }}</span>
+        <vSelect
+          v-model="newItem[tableColumns[2]?.value]"
+          :options="secondSelect"
+        />
       </div>
     </BaseModal>
   </BaseLayout>
@@ -48,7 +61,9 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { BaseTable, BaseModal, BaseInput, BaseSkelet } from "@/components";
+import { BaseTable, BaseModal, BaseSkelet } from "@/components";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import {
   GroupsService,
@@ -58,7 +73,7 @@ import {
   TeachersService,
   SGService,
   SPService,
-  STService
+  STService,
 } from "@/services";
 
 export default {
@@ -66,8 +81,8 @@ export default {
     BaseLayout,
     BaseTable,
     BaseModal,
-    BaseInput,
     BaseSkelet,
+    vSelect,
   },
   data() {
     return {
@@ -90,6 +105,12 @@ export default {
   },
   computed: {
     ...mapGetters(["getUserInfo"]),
+    firstSelect() {
+      return this.service1.data.map((item) => Object.values(item).join(" "));
+    },
+    secondSelect() {
+      return this.service2.data.map((item) => Object.values(item).join(" "));
+    },
   },
   async created() {
     this.sidebarData = [
@@ -99,7 +120,7 @@ export default {
         icon: "fa-chevron-left",
       },
     ];
-    await this.setService(this.$route.hash)
+    await this.setService(this.$route.hash);
     await this.initActiveTable();
     this.isLoading = false;
   },
@@ -124,8 +145,14 @@ export default {
       if (Object.values(this.newItem).filter((item) => !item).length) {
         return;
       }
+      const item = Object.fromEntries(
+        Object.entries(this.newItem).map((item) => [
+          item[0],
+          item[1].split(" ")[0],
+        ])
+      );
       this.isLoading = true;
-      await this.activeService.addData(this.newItem);
+      await this.activeService.addData(item);
       this.tableData = await this.activeService.getData();
       this.clearNewItem();
       this.isLoading = false;
@@ -158,6 +185,9 @@ export default {
       this.tableColumns = this.activeService.getColumns();
       this.tableData = await this.activeService.getData();
 
+      await this.service1.getData();
+      await this.service2.getData();
+
       this.clearNewItem();
       this.isLoading = false;
     },
@@ -168,7 +198,7 @@ export default {
         this.service1 = SubjectsService;
         this.service2 = PlansService;
       }
-      if (value === "#subjects_groups") {
+      if (value === "#students_groups") {
         this.activeService = SGService;
         this.service1 = StudentsService;
         this.service2 = GroupsService;

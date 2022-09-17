@@ -2,8 +2,9 @@ import axios from "axios";
 
 class JournalsService {
   constructor() {
-    this.journals = [];
+    this.data = [];
     this.columns = [];
+    this.label = "Журнал";
   }
 
   getColumns() {
@@ -37,13 +38,13 @@ class JournalsService {
   }
 
   async getData() {
-    if (!this.journals.length) {
+    if (!this.data.length) {
       const journals = await axios.get(
         `${import.meta.env.VITE_API_URL}/journals`
       );
-      this.journals = journals.data;
+      this.data = journals.data;
     }
-    return this.journals;
+    return this.data;
   }
 
   async addData(journal) {
@@ -51,7 +52,7 @@ class JournalsService {
       `${import.meta.env.VITE_API_URL}/journals`,
       journal
     );
-    this.journals.push(response.data);
+    this.data.push(response.data);
     return response.data;
   }
 
@@ -60,7 +61,7 @@ class JournalsService {
       `${import.meta.env.VITE_API_URL}/journals/${journal.id}`,
       journal
     );
-    this.journals = this.journals.map(
+    this.data = this.data.map(
       (item) => (item = item.id === journal.id ? journal : item)
     );
     return journal;
@@ -68,7 +69,7 @@ class JournalsService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/journals/${id}`);
-    this.journals = this.journals.filter((journal) => journal.id !== id);
+    this.data = this.data.filter((journal) => journal.id !== id);
   }
 }
 

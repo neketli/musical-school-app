@@ -1,6 +1,11 @@
 <template>
   <div class="overflow-x-auto relative bg-white shadow-md sm:rounded-lg">
-    <table class="overflow-x-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <div class="text-xl font-bold my-5 mx-3">
+      {{ title }}
+    </div>
+    <table
+      class="overflow-x-auto w-full text-sm text-left text-gray-500 dark:text-gray-400"
+    >
       <thead
         class="overflow-x-auto text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       >
@@ -13,20 +18,13 @@
           >
             {{ item.label }}
           </th>
-          <th
-            v-if="isEditable"
-            scope="col"
-            class="py-3 px-6 text-right"
-          >
+          <th v-if="isEditable" scope="col" class="py-3 px-6 text-right">
             Action
           </th>
         </tr>
       </thead>
       <tbody>
-        <template
-          v-for="row in dataSource"
-          :key="row.id"
-        >
+        <template v-for="row in dataSource" :key="row.id">
           <TableRow
             :isEditable="isEditable"
             :rowData="row"
@@ -66,8 +64,12 @@ export default {
       type: Boolean,
       default: false,
     },
+    title: {
+      type: String,
+      default: "",
+    },
   },
-  emits: { onSave: null, onAdd: null, 'onRemove': null },
+  emits: { onSave: null, onAdd: null, onRemove: null },
   data() {
     return {
       dataSource: [],
@@ -81,15 +83,15 @@ export default {
       this.$emit("onSave", row);
     },
     add() {
-      this.$emit('onAdd');
+      this.$emit("onAdd");
     },
     cancel() {
       this.dataSource.pop();
     },
     remove(id) {
-      this.$emit('onRemove', id);
-      this.dataSource = this.dataSource.filter(item => item.id != id);
-    }
+      this.$emit("onRemove", id);
+      this.dataSource = this.dataSource.filter((item) => item.id != id);
+    },
   },
 };
 </script>

@@ -5,7 +5,7 @@
     @setSubTab="setSubTab"
   >
     <div class="text-xl font-bold my-5 mx-3">
-      {{ filter.label }}
+      {{ activeService.label }}
     </div>
 
     <BaseTable
@@ -17,10 +17,7 @@
       @onRemove="remove"
       @onAdd="showModal"
     />
-    <BaseSkelet
-      v-else
-      :size="200"
-    />
+    <BaseSkelet v-else :size="200" />
 
     <BaseModal
       v-if="isModalShow"
@@ -28,9 +25,7 @@
       @confirm="add"
       @cancel="cancel"
     >
-      <template #title>
-        Добавить
-      </template>
+      <template #title> Добавить </template>
 
       <div class="flex flex-col gap-4">
         <template v-for="column in tableColumns">
@@ -72,7 +67,7 @@ const TABLES = [
   },
   {
     value: "departaments",
-    label: "Отделы",
+    label: "Отделения",
     icon: "fa-archive",
     editAccess: ["admin", "director"],
     readAccess: ["teacher", "student", "head_teacher"],
@@ -107,9 +102,9 @@ const TABLES = [
     icon: "fa-users",
     editAccess: ["admin", "director", "head_teacher"],
     readAccess: ["teacher", "student"],
-    
-    supLabel: 'Указать учеников',
-    subValue: 'students_groups',
+
+    supLabel: "Указать учеников",
+    subValue: "students_groups",
   },
   {
     value: "journals",
@@ -138,8 +133,8 @@ const TABLES = [
     editAccess: ["admin", "director", "head_teacher"],
     readAccess: ["teacher", "student"],
 
-    supLabel: 'Указать предметы',
-    subValue: 'subjects_teachers',
+    supLabel: "Указать предметы",
+    subValue: "subjects_teachers",
   },
 ];
 

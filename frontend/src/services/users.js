@@ -3,8 +3,9 @@ import CryptoJS from "crypto-js";
 
 class UsersService {
   constructor() {
-    this.users = [];
+    this.data = [];
     this.columns = [];
+    this.label = "Пользователи";
   }
 
   getColumns() {
@@ -30,11 +31,11 @@ class UsersService {
   }
 
   async getData() {
-    if (!this.users.length) {
+    if (!this.data.length) {
       const users = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
-      this.users = users.data;
+      this.data = users.data;
     }
-    return this.users;
+    return this.data;
   }
 
   async addData(user) {
@@ -46,12 +47,12 @@ class UsersService {
       `${import.meta.env.VITE_API_URL}/users`,
       userInfo
     );
-    this.users.push(newUser.data);
+    this.data.push(newUser.data);
     return newUser.data;
   }
 
   async editData(user) {
-    const oldPass = !!this.users.filter((item) => {
+    const oldPass = !!this.data.filter((item) => {
       item.password === user.password;
     }).length;
     const newUser = {
@@ -64,7 +65,7 @@ class UsersService {
       `${import.meta.env.VITE_API_URL}/users/${user.id}`,
       newUser
     );
-    this.users = this.users.map(
+    this.data = this.data.map(
       (item) => (item = item.id === newUser.id ? newUser : item)
     );
     return newUser;
@@ -72,7 +73,7 @@ class UsersService {
 
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/users/${id}`);
-    this.users = this.users.filter((user) => user.id !== id);
+    this.data = this.data.filter((user) => user.id !== id);
   }
 }
 

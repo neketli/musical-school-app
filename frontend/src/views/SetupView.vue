@@ -1,5 +1,9 @@
 <template>
-  <BaseLayout :sidebarData="sidebarData" @setFilter="setFilter">
+  <BaseLayout
+    :sidebarData="sidebarData"
+    :headerData="headerData"
+    @setFilter="setFilter"
+  >
     <h2 class="text-xl font-bold my-5 mx-3">
       {{ activeService.label }}
     </h2>
@@ -86,6 +90,16 @@ export default {
   },
   data() {
     return {
+      headerData: [
+        {
+          value: "/",
+          label: "Школа",
+        },
+        {
+          value: "/backup",
+          label: "Резервные копии",
+        },
+      ],
       sidebarData: [],
       filter: {},
 

@@ -1,6 +1,7 @@
 <template>
   <BaseLayout
     :sidebarData="sidebarData"
+    :headerData="headerData"
     @setFilter="setFilter"
     @setSubTab="setSubTab"
   >
@@ -148,6 +149,7 @@ export default {
   },
   data() {
     return {
+      headerData: [],
       sidebarData: [],
       filter: {},
 
@@ -171,6 +173,19 @@ export default {
         item?.editAccess?.includes(this.getUserInfo.role) ||
         item?.readAccess?.includes(this.getUserInfo.role)
     );
+    this.headerData =
+      this.getUserInfo.role === "admin"
+        ? [
+            {
+              value: "/",
+              label: "Школа",
+            },
+            {
+              value: "/backup",
+              label: "Резервные копии",
+            },
+          ]
+        : [];
     this.setFilter(this.sidebarData[0]);
     await this.initActiveTable();
     this.isLoading = false;

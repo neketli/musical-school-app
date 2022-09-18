@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { AuthView, HomeView, SetupView, ErrorView } from "@/views";
+import { AuthView, HomeView, SetupView, BackupView, ErrorView } from "@/views";
 import store from "@/store";
 
 const router = createRouter({
@@ -30,6 +30,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/backup",
+      name: "backup",
+      component: BackupView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: "/404",
       name: "error",
       component: ErrorView,
@@ -41,6 +49,9 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isLogged) {
       to.path === "/auth" ? next("/") : next();
+      if (to.path === "/backup" && store.getters.getUserInfo.role !== "admin") {
+        next("/");
+      }
       return;
     }
     next("/auth");

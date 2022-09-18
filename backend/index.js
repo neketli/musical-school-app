@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 require("dotenv").config();
 
 // Routes
@@ -19,6 +20,7 @@ const subjectsPlansRouter = require("./routes/subjects_plans.routes");
 const subjectsTeachersRouter = require("./routes/subjects_teachers.routes");
 
 const authRouter = require("./routes/auth.routes");
+const dumpRouter = require("./routes/dump.routes");
 
 const PORT = process.env.PORT || 8080;
 
@@ -26,6 +28,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
+app.use(fileUpload({}));
 
 app.use("/api", departamentRouter);
 app.use("/api", subjectsRouter);
@@ -43,6 +46,7 @@ app.use("/api", subjectsPlansRouter);
 app.use("/api", subjectsTeachersRouter);
 
 app.use("/api", authRouter);
+app.use("/api", dumpRouter);
 
 // eslint-disable-next-line no-console
 app.listen(PORT, () => console.log(`server started on port: ${PORT}`));

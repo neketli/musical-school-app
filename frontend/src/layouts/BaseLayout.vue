@@ -1,6 +1,6 @@
 <template>
   <div class="bg-sky-50 relative min-h-full">
-    <BaseHeader v-model="activeTab" :data="headerData" @onLogOut="logOut" />
+    <BaseHeader :data="headerData" @onLogOut="logOut" />
     <div class="flex container py-10">
       <BaseSidebar
         v-if="sidebarData"
@@ -38,7 +38,6 @@ export default {
   emits: { setFilter: null, setSubTab: null },
   data() {
     return {
-      activeTab: this.headerData ? this.headerData[0] : {},
       activeFilter: this.sidebarData ? this.sidebarData[0] : {},
     };
   },

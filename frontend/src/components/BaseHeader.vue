@@ -16,14 +16,13 @@
             v-for="item in data"
             :key="item.value"
             class="py-3 px-5 rounded-md text-gray-300 hover:text-white hover:bg-sky-100 hover:bg-opacity-10 transition-all cursor-pointer"
-            :to="item.link"
+            :to="item.value"
             :class="{
               'text-white bg-sky-100 bg-opacity-10 transition-all cursor-default':
-                item.value === modelValue.value,
+                item.value === $route.path,
             }"
-            @click="setActiveTab(item)"
           >
-            {{ item.value }}
+            {{ item.label }}
           </router-link>
         </template>
       </div>
@@ -50,19 +49,12 @@ export default {
       type: Array,
       default: () => [],
     },
-    modelValue: {
-      type: Object,
-      default: () => {},
-    },
   },
-  emits: { "update:modelValue": null, onLogOut: null },
+  emits: { onLogOut: null },
   computed: {
     ...mapGetters(["getUserInfo"]),
   },
   methods: {
-    setActiveTab(value) {
-      this.$emit("update:modelValue", value);
-    },
     logOut() {
       this.$emit("onLogOut");
     },

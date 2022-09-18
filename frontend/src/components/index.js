@@ -5,3 +5,5 @@ export { default as BaseSidebar } from "./BaseSidebar.vue";
 export { default as BaseTable } from "./BaseTable/index.vue";
 export { default as BaseModal } from "./BaseModal.vue";
 export { default as BaseSkelet } from "./BaseSkelet.vue";
+export { default as BaseSpinner } from "./BaseSpinner.vue";
+export { default as BaseFileInput } from "./BaseFileInput.vue";

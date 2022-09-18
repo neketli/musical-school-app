@@ -27,7 +27,12 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    exposedHeaders: ["Content-Disposition"],
+  })
+);
 app.use(fileUpload({}));
 
 app.use("/api", departamentRouter);

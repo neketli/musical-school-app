@@ -2,46 +2,65 @@ const db = require("../db");
 
 class StudentsController {
   async createStudents(req, res) {
-    const {
-      first_name,
-      last_name,
-      patronymic,
-      phone,
-      birthdate,
-      parents_phone,
-    } = req.body;
-    const newStudent = await db.query(
-      `INSERT INTO students (first_name, last_name, patronymic, phone, birthdate, parents_phone) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [first_name, last_name, patronymic, phone, birthdate, parents_phone]
-    );
+    try {
+      const {
+        first_name,
+        last_name,
+        patronymic,
+        phone,
+        birthdate,
+        parents_phone,
+      } = req.body;
+      const newStudent = await db.query(
+        `INSERT INTO students (first_name, last_name, patronymic, phone, birthdate, parents_phone) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+        [first_name, last_name, patronymic, phone, birthdate, parents_phone]
+      );
 
-    res.json(newStudent.rows[0]);
+      res.json(newStudent.rows[0]);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      res.status(500).send(error);
+    }
   }
   async getStudents(req, res) {
-    const { id } = req.params;
-    const students = await db.query("SELECT * FROM students WHERE id = $1", [
-      id,
-    ]);
+    try {
+      const { id } = req.params;
+      const students = await db.query("SELECT * FROM students WHERE id = $1", [
+        id,
+      ]);
 
-    res.json(students.rows[0]);
+      res.json(students.rows[0]);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      res.status(500).send(error);
+    }
   }
   async getAllStudents(req, res) {
-    const students = await db.query("SELECT * FROM students");
+    try {
+      const students = await db.query("SELECT * FROM students");
 
-    res.json(students.rows);
+      res.json(students.rows);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      res.status(500).send(error);
+    }
   }
   async updateStudents(req, res) {
-    const { id } = req.params;
-    const {
-      first_name,
-      last_name,
-      patronymic,
-      phone,
-      birthdate,
-      parents_phone,
-    } = req.body;
-    const student = await db.query(
-      `UPDATE students SET
+    try {
+      const { id } = req.params;
+      const {
+        first_name,
+        last_name,
+        patronymic,
+        phone,
+        birthdate,
+        parents_phone,
+      } = req.body;
+      const student = await db.query(
+        `UPDATE students SET
 	  	first_name = $2,
 		last_name = $3,
 		patronymic = $4,
@@ -49,16 +68,27 @@ class StudentsController {
 		birthdate = $6,
 		parents_phone = $7
 	   WHERE id = $1 RETURNING * `,
-      [id, first_name, last_name, patronymic, phone, birthdate, parents_phone]
-    );
+        [id, first_name, last_name, patronymic, phone, birthdate, parents_phone]
+      );
 
-    res.json(student.rows[0]);
+      res.json(student.rows[0]);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      res.status(500).send(error);
+    }
   }
   async deleteStudents(req, res) {
-    const { id } = req.params;
-    await db.query("DELETE FROM students WHERE id = $1", [id]);
+    try {
+      const { id } = req.params;
+      await db.query("DELETE FROM students WHERE id = $1", [id]);
 
-    res.json("ok");
+      res.json("ok");
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      res.status(500).send(error);
+    }
   }
 }
 

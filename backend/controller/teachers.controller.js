@@ -32,7 +32,10 @@ class TeachersController {
         id,
       ]);
 
-      res.json(teachers.rows[0]);
+      res.json({
+        ...teachers.rows[0],
+        birthdate: new Date(teachers[0].birthdate).toLocaleDateString(),
+      });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -43,7 +46,14 @@ class TeachersController {
     try {
       const teachers = await db.query("SELECT * FROM teachers");
 
-      res.json(teachers.rows);
+      res.json(
+        teachers.rows.map((item) => {
+          return {
+            ...item,
+            birthdate: new Date(item.birthdate).toLocaleDateString(),
+          };
+        })
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

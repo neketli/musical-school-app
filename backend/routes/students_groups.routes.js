@@ -13,16 +13,6 @@ router.get(
   jwtAuthMiddleware,
   students_groupsController.getAllStudentsGroups
 );
-router.get(
-  "/students_groups?:id_group",
-  jwtAuthMiddleware,
-  students_groupsController.getStudentsByGroup
-);
-router.get(
-  "/students_groups?:id_student",
-  jwtAuthMiddleware,
-  students_groupsController.getStudentsGroup
-);
 router.put(
   "/students_groups",
   jwtAuthMiddleware,

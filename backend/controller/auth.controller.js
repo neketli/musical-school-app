@@ -17,6 +17,7 @@ class AuthController {
       const resUser = {
         login: user.login,
         role: user.role,
+        rid: user.rid,
       };
       const token = jwt.sign(resUser, process.env.JWT_KEY);
 

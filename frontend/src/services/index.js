@@ -12,6 +12,10 @@ import UsersService from "./users";
 import SGService from "./students_groups";
 import SPService from "./subjects_plans";
 import STService from "./subjects_teachers";
+import TSService from "./teachers_subjects";
+
+import GroupStudentService from "./group_student";
+import StudentJournalService from "./student_journal";
 
 export {
   ClassroomsService,
@@ -26,5 +30,8 @@ export {
   UsersService,
   SGService,
   SPService,
-  STService
+  STService,
+  TSService,
+  GroupStudentService,
+  StudentJournalService,
 };

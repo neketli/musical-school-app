@@ -233,7 +233,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     login character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
-    role character varying(20) NOT NULL
+    role character varying(20) NOT NULL,
+	rid integer,
 );
 
 CREATE TABLE temp_users (
@@ -241,6 +242,7 @@ CREATE TABLE temp_users (
     login character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
     role character varying(20) NOT NULL,
+	rid integer,
 	
 	operation         char(6)   NOT NULL,
     stamp             timestamp NOT NULL

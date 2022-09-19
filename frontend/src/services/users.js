@@ -25,6 +25,9 @@ class UsersService {
       {
         label: "Группа",
         value: "role",
+      },{
+        label: "r_id",
+        value: "rid",
       },
     ];
     return this.columns;

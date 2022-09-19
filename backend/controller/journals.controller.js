@@ -36,9 +36,36 @@ class JournalsController {
   }
   async getAllJournals(req, res) {
     try {
-      const journals = await db.query("SELECT * FROM journals");
+      if (!Object.values(req.query).length) {
+        const journals = await db.query("SELECT * FROM journals");
+        res.json(
+          journals.rows.map((item) => {
+            return {
+              ...item,
+              date: new Date(item.date).toLocaleDateString(),
+            };
+          })
+        );
+        return;
+      }
+      const { id_student } = req.query;
+      if (id_student) {
+        const journals = await db.query(
+          "SELECT * FROM journals JOIN subjects ON journals.id_subject=subjects.id WHERE id_student=$1",
+          [id_student]
+        );
 
-      res.json(journals.rows);
+        res.json(
+          journals.rows.map((item) => {
+            delete item.id_student;
+            delete item.id_subject;
+            return {
+              ...item,
+              date: new Date(item.date).toLocaleDateString(),
+            };
+          })
+        );
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

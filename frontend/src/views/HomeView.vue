@@ -56,7 +56,10 @@ import {
   StudentsService,
   SubjectsService,
   TeachersService,
+  TSService,
   UsersService,
+  GroupStudentService,
+  StudentJournalService,
 } from "@/services";
 
 const TABLES = [
@@ -85,10 +88,17 @@ const TABLES = [
     label: "Предметы",
     icon: "fa-bookmark-o",
     editAccess: ["admin", "director", "head_teacher"],
-    readAccess: ["teacher", "student"],
+    readAccess: ["teacher"],
 
-    supLabel: "Указать планы",
+    supLabel: "Учебная часть",
     subValue: "subjects_plans",
+  },
+  {
+    value: "subjects",
+    label: "Предметы",
+    icon: "fa-bookmark-o",
+    editAccess: [],
+    readAccess: ["student"],
   },
   {
     value: "classrooms",
@@ -102,16 +112,29 @@ const TABLES = [
     label: "Группы",
     icon: "fa-users",
     editAccess: ["admin", "director", "head_teacher"],
-    readAccess: ["teacher", "student"],
+    readAccess: ["teacher"],
 
-    supLabel: "Указать учеников",
+    supLabel: "Списки учеников",
     subValue: "students_groups",
+  },
+  {
+    value: "student_group",
+    label: "Мои группы",
+    icon: "fa-users",
+    editAccess: [],
+    readAccess: ["student"],
   },
   {
     value: "journals",
     label: "Журналы",
     icon: "fa-book",
     editAccess: ["admin", "director", "head_teacher", "teacher"],
+  },
+  {
+    value: "student_journal",
+    label: "Мои оценки",
+    icon: "fa-book",
+    readAccess: ["student"],
   },
   {
     value: "plans",
@@ -125,17 +148,24 @@ const TABLES = [
     label: "Ученики",
     icon: "fa-user",
     editAccess: ["admin", "director", "head_teacher"],
-    readAccess: ["teacher", "student"],
+    readAccess: ["teacher"],
   },
   {
     value: "teachers",
     label: "Преподаватели",
     icon: "fa-user-o",
     editAccess: ["admin", "director", "head_teacher"],
-    readAccess: ["teacher", "student"],
+    readAccess: [],
 
-    supLabel: "Указать предметы",
+    supLabel: "Ответсвенные",
     subValue: "subjects_teachers",
+  },
+  {
+    value: "teachers",
+    label: "Преподаватели",
+    icon: "fa-user-o",
+    editAccess: [],
+    readAccess: ["teacher", "student"],
   },
 ];
 
@@ -250,7 +280,11 @@ export default {
     async initActiveTable() {
       this.isLoading = true;
       this.tableColumns = this.activeService.getColumns();
-      this.tableData = await this.activeService.getData();
+      if (this.getUserInfo.role === "student") {
+        this.tableData = await this.activeService.getData(this.getUserInfo.rid);
+      } else {
+        this.tableData = await this.activeService.getData();
+      }
 
       this.clearNewItem();
       this.isLoading = false;
@@ -321,11 +355,21 @@ export default {
           .editAccess.includes(this.getUserInfo.role);
       }
       if (value === "teachers") {
-        this.activeService = TeachersService;
+        this.activeService = ["student", "teacher"].includes(
+          this.getUserInfo.role
+        )
+          ? TSService
+          : TeachersService;
 
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "teachers")[0]
           .editAccess.includes(this.getUserInfo.role);
+      }
+      if (value === "student_group") {
+        this.activeService = GroupStudentService;
+      }
+      if (value === "student_journal") {
+        this.activeService = StudentJournalService;
       }
     },
   },

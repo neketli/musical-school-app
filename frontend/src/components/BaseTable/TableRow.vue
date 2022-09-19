@@ -95,13 +95,14 @@ export default {
       return Object.keys(this.row);
     },
     isButtonDisabled() {
-      return Object.values(this.row).some((item) => !item);
+      // return Object.values(this.row).some((item) => !item);
+      return false;
     },
   },
   created() {
     this.row = { ...this.rowData };
     if (Object.values(this.row).some((item) => !item)) {
-      this.toggleEditMode();
+      // this.toggleEditMode();
     }
   },
   methods: {

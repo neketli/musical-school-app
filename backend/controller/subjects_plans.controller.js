@@ -3,6 +3,15 @@ const db = require("../db");
 class SubjectPlanController {
   async createSubjectPlan(req, res) {
     try {
+      if (req.body.id) {
+        const { id, id_subject, id_plan } = req.body;
+        await db.query(
+          `INSERT INTO subjects_plans (id, id_subject, id_plan) VALUES ($1, $2, $3)`,
+          [id, id_subject, id_plan]
+        );
+        return;
+      }
+
       const { id_subject, id_plan } = req.body;
       const relation = await db.query(
         `INSERT INTO subjects_plans (id_subject, id_plan) VALUES ($1, $2) RETURNING *`,
@@ -48,6 +57,17 @@ class SubjectPlanController {
   }
   async updateSubjectPlan(req, res) {
     try {
+      if (req.body.id) {
+        const { id, id_subject, id_plan } = req.body;
+        await db.query(
+          `UPDATE subjects_plans SET
+	  	id_subject = $2, id_plan = $3
+	   WHERE id=$1`,
+          [id, id_subject, id_plan]
+        );
+        return;
+      }
+
       const { id_subject, id_plan } = req.body;
       const data = await db.query(
         `UPDATE subjects_plans SET
@@ -65,12 +85,19 @@ class SubjectPlanController {
   }
   async deleteSubjectPlan(req, res) {
     try {
-      const { id_subject, id_plan } = req.body;
+      if (req.body.id) {
+        const { id, id_subject, id_plan } = req.body;
+        await db.query(
+          `UPDATE subjects_plans SET
+	  	id_subject = $2, id_plan = $3
+	   WHERE id=$1`,
+          [id, id_subject, id_plan]
+        );
+        return;
+      }
 
-      await db.query("DELETE FROM data WHERE id_subject = $1, id_plan = $2", [
-        id_subject,
-        id_plan,
-      ]);
+      const { id } = req.params;
+      await db.query("DELETE FROM data WHERE id = $1", [id]);
 
       res.json("ok");
     } catch (error) {

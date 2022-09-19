@@ -24,3 +24,4 @@ DROP TABLE temp_subjects CASCADE;
 DROP TABLE temp_subjects_plans CASCADE;
 DROP TABLE temp_subjects_teachers CASCADE;
 DROP TABLE temp_teachers CASCADE;
+drop table temp_users cascade;

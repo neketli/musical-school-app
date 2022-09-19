@@ -107,7 +107,8 @@ CREATE TABLE temp_departaments (
     title character varying(50) NOT NULL,
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_plans (
@@ -116,7 +117,8 @@ CREATE TABLE temp_plans (
     year integer,
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 
@@ -127,7 +129,8 @@ CREATE TABLE temp_classrooms (
     id_departament bigint NOT NULL,
     
 	operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_speciality (
@@ -137,7 +140,8 @@ CREATE TABLE temp_speciality (
     id_departament bigint NOT NULL,
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_groups (
@@ -147,7 +151,8 @@ CREATE TABLE temp_groups (
     id_speciality bigint NOT NULL,
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_students (
@@ -160,7 +165,8 @@ CREATE TABLE temp_students (
 	birthdate date NOT NULL,
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL	
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_teachers (
@@ -174,7 +180,8 @@ CREATE TABLE temp_teachers (
 	birthdate date NOT NULL, 
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_subjects (
@@ -182,7 +189,8 @@ CREATE TABLE temp_subjects (
     title character varying(50) NOT NULL,
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL	
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_journals (
@@ -194,7 +202,8 @@ CREATE TABLE temp_journals (
     id_subject bigint NOT NULL,
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 	
 );
 
@@ -204,7 +213,8 @@ CREATE TABLE temp_students_groups (
     id_group bigint NOT NULL,
 
 	operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 
@@ -215,7 +225,8 @@ CREATE TABLE temp_subjects_plans (
     id_plan bigint NOT NULL,
 
     operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_subjects_teachers (
@@ -224,7 +235,8 @@ CREATE TABLE temp_subjects_teachers (
     id_teacher bigint NOT NULL,
 
 	operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 -- USERS
@@ -245,7 +257,8 @@ CREATE TABLE temp_users (
 	rid integer,
 	
 	operation         char(6)   NOT NULL,
-    stamp             timestamp NOT NULL
+    stamp             timestamp NOT NULL,
+	op_id SERIAL PRIMARY KEY
 );
 
 

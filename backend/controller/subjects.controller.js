@@ -3,6 +3,15 @@ const db = require("../db");
 class SubjectsController {
   async createSubjects(req, res) {
     try {
+      if (req.body.id) {
+        const { id, title } = req.body;
+        await db.query(`INSERT INTO subjects (id, title) VALUES ($1, $2)`, [
+          id,
+          title,
+        ]);
+        return;
+      }
+
       const { title } = req.body;
       const newDepartment = await db.query(
         `INSERT INTO subjects (title) VALUES ($1) RETURNING *`,
@@ -43,6 +52,15 @@ class SubjectsController {
   }
   async updateSubjects(req, res) {
     try {
+      if (req.body.id) {
+        const { id, title } = req.body;
+        await db.query("UPDATE subjects SET title = $2 WHERE id = $1", [
+          id,
+          title,
+        ]);
+        return;
+      }
+
       const { id } = req.params;
       const { title } = req.body;
       const subject = await db.query(
@@ -59,10 +77,52 @@ class SubjectsController {
   }
   async deleteSubjects(req, res) {
     try {
+      if (req.body.id) {
+        const { id } = req.body;
+        await db.query("DELETE FROM subjects WHERE id = $1", [id]);
+        return;
+      }
       const { id } = req.params;
       await db.query("DELETE FROM subjects WHERE id = $1", [id]);
 
       res.json("ok");
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      res.status(500).send(error);
+    }
+  }
+  async revertChanges(item, res) {
+    switch (item.operation) {
+      case "INSERT":
+        await this.deleteSubjects({ body: { ...item } }, res);
+        break;
+      case "DELETE":
+        await this.createSubjects({ body: { ...item } }, res);
+        break;
+      case "UPDATE":
+        await this.updateSubjects({ body: { ...item } }, res);
+        break;
+      default:
+        break;
+    }
+  }
+  async undoSubjects(req, res) {
+    try {
+      const { op_id, limit = 1 } = req.body;
+      if (op_id) {
+        const queryString = `select * from temp_subjects where op_id = ${op_id}`;
+        const data = await db.query(queryString);
+        await this.revertChanges(data.rows[0], res);
+        res.json("reverted");
+        return;
+      }
+      const queryString = `select * from temp_subjects order by op_id desc limit ${limit};`;
+      const data = await db.query(queryString);
+      data.rows.forEach(async (item) => {
+        await this.revertChanges(item, res);
+      });
+      res.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

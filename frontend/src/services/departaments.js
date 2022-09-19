@@ -4,7 +4,7 @@ class DepartamentsService {
   constructor() {
     this.data = [];
     this.columns = [];
-    this.label = "Отделы";
+    this.label = "Отделения";
   }
 
   getColumns() {

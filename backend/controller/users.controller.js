@@ -3,10 +3,10 @@ const db = require("../db");
 class UsersController {
   async createUsers(req, res) {
     try {
-      const { login, password, role } = req.body;
+      const { login, password, role, rid } = req.body;
       const newUsers = await db.query(
-        `INSERT INTO users (login, password, role) VALUES ($1, $2, $3) RETURNING *`,
-        [login, password, role]
+        `INSERT INTO users (login, password, role, rid) VALUES ($1, $2, $3, $4) RETURNING *`,
+        [login, password, role, rid]
       );
 
       res.json(newUsers.rows[0]);
@@ -42,12 +42,12 @@ class UsersController {
   async updateUsers(req, res) {
     try {
       const { id } = req.params;
-      const { login, password, role } = req.body;
+      const { login, password, role, rid} = req.body;
       const student = await db.query(
         `UPDATE users SET
-	  	login = $2, password = $3, role = $4
+	  	login = $2, password = $3, role = $4, rid= $5
 	   WHERE id = $1 RETURNING * `,
-        [id, login, password, role]
+        [id, login, password, role, rid]
       );
 
       res.json(student.rows[0]);

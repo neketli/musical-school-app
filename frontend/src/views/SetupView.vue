@@ -12,7 +12,7 @@
       v-if="!isLoading"
       :columns="tableColumns"
       :data="tableData"
-      isEditable
+      :isEditable="canUserEdit"
       @onSave="save"
       @onRemove="remove"
       @onAdd="showModal"
@@ -125,8 +125,14 @@ export default {
     secondSelect() {
       return this.service2.data.map((item) => Object.values(item).join(" "));
     },
+    canUserEdit() {
+      return !["student", "teacher"].includes(this.getUserInfo.role);
+    },
   },
   async created() {
+    if (this.getUserInfo.role === "student") {
+      await this.$router.push(`/`);
+    }
     this.sidebarData = [
       {
         value: "back",

@@ -13,16 +13,6 @@ router.get(
   jwtAuthMiddleware,
   subjects_plansController.getAllSubjectPlan
 );
-router.get(
-  "/subjects_plans?:id_plan",
-  jwtAuthMiddleware,
-  subjects_plansController.getSubjectByPlan
-);
-router.get(
-  "/subjects_plans?:id_subject",
-  jwtAuthMiddleware,
-  subjects_plansController.getSubjectsPlan
-);
 router.put(
   "/subjects_plans",
   jwtAuthMiddleware,

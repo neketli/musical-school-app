@@ -4,7 +4,7 @@ class SGService {
   constructor() {
     this.data = [];
     this.columns = [];
-    this.label = "Добавить учеников в группы";
+    this.label = "Список групп учеников";
   }
 
   getColumns() {

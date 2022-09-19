@@ -16,41 +16,38 @@ class SubjectTeacherController {
       res.status(500).send(error);
     }
   }
-  async getSubjectByTeacher(req, res) {
-    try {
-      const { id_teacher } = req.query;
-      const data = await db.query(
-        "SELECT * FROM subjects_teachers WHERE id_teacher = $1",
-        [id_teacher]
-      );
-
-      res.json(data.rows[0]);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-      res.status(500).send(error);
-    }
-  }
-  async getSubjectsTeacher(req, res) {
-    try {
-      const { id_subject } = req.query;
-      const group = await db.query(
-        "SELECT * FROM subjects_teachers WHERE id_subject = $1",
-        [id_subject]
-      );
-
-      res.json(group.rows[0]);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-      res.status(500).send(error);
-    }
-  }
   async getAllSubjectTeacher(req, res) {
     try {
-      const data = await db.query("SELECT * FROM subjects_teachers");
-
-      res.json(data.rows);
+      if (!Object.values(req.query).length) {
+        const data = await db.query(`SELECT * FROM subjects_teachers`);
+        res.json(data.rows);
+        return;
+      }
+      if (req.query.teachers) {
+        const data = await db.query(
+          `SELECT (teachers.last_name,teachers.first_name,teachers.patronymic,subjects.title) 
+          FROM subjects_teachers
+          join subjects on subjects_teachers.id_subject = subjects.id
+          JOIN teachers on subjects_teachers.id_teacher = teachers.id;`
+        );
+        res.json(data.rows.map((item) => item.row.slice(1, -1).split(",")));
+        return;
+      }
+      const { id_subject, id_teacher } = req.query;
+      if (id_teacher) {
+        const data = await db.query(
+          "SELECT * FROM subjects_teachers WHERE id_teacher = $1",
+          [id_teacher]
+        );
+        res.json(data.rows[0]);
+      }
+      if (id_subject) {
+        const data = await db.query(
+          "SELECT * FROM subjects_teachers WHERE id_subject = $1",
+          [id_subject]
+        );
+        res.json(data.rows[0]);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

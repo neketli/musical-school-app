@@ -16,40 +16,30 @@ class SubjectPlanController {
       res.status(500).send(error);
     }
   }
-  async getSubjectByPlan(req, res) {
-    try {
-      const { id_plan } = req.query;
-      const data = await db.query(
-        "SELECT * FROM subjects_plans WHERE id_plan = $1",
-        [id_plan]
-      );
-
-      res.json(data.rows[0]);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-      res.status(500).send(error);
-    }
-  }
-  async getSubjectsPlan(req, res) {
-    try {
-      const { id_subject } = req.query;
-      const group = await db.query(
-        "SELECT * FROM subjects_plans WHERE id_subject = $1",
-        [id_subject]
-      );
-
-      res.json(group.rows[0]);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-      res.status(500).send(error);
-    }
-  }
   async getAllSubjectPlan(req, res) {
     try {
-      const sp = await db.query("SELECT * FROM subjects_plans");
-      res.json(sp.rows);
+      if (!Object.values(req.query).length) {
+        const sp = await db.query("SELECT * FROM subjects_plans");
+        res.json(sp.rows);
+        return;
+      }
+
+      const { id_subject, id_plan } = req.query;
+      if (id_plan) {
+        const data = await db.query(
+          "SELECT * FROM subjects_plans WHERE id_plan = $1",
+          [id_plan]
+        );
+        res.json(data.rows[0]);
+      }
+      if (id_subject) {
+        const group = await db.query(
+          "SELECT * FROM subjects_plans WHERE id_subject = $1",
+          [id_subject]
+        );
+
+        res.json(group.rows[0]);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

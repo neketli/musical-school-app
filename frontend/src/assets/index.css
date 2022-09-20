@@ -1,15 +1,17 @@
-@import 'normalize.min.css';
-@import 'font-awesome';
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+@import "normalize.css";
+@import "font-awesome";
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html, body, #app  {
-	height: 100%;
-	font-family: 'Roboto', sans-serif;
+html,
+body,
+#app {
+  height: 100%;
+  font-family: "Roboto", sans-serif;
 }
 
 .container {
-	margin: 0 auto;
+  margin: 0 auto;
 }

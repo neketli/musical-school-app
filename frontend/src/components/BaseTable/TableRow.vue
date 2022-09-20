@@ -1,48 +1,25 @@
 <template>
-  <tr
-    class="overflow-x-auto bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-  >
+  <tr class="overflow-x-auto bg-white border-b hover:bg-gray-50">
     <template v-if="editMode">
-      <td
-        v-for="key in rowKeys"
-        :key="key"
-        class="px-5 py-3 min-w-[100px]"
-      >
-        <BaseInput
-          v-if="key !== 'id'"
-          :key="key"
-          v-model="row[key]"
-        />
+      <td v-for="key in rowKeys" :key="key" class="px-5 py-3 min-w-[100px]">
+        <BaseInput v-if="key !== 'id'" :key="key" v-model="row[key]" />
         <template v-else>
           {{ row[key] }}
         </template>
       </td>
     </template>
     <template v-else>
-      <td
-        v-for="key in rowKeys"
-        :key="key"
-        class="px-5 py-3"
-      >
+      <td v-for="key in rowKeys" :key="key" class="px-5 py-3">
         {{ row[key] }}
       </td>
     </template>
     <!-- Edit mode buttons -->
-    <div
-      v-if="isEditable"
-      class="flex gap-5 px-5 py-3 text-right justify-end"
-    >
+    <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
       <template v-if="editMode">
-        <BaseButton
-          class="text-green-400 mx-2"
-          @click="save"
-        >
+        <BaseButton class="text-green-400 mx-2" @click="save">
           <i class="fa fa-check" />
         </BaseButton>
-        <BaseButton
-          class="text-red-400 mx-2"
-          @click="cancel"
-        >
+        <BaseButton class="text-red-400 mx-2" @click="cancel">
           <i class="fa fa-times" />
         </BaseButton>
         <BaseButton
@@ -54,10 +31,7 @@
         </BaseButton>
       </template>
       <template v-else>
-        <BaseButton
-          class="mx-2"
-          @click="toggleEditMode"
-        >
+        <BaseButton class="mx-2" @click="toggleEditMode">
           <i class="fa fa-pencil" />
         </BaseButton>
       </template>

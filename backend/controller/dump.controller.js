@@ -47,9 +47,7 @@ class dumpController {
       res?.status(500).send(error);
       return;
     }
-    if (req?.params?.id) {
-      res?.sendStatus(200);
-    }
+    res?.sendStatus(200);
   }
 }
 

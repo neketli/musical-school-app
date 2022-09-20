@@ -14,7 +14,7 @@ class dbDump {
     await execute(
       `pg_dump -d postgresql://${username}:${password}@${host}${
         port ? ":" + port : ""
-      }/${database}?ssl=true -f ${fileName} -F t`
+      }/${database}${process.env.DB_SSL ? "?ssl=true" : ""} -f ${fileName} -F t`
     );
     // eslint-disable-next-line no-console
     console.log(`Backup succefuly! Path: ./${fileName}`);
@@ -25,7 +25,7 @@ class dbDump {
     await execute(
       `pg_restore -d postgresql://${username}:${password}@${host}${
         port ? ":" + port : ""
-      }/${database}?ssl=true -c ${fileName}`
+      }/${database}${process.env.DB_SSL ? "?ssl=true" : ""} -c ${fileName}`
     );
     // eslint-disable-next-line no-console
     console.log("Restored successfully!");

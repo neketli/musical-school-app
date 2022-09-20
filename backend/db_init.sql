@@ -246,7 +246,7 @@ CREATE TABLE users (
     login character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
     role character varying(20) NOT NULL,
-		rid character varying(10),
+		rid character varying(10)
 );
 
 CREATE TABLE temp_users (

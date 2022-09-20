@@ -21,12 +21,7 @@
     />
     <BaseSkelet v-else :size="200" />
 
-    <BaseModal
-      v-if="isModalShow"
-      v-model="isModalShow"
-      @confirm="add"
-      @cancel="cancel"
-    >
+    <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
       <template #title> Добавить </template>
 
       <div class="flex flex-col gap-4">

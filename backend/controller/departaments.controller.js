@@ -18,11 +18,11 @@ class DepartamentController {
         [title]
       );
 
-      res.json(newDepartment.rows[0]);
+      res?.json(newDepartment.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getDepartament(req, res) {
@@ -33,47 +33,40 @@ class DepartamentController {
         [id]
       );
 
-      res.json(departaments.rows[0]);
+      res?.json(departaments.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllDepartaments(req, res) {
     try {
       const departaments = await db.query("SELECT * FROM departaments");
 
-      res.json(departaments.rows);
+      res?.json(departaments.rows);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateDepartament(req, res) {
     try {
-      if (req.body.id) {
-        const { id, title } = req.body;
-        await db.query("UPDATE departaments SET title = $2 WHERE id = $1", [
-          id,
-          title,
-        ]);
-        return;
+      const { id, title } = req.body;
+      await db.query("UPDATE departaments SET title = $2 WHERE id = $1", [
+        id,
+        title,
+      ]);
+      if (req?.params?.id) {
+        if (req?.params?.id) {
+          res?.sendStatus(200);
+        }
       }
-
-      const { id } = req.params;
-      const { title } = req.body;
-      const departament = await db.query(
-        "UPDATE departaments SET title = $2 WHERE id = $1 RETURNING *",
-        [id, title]
-      );
-
-      res.json(departament.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteDepartament(req, res) {
@@ -87,24 +80,24 @@ class DepartamentController {
       const { id } = req.params;
       await db.query("DELETE FROM departaments WHERE id = $1", [id]);
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 
-  async revertChanges(item, res) {
+  async revertChanges(item) {
     switch (item.operation) {
       case "INSERT":
-        await this.deleteDepartament({ body: { ...item } }, res);
+        await this.deleteDepartament({ body: { ...item } }, {});
         break;
       case "DELETE":
-        await this.createDepartament({ body: { ...item } }, res);
+        await this.createDepartament({ body: { ...item } }, {});
         break;
       case "UPDATE":
-        await this.updateDepartament({ body: { ...item } }, res);
+        await this.updateDepartament({ body: { ...item } }, {});
         break;
       default:
         break;
@@ -118,19 +111,19 @@ class DepartamentController {
         const queryString = `select * from temp_departaments where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
-        res.json("reverted");
+        res?.json("reverted");
         return;
       }
       const queryString = `select * from temp_departaments order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
-        await this.revertChanges(item, res);
+        await this.revertChanges(item);
       });
-      res.json("reverted");
+      res?.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

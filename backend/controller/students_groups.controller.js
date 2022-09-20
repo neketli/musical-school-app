@@ -18,11 +18,11 @@ class StudentsGroupsController {
         [id_student, id_group]
       );
 
-      res.json(relation.rows[0]);
+      res?.json(relation.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllStudentsGroups(req, res) {
@@ -30,7 +30,7 @@ class StudentsGroupsController {
       let queryString = "SELECT * FROM students_groups";
       if (!Object.values(req.query).length) {
         const data = await db.query(queryString);
-        res.json(data.rows);
+        res?.json(data.rows);
         return;
       }
       const { id_student, id_group } = req.query;
@@ -47,7 +47,7 @@ class StudentsGroupsController {
         JOIN students ON students_groups.id=students.id 
         WHERE `;
         const groups = await db.query(queryString + condition);
-        res.json(
+        res?.json(
           groups.rows.map((item) => {
             return {
               id_group: item.id_group,
@@ -67,12 +67,12 @@ class StudentsGroupsController {
           id_group,
         ]);
 
-        res.json(data.rows);
+        res?.json(data.rows);
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateStudentsGroups(req, res) {
@@ -96,11 +96,11 @@ class StudentsGroupsController {
         [id, id_student, id_group]
       );
 
-      res.json(data.rows[0]);
+      res?.json(data.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteStudentsGroups(req, res) {
@@ -118,23 +118,23 @@ class StudentsGroupsController {
         [id_student, id_group]
       );
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
-  async revertChanges(item, res) {
+  async revertChanges(item) {
     switch (item.operation) {
       case "INSERT":
-        await this.deleteStudentsGroups({ body: { ...item } }, res);
+        await this.deleteStudentsGroups({ body: { ...item } }, {});
         break;
       case "DELETE":
-        await this.createStudentsGroups({ body: { ...item } }, res);
+        await this.createStudentsGroups({ body: { ...item } }, {});
         break;
       case "UPDATE":
-        await this.updateStudentsGroups({ body: { ...item } }, res);
+        await this.updateStudentsGroups({ body: { ...item } }, {});
         break;
       default:
         break;
@@ -147,19 +147,19 @@ class StudentsGroupsController {
         const queryString = `select * from temp_students_groups where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
-        res.json("reverted");
+        res?.json("reverted");
         return;
       }
       const queryString = `select * from temp_students_groups order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
-        await this.revertChanges(item, res);
+        await this.revertChanges(item);
       });
-      res.json("reverted");
+      res?.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

@@ -25,12 +25,16 @@ class STService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/subjects_teachers`
+    );
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const subjects_teachers = await axios.get(
-        `${import.meta.env.VITE_API_URL}/subjects_teachers`
-      );
-      this.data = subjects_teachers.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -65,6 +69,12 @@ class STService {
     this.data = this.data.filter(
       (subjects_teachers) => subjects_teachers.id !== id
     );
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/subjects_teachers/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

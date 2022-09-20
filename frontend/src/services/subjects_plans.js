@@ -25,12 +25,16 @@ class SPService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/subjects_plans`
+    );
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const subjects_plans = await axios.get(
-        `${import.meta.env.VITE_API_URL}/subjects_plans`
-      );
-      this.data = subjects_plans.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -58,6 +62,12 @@ class SPService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/subjects_plans/${id}`);
     this.data = this.data.filter((subjects_plans) => subjects_plans.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/subjects_plans/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

@@ -18,18 +18,18 @@ class SubjectPlanController {
         [id_subject, id_plan]
       );
 
-      res.json(relation.rows[0]);
+      res?.json(relation.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllSubjectPlan(req, res) {
     try {
       if (!Object.values(req.query).length) {
         const sp = await db.query("SELECT * FROM subjects_plans");
-        res.json(sp.rows);
+        res?.json(sp.rows);
         return;
       }
 
@@ -39,7 +39,7 @@ class SubjectPlanController {
           "SELECT * FROM subjects_plans WHERE id_plan = $1",
           [id_plan]
         );
-        res.json(data.rows[0]);
+        res?.json(data.rows[0]);
       }
       if (id_subject) {
         const group = await db.query(
@@ -47,12 +47,12 @@ class SubjectPlanController {
           [id_subject]
         );
 
-        res.json(group.rows[0]);
+        res?.json(group.rows[0]);
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateSubjectPlan(req, res) {
@@ -65,6 +65,7 @@ class SubjectPlanController {
 	   WHERE id=$1`,
           [id, id_subject, id_plan]
         );
+
         return;
       }
 
@@ -76,11 +77,11 @@ class SubjectPlanController {
         [id_subject, id_plan]
       );
 
-      res.json(data.rows[0]);
+      res?.json(data.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteSubjectPlan(req, res) {
@@ -99,11 +100,49 @@ class SubjectPlanController {
       const { id } = req.params;
       await db.query("DELETE FROM data WHERE id = $1", [id]);
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
+    }
+  }
+
+  async revertChanges(item) {
+    switch (item.operation) {
+      case "INSERT":
+        await this.deleteSubjectsTeacher({ body: { ...item } }, {});
+        break;
+      case "DELETE":
+        await this.createSubjectsTeacher({ body: { ...item } }, {});
+        break;
+      case "UPDATE":
+        await this.updateSubjectsTeacher({ body: { ...item } }, {});
+        break;
+      default:
+        break;
+    }
+  }
+  async undoSubjectsPlans(req, res) {
+    try {
+      const { op_id, limit = 1 } = req.body;
+      if (op_id) {
+        const queryString = `select * from temp_subjects_plans where op_id = ${op_id}`;
+        const data = await db.query(queryString);
+        await this.revertChanges(data.rows[0], res);
+        res?.json("reverted");
+        return;
+      }
+      const queryString = `select * from temp_subjects_plans order by op_id desc limit ${limit};`;
+      const data = await db.query(queryString);
+      data.rows.forEach(async (item) => {
+        await this.revertChanges(item);
+      });
+      res?.json("reverted");
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      res?.status(500).send(error);
     }
   }
 }

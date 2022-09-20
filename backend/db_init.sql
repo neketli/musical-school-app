@@ -246,7 +246,7 @@ CREATE TABLE users (
     login character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
     role character varying(20) NOT NULL,
-	rid integer,
+		rid character varying(10),
 );
 
 CREATE TABLE temp_users (
@@ -254,7 +254,7 @@ CREATE TABLE temp_users (
     login character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
     role character varying(20) NOT NULL,
-	rid integer,
+	rid character varying(10),
 	
 	operation         char(6)   NOT NULL,
     stamp             timestamp NOT NULL,
@@ -272,7 +272,7 @@ CREATE OR REPLACE FUNCTION departaments_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_departaments
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_departaments
 			SELECT OLD.*,'DELETE',now();
@@ -293,7 +293,7 @@ CREATE OR REPLACE FUNCTION plans_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_plans
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_plans
 			SELECT OLD.*,'DELETE',now();
@@ -314,7 +314,7 @@ CREATE OR REPLACE FUNCTION classrooms_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_classrooms
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_classrooms
 			SELECT OLD.*,'DELETE',now();
@@ -335,7 +335,7 @@ CREATE OR REPLACE FUNCTION speciality_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_speciality
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_speciality
 			SELECT OLD.*,'DELETE',now();
@@ -356,7 +356,7 @@ CREATE OR REPLACE FUNCTION groups_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_groups
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_groups
 			SELECT OLD.*,'DELETE',now();
@@ -377,7 +377,7 @@ CREATE OR REPLACE FUNCTION students_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_students
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_students
 			SELECT OLD.*,'DELETE',now();
@@ -398,7 +398,7 @@ CREATE OR REPLACE FUNCTION teachers_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_teachers
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_teachers
 			SELECT OLD.*,'DELETE',now();
@@ -419,7 +419,7 @@ CREATE OR REPLACE FUNCTION subjects_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_subjects
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_subjects
 			SELECT OLD.*,'DELETE',now();
@@ -440,7 +440,7 @@ CREATE OR REPLACE FUNCTION journals_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_journals
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_journals
 			SELECT OLD.*,'DELETE',now();
@@ -461,7 +461,7 @@ CREATE OR REPLACE FUNCTION students_groups_audit_function() RETURNS TRIGGER AS $
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_students_groups
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_students_groups
 			SELECT OLD.*,'DELETE',now();
@@ -482,7 +482,7 @@ CREATE OR REPLACE FUNCTION subjects_plans_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_subjects_plans
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_subjects_plans
 			SELECT OLD.*,'DELETE',now();
@@ -503,7 +503,7 @@ CREATE OR REPLACE FUNCTION subjects_teachers_audit_function() RETURNS TRIGGER AS
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_subjects_teachers
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_subjects_teachers
 			SELECT OLD.*,'DELETE',now();
@@ -524,7 +524,7 @@ CREATE OR REPLACE FUNCTION users_audit_function() RETURNS TRIGGER AS $$
 			SELECT NEW.*, 'INSERT', now();
 		ELSIF TG_OP = 'UPDATE' THEN
 			INSERT INTO temp_users
-			SELECT NEW.*, 'UPDATE', now();
+			SELECT OLD.*, 'UPDATE', now();
 		ELSIF TG_OP = 'DELETE' THEN
 			INSERT INTO temp_users
 			SELECT OLD.*,'DELETE',now();

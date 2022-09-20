@@ -37,12 +37,16 @@ class JournalsService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/journals`
+    );
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const journals = await axios.get(
-        `${import.meta.env.VITE_API_URL}/journals`
-      );
-      this.data = journals.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -70,6 +74,12 @@ class JournalsService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/journals/${id}`);
     this.data = this.data.filter((journal) => journal.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/journals/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

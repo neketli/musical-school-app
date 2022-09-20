@@ -41,12 +41,16 @@ class StudentsService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/students`
+    );
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const students = await axios.get(
-        `${import.meta.env.VITE_API_URL}/students`
-      );
-      this.data = students.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -74,6 +78,12 @@ class StudentsService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/students/${id}`);
     this.data = this.data.filter((student) => student.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/students/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

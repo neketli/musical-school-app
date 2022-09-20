@@ -8,6 +8,11 @@ router.post(
   jwtAuthMiddleware,
   subjects_plansController.createSubjectPlan
 );
+router.post(
+  "/subjects_plans/undo",
+  jwtAuthMiddleware,
+  subjects_plansController.undoSubjectsPlans.bind(subjects_plansController)
+);
 router.get(
   "/subjects_plans",
   jwtAuthMiddleware,

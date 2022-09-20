@@ -8,6 +8,11 @@ router.post(
   jwtAuthMiddleware,
   students_groupsController.createStudentsGroups
 );
+router.post(
+  "/students_groups/undo",
+  jwtAuthMiddleware,
+  students_groupsController.undoStudentsGroups.bind(students_groupsController)
+);
 router.get(
   "/students_groups",
   jwtAuthMiddleware,

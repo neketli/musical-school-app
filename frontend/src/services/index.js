@@ -16,6 +16,7 @@ import TSService from "./teachers_subjects";
 
 import GroupStudentService from "./group_student";
 import StudentJournalService from "./student_journal";
+import History from "./history";
 
 export {
   ClassroomsService,
@@ -34,4 +35,5 @@ export {
   TSService,
   GroupStudentService,
   StudentJournalService,
+  History,
 };

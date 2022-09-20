@@ -29,12 +29,16 @@ class SpecialitysService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/speciality`
+    );
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const specialities = await axios.get(
-        `${import.meta.env.VITE_API_URL}/speciality`
-      );
-      this.data = specialities.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -62,6 +66,12 @@ class SpecialitysService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/speciality/${id}`);
     this.data = this.data.filter((speciality) => speciality.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/speciality/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

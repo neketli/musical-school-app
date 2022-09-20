@@ -41,11 +41,11 @@ class StudentsController {
         [first_name, last_name, patronymic, phone, birthdate, parents_phone]
       );
 
-      res.json(newStudent.rows[0]);
+      res?.json(newStudent.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getStudents(req, res) {
@@ -55,21 +55,21 @@ class StudentsController {
         id,
       ]);
 
-      res.json({
+      res?.json({
         ...students.rows[0],
         birthdate: new Date(students.rows[0].birthdate).toLocaleDateString(),
       });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllStudents(req, res) {
     try {
       const students = await db.query("SELECT * FROM students");
 
-      res.json(
+      res?.json(
         students.rows.map((item) => {
           return {
             ...item,
@@ -80,45 +80,13 @@ class StudentsController {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateStudents(req, res) {
     try {
-      if (req.body.id) {
-        const {
-          id,
-          first_name,
-          last_name,
-          patronymic,
-          phone,
-          birthdate,
-          parents_phone,
-        } = req.body;
-        await db.query(
-          `UPDATE students SET
-	  	first_name = $2,
-		last_name = $3,
-		patronymic = $4,
-		phone = $5,
-		birthdate = $6,
-		parents_phone = $7
-	   WHERE id = $1 RETURNING * `,
-          [
-            id,
-            first_name,
-            last_name,
-            patronymic,
-            phone,
-            birthdate,
-            parents_phone,
-          ]
-        );
-        return;
-      }
-
-      const { id } = req.params;
       const {
+        id,
         first_name,
         last_name,
         patronymic,
@@ -126,7 +94,7 @@ class StudentsController {
         birthdate,
         parents_phone,
       } = req.body;
-      const student = await db.query(
+      await db.query(
         `UPDATE students SET
 	  	first_name = $2,
 		last_name = $3,
@@ -137,12 +105,13 @@ class StudentsController {
 	   WHERE id = $1 RETURNING * `,
         [id, first_name, last_name, patronymic, phone, birthdate, parents_phone]
       );
-
-      res.json(student.rows[0]);
+      if (req?.params?.id) {
+        res?.sendStatus(200);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteStudents(req, res) {
@@ -155,23 +124,23 @@ class StudentsController {
       const { id } = req.params;
       await db.query("DELETE FROM students WHERE id = $1", [id]);
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
-  async revertChanges(item, res) {
+  async revertChanges(item) {
     switch (item.operation) {
       case "INSERT":
-        await this.deleteStudents({ body: { ...item } }, res);
+        await this.deleteStudents({ body: { ...item } }, {});
         break;
       case "DELETE":
-        await this.createStudents({ body: { ...item } }, res);
+        await this.createStudents({ body: { ...item } }, {});
         break;
       case "UPDATE":
-        await this.updateStudents({ body: { ...item } }, res);
+        await this.updateStudents({ body: { ...item } }, {});
         break;
       default:
         break;
@@ -184,19 +153,19 @@ class StudentsController {
         const queryString = `select * from temp_students where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
-        res.json("reverted");
+        res?.json("reverted");
         return;
       }
       const queryString = `select * from temp_students order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
-        await this.revertChanges(item, res);
+        await this.revertChanges(item);
       });
-      res.json("reverted");
+      res?.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

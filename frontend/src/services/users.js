@@ -25,7 +25,8 @@ class UsersService {
       {
         label: "Группа",
         value: "role",
-      },{
+      },
+      {
         label: "r_id",
         value: "rid",
       },
@@ -33,10 +34,14 @@ class UsersService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const users = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
-      this.data = users.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -64,10 +69,12 @@ class UsersService {
         ? user.password
         : CryptoJS.MD5(user.password).toString(),
     };
+
     await axios.put(
       `${import.meta.env.VITE_API_URL}/users/${user.id}`,
       newUser
     );
+
     this.data = this.data.map(
       (item) => (item = item.id === newUser.id ? newUser : item)
     );
@@ -77,6 +84,12 @@ class UsersService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/users/${id}`);
     this.data = this.data.filter((user) => user.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/users/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

@@ -25,10 +25,14 @@ class PlansService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/plans`);
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const plans = await axios.get(`${import.meta.env.VITE_API_URL}/plans`);
-      this.data = plans.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -53,6 +57,12 @@ class PlansService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/plans/${id}`);
     this.data = this.data.filter((plan) => plan.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/plans/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

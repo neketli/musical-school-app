@@ -1,13 +1,37 @@
-const Router = require('express')
-const router = new Router()
-const specialityController = require('../controller/speciality.controller')
-const jwtAuthMiddleware = require('../middleware/auth')
+const Router = require("express");
+const router = new Router();
+const specialityController = require("../controller/speciality.controller");
+const jwtAuthMiddleware = require("../middleware/auth");
 
+router.post(
+  "/speciality",
+  jwtAuthMiddleware,
+  specialityController.createSpeciality
+);
+router.post(
+  "/speciality/undo",
+  jwtAuthMiddleware,
+  specialityController.undoSpeciality.bind(specialityController)
+);
+router.get(
+  "/speciality/:id",
+  jwtAuthMiddleware,
+  specialityController.getSpeciality
+);
+router.get(
+  "/speciality",
+  jwtAuthMiddleware,
+  specialityController.getAllSpeciality
+);
+router.put(
+  "/speciality/:id",
+  jwtAuthMiddleware,
+  specialityController.updateSpeciality
+);
+router.delete(
+  "/speciality/:id",
+  jwtAuthMiddleware,
+  specialityController.deleteSpeciality
+);
 
-router.post('/speciality', jwtAuthMiddleware, specialityController.createSpeciality)
-router.get('/speciality/:id', jwtAuthMiddleware, specialityController.getSpeciality)
-router.get('/speciality', jwtAuthMiddleware, specialityController.getAllSpeciality)
-router.put('/speciality/:id', jwtAuthMiddleware, specialityController.updateSpeciality)
-router.delete('/speciality/:id', jwtAuthMiddleware, specialityController.deleteSpeciality)
-
-module.exports = router
+module.exports = router;

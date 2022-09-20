@@ -17,6 +17,7 @@
       @onSave="save"
       @onRemove="remove"
       @onAdd="showModal"
+      @onUndo="undo"
     />
     <BaseSkelet v-else :size="200" />
 
@@ -239,13 +240,23 @@ export default {
       this.isLoading = false;
     },
 
+    async undo() {
+      this.isLoading = true;
+      await this.activeService.revertData();
+      this.tableData = await this.activeService.getData();
+      this.isLoading = false;
+    },
+
     showModal() {
       this.clearNewItem();
       this.isModalShow = true;
     },
 
     async add() {
-      if (Object.values(this.newItem).filter((item) => !item).length) {
+      if (
+        !Object.keys(this.newItem).includes("rid") &&
+        Object.values(this.newItem).filter((item) => !item).length
+      ) {
         return;
       }
       this.isLoading = true;
@@ -280,6 +291,7 @@ export default {
     async initActiveTable() {
       this.isLoading = true;
       this.tableColumns = this.activeService.getColumns();
+      await this.activeService.updateData();
       if (this.getUserInfo.role === "student") {
         this.tableData = await this.activeService.getData(this.getUserInfo.rid);
       } else {

@@ -17,11 +17,11 @@ class SpecialityController {
         [title, instrument, id_departament]
       );
 
-      res.json(newSpeciality.rows[0]);
+      res?.json(newSpeciality.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getSpeciality(req, res) {
@@ -32,46 +32,38 @@ class SpecialityController {
         [id]
       );
 
-      res.json(speciality.rows[0]);
+      res?.json(speciality.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllSpeciality(req, res) {
     try {
       const speciality = await db.query("SELECT * FROM speciality");
 
-      res.json(speciality.rows);
+      res?.json(speciality.rows);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateSpeciality(req, res) {
     try {
-      if (req.body.id) {
-        const { id, title, instrument, id_departament } = req.body;
-        await db.query(
-          "UPDATE speciality SET title = $2, instrument = $3, id_departament = $4 WHERE id = $1",
-          [id, title, instrument, id_departament]
-        );
-        return;
-      }
-      const { id } = req.params;
-      const { title, instrument, id_departament } = req.body;
-      const departament = await db.query(
-        "UPDATE speciality SET title = $2, instrument = $3, id_departament = $4 WHERE id = $1 RETURNING *",
+      const { id, title, instrument, id_departament } = req.body;
+      await db.query(
+        "UPDATE speciality SET title = $2, instrument = $3, id_departament = $4 WHERE id = $1",
         [id, title, instrument, id_departament]
       );
-
-      res.json(departament.rows[0]);
+      if (req?.params?.id) {
+        res?.sendStatus(200);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteSpeciality(req, res) {
@@ -84,23 +76,23 @@ class SpecialityController {
       const { id } = req.params;
       await db.query("DELETE FROM speciality WHERE id = $1", [id]);
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
-  async revertChanges(item, res) {
+  async revertChanges(item) {
     switch (item.operation) {
       case "INSERT":
-        await this.deleteSpeciality({ body: { ...item } }, res);
+        await this.deleteSpeciality({ body: { ...item } }, {});
         break;
       case "DELETE":
-        await this.createSpeciality({ body: { ...item } }, res);
+        await this.createSpeciality({ body: { ...item } }, {});
         break;
       case "UPDATE":
-        await this.updateSpeciality({ body: { ...item } }, res);
+        await this.updateSpeciality({ body: { ...item } }, {});
         break;
       default:
         break;
@@ -113,19 +105,19 @@ class SpecialityController {
         const queryString = `select * from temp_speciality where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
-        res.json("reverted");
+        res?.json("reverted");
         return;
       }
       const queryString = `select * from temp_speciality order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
-        await this.revertChanges(item, res);
+        await this.revertChanges(item);
       });
-      res.json("reverted");
+      res?.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

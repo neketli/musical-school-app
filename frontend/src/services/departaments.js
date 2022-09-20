@@ -21,12 +21,16 @@ class DepartamentsService {
     return this.columns;
   }
 
+  async updateData() {
+    const departaments = await axios.get(
+      `${import.meta.env.VITE_API_URL}/departaments`
+    );
+    this.data = departaments.data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const departaments = await axios.get(
-        `${import.meta.env.VITE_API_URL}/departaments`
-      );
-      this.data = departaments.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -54,6 +58,12 @@ class DepartamentsService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/departaments/${id}`);
     this.data = this.data.filter((departament) => departament.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/departaments/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

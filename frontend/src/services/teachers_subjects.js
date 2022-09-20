@@ -25,12 +25,16 @@ class TSService {
     return this.columns;
   }
 
+  async updateData() {
+    const subjects_teachers = await axios.get(
+      `${import.meta.env.VITE_API_URL}/subjects_teachers?teachers=true`
+    );
+    this.data = subjects_teachers.data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const subjects_teachers = await axios.get(
-        `${import.meta.env.VITE_API_URL}/subjects_teachers?teachers=true`
-      );
-      this.data = subjects_teachers.data;
+      await this.updateData();
     }
     return this.data;
   }

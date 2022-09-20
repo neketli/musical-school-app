@@ -25,3 +25,17 @@ DROP TABLE temp_subjects_plans CASCADE;
 DROP TABLE temp_subjects_teachers CASCADE;
 DROP TABLE temp_teachers CASCADE;
 drop table temp_users cascade;
+
+DROP TRIGGER classrooms_audit on classrooms CASCADE;
+DROP TRIGGER departaments_audit on departaments CASCADE;
+DROP TRIGGER groups_audit on groups CASCADE;
+DROP TRIGGER journals_audit on journals CASCADE;
+DROP TRIGGER plans_audit on plans CASCADE;
+DROP TRIGGER speciality_audit on speciality CASCADE;
+DROP TRIGGER students_audit on students CASCADE;
+DROP TRIGGER subjects_audit on subjects CASCADE;
+DROP TRIGGER teachers_audit on teachers CASCADE;
+-- n:n
+DROP TRIGGER students_groups_audit on students_groups CASCADE;
+DROP TRIGGER subjects_plans_audit on subjects_plans CASCADE;
+DROP TRIGGER subjects_teachers_audit on subjects_teachers CASCADE;

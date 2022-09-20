@@ -21,12 +21,16 @@ class SubjectsService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/subjects`
+    );
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const subjects = await axios.get(
-        `${import.meta.env.VITE_API_URL}/subjects`
-      );
-      this.data = subjects.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -54,6 +58,12 @@ class SubjectsService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/subjects/${id}`);
     this.data = this.data.filter((subject) => subject.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/subjects/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

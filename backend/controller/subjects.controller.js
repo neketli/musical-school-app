@@ -18,11 +18,11 @@ class SubjectsController {
         [title]
       );
 
-      res.json(newDepartment.rows[0]);
+      res?.json(newDepartment.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getSubjects(req, res) {
@@ -32,47 +32,39 @@ class SubjectsController {
         id,
       ]);
 
-      res.json(subjects.rows[0]);
+      res?.json(subjects.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllSubjectss(req, res) {
     try {
       const subjects = await db.query("SELECT * FROM subjects");
 
-      res.json(subjects.rows);
+      res?.json(subjects.rows);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateSubjects(req, res) {
     try {
-      if (req.body.id) {
-        const { id, title } = req.body;
-        await db.query("UPDATE subjects SET title = $2 WHERE id = $1", [
-          id,
-          title,
-        ]);
-        return;
+      const { id, title } = req.body;
+      await db.query("UPDATE subjects SET title = $2 WHERE id = $1", [
+        id,
+        title,
+      ]);
+
+      if (req?.params?.id) {
+        res?.sendStatus(200);
       }
-
-      const { id } = req.params;
-      const { title } = req.body;
-      const subject = await db.query(
-        "UPDATE subjects SET title = $2 WHERE id = $1 RETURNING *",
-        [id, title]
-      );
-
-      res.json(subject.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteSubjects(req, res) {
@@ -85,23 +77,23 @@ class SubjectsController {
       const { id } = req.params;
       await db.query("DELETE FROM subjects WHERE id = $1", [id]);
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
-  async revertChanges(item, res) {
+  async revertChanges(item) {
     switch (item.operation) {
       case "INSERT":
-        await this.deleteSubjects({ body: { ...item } }, res);
+        await this.deleteSubjects({ body: { ...item } }, {});
         break;
       case "DELETE":
-        await this.createSubjects({ body: { ...item } }, res);
+        await this.createSubjects({ body: { ...item } }, {});
         break;
       case "UPDATE":
-        await this.updateSubjects({ body: { ...item } }, res);
+        await this.updateSubjects({ body: { ...item } }, {});
         break;
       default:
         break;
@@ -114,19 +106,19 @@ class SubjectsController {
         const queryString = `select * from temp_subjects where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
-        res.json("reverted");
+        res?.json("reverted");
         return;
       }
       const queryString = `select * from temp_subjects order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
-        await this.revertChanges(item, res);
+        await this.revertChanges(item);
       });
-      res.json("reverted");
+      res?.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

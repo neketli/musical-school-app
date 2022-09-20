@@ -5,7 +5,7 @@ class dumpController {
   async getDump(req, res) {
     try {
       const fileName = await dbDump.backup();
-      await res.download(`./${fileName}`);
+      await res?.download(`./${fileName}`);
       setTimeout(() => {
         execute(`rm -rf ${fileName}`);
         // eslint-disable-next-line no-console
@@ -14,7 +14,7 @@ class dumpController {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 
@@ -26,12 +26,13 @@ class dumpController {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
       return;
     }
 
     try {
       await dbDump.restore(file.name);
+      res?.sendStatus(200);
 
       setTimeout(() => {
         execute(`rm -rf ${file.name}`);
@@ -44,10 +45,9 @@ class dumpController {
       execute(`rm -rf ${file.name}`);
       // eslint-disable-next-line no-console
       console.log(`Removed backup succefuly! Path: ./${file.name}`);
-      res.status(500).send(error);
+      res?.status(500).send(error);
       return;
     }
-    res.sendStatus(200);
   }
 }
 

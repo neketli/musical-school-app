@@ -29,10 +29,14 @@ class GroupsService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/groups`);
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const groups = await axios.get(`${import.meta.env.VITE_API_URL}/groups`);
-      this.data = groups.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -60,6 +64,12 @@ class GroupsService {
   async removeData(id) {
     await axios.delete(`${import.meta.env.VITE_API_URL}/groups/${id}`);
     this.data = this.data.filter((group) => group.id !== id);
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/groups/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

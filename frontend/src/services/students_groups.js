@@ -25,12 +25,16 @@ class SGService {
     return this.columns;
   }
 
+  async updateData() {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/students_groups`
+    );
+    this.data = data;
+  }
+
   async getData() {
     if (!this.data.length) {
-      const students_groups = await axios.get(
-        `${import.meta.env.VITE_API_URL}/students_groups`
-      );
-      this.data = students_groups.data;
+      await this.updateData();
     }
     return this.data;
   }
@@ -60,6 +64,12 @@ class SGService {
     this.data = this.data.filter(
       (students_groups) => students_groups.id !== id
     );
+  }
+
+  async revertData(value = {}) {
+    await axios.post(`${import.meta.env.VITE_API_URL}/students_groups/undo`, value);
+    await this.updateData();
+    return this.data;
   }
 }
 

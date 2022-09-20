@@ -12,7 +12,9 @@ class dbDump {
       date.getMonth() + 1
     }-${date.getFullYear()}.tar`;
     await execute(
-      `pg_dump -d postgresql://${username}:${password}@${host}:${port}/${database} -f ${fileName} -F t`
+      `pg_dump -d postgresql://${username}:${password}@${host}${
+        port ? ":" + port : ""
+      }/${database}${process.env.DB_SSL ? "?ssl=true" : ""} -f ${fileName} -F t`
     );
     // eslint-disable-next-line no-console
     console.log(`Backup succefuly! Path: ./${fileName}`);
@@ -21,7 +23,9 @@ class dbDump {
 
   async restore(fileName) {
     await execute(
-      `pg_restore -d postgresql://${username}:${password}@${host}:${port}/${database} -c ${fileName}`
+      `pg_restore -d postgresql://${username}:${password}@${host}${
+        port ? ":" + port : ""
+      }/${database}${process.env.DB_SSL ? "?ssl=true" : ""} -c ${fileName}`
     );
     // eslint-disable-next-line no-console
     console.log("Restored successfully!");

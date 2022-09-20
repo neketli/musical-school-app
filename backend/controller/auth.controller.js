@@ -10,7 +10,7 @@ class AuthController {
         (user) => user.login === login && user.password === password
       );
       if (!user) {
-        res.status(403).send("Username or password incorrect");
+        res?.status(403).send("Username or password incorrect");
         // throw new Error()
         return;
       }
@@ -21,14 +21,14 @@ class AuthController {
       };
       const token = jwt.sign(resUser, process.env.JWT_KEY);
 
-      res.json({
+      res?.json({
         user: resUser,
         token,
       });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

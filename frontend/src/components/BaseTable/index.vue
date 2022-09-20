@@ -3,12 +3,8 @@
     <div class="text-xl font-bold my-5 mx-3">
       {{ title }}
     </div>
-    <table
-      class="overflow-x-auto w-full text-sm text-left text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="overflow-x-auto text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-      >
+    <table class="overflow-x-auto w-full text-sm text-left text-gray-500">
+      <thead class="overflow-x-auto text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th
             v-for="item in columns"
@@ -24,7 +20,10 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="row in dataSource" :key="row.id">
+        <template
+          v-for="row in dataSource"
+          :key="row.stamp ? row.stamp : row.id"
+        >
           <TableRow
             :isEditable="isEditable"
             :rowData="row"
@@ -33,15 +32,32 @@
             @onRemove="remove"
           />
         </template>
-        <BaseButton
-          v-if="isEditable"
-          class="text-green-400 mx-5 my-3"
-          @click="add"
-        >
-          <i class="fa fa-plus" />
-        </BaseButton>
       </tbody>
     </table>
+
+    <div class="flex justify-between px-5 py-3">
+      <div v-if="isEditable" class="flex gap-3">
+        <BaseButton class="text-green-400" @click="add">
+          <i class="fa fa-plus" />
+        </BaseButton>
+
+        <BaseButton class="text-yellow-400" @click="undo">
+          <i class="fa fa-undo" />
+        </BaseButton>
+      </div>
+
+      <div v-if="isPagination" class="flex justify-center items-center gap-3">
+        <BaseButton class="text-black" @click="prev">
+          <i class="fa fa-angle-left" />
+        </BaseButton>
+        <div class="flex text-gray-500">
+          {{ currentPage }} / {{ totalPages }}
+        </div>
+        <BaseButton class="text-black" @click="next">
+          <i class="fa fa-angle-right" />
+        </BaseButton>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -68,15 +84,31 @@ export default {
       type: String,
       default: "",
     },
+    paginationLimit: {
+      type: Number,
+      default: 6,
+    },
   },
-  emits: { onSave: null, onAdd: null, onRemove: null },
+  emits: { onSave: null, onAdd: null, onRemove: null, onUndo: null },
   data() {
     return {
       dataSource: [],
+      currentPage: 1,
+      totalPages: 1,
+      currStart: 0,
     };
   },
+  computed: {
+    isPagination() {
+      return this.data.length > this.paginationLimit;
+    },
+  },
   created() {
-    this.dataSource = this.data;
+    if (this.isPagination) {
+      this.initPagination();
+    } else {
+      this.dataSource = this.data;
+    }
   },
   methods: {
     save(row) {
@@ -91,6 +123,33 @@ export default {
     remove(id) {
       this.$emit("onRemove", id);
       this.dataSource = this.dataSource.filter((item) => item.id != id);
+    },
+    undo() {
+      this.$emit("onUndo");
+    },
+    initPagination() {
+      this.totalPages = Math.ceil(this.data.length / this.paginationLimit);
+      this.dataSource = this.data.slice(0, this.paginationLimit);
+    },
+    async next() {
+      if (this.currentPage === this.totalPages) return;
+
+      this.currStart += this.paginationLimit;
+      this.dataSource = this.data.slice(
+        this.currStart,
+        this.currStart + this.paginationLimit
+      );
+      this.currentPage += 1;
+    },
+    async prev() {
+      if (this.currentPage === 1) return;
+      this.currStart -= this.paginationLimit;
+
+      this.dataSource = this.data.slice(
+        this.currStart,
+        this.currStart + this.paginationLimit
+      );
+      this.currentPage -= 1;
     },
   },
 };

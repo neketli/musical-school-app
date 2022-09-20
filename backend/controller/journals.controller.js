@@ -28,11 +28,11 @@ class JournalsController {
         [type, date, grade, id_subject, id_student]
       );
 
-      res.json(newStudent.rows[0]);
+      res?.json(newStudent.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getJournals(req, res) {
@@ -42,18 +42,18 @@ class JournalsController {
         id,
       ]);
 
-      res.json(journals.rows[0]);
+      res?.json(journals.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllJournals(req, res) {
     try {
       if (!Object.values(req.query).length) {
         const journals = await db.query("SELECT * FROM journals");
-        res.json(
+        res?.json(
           journals.rows.map((item) => {
             return {
               ...item,
@@ -70,7 +70,7 @@ class JournalsController {
           [id_student]
         );
 
-        res.json(
+        res?.json(
           journals.rows.map((item) => {
             delete item.id_student;
             delete item.id_subject;
@@ -84,44 +84,29 @@ class JournalsController {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateJournals(req, res) {
     try {
-      if (req.body.id) {
-        const { id, type, date, grade, id_subject, id_student } = req.body;
-        await db.query(
-          `UPDATE journals SET
-	  	type = $2,
-		date = $3,
-		grade = $4,
-		id_subject = $5,
-		id_student = $6
-	   WHERE id = $1 RETURNING * `,
-          [id, type, date, grade, id_subject, id_student]
-        );
-        return;
-      }
-
-      const { id } = req.params;
-      const { type, date, grade, id_subject, id_student } = req.body;
-      const departament = await db.query(
+      const { id, type, date, grade, id_subject, id_student } = req.body;
+      await db.query(
         `UPDATE journals SET
 	  	type = $2,
 		date = $3,
 		grade = $4,
 		id_subject = $5,
 		id_student = $6
-	   WHERE id = $1 RETURNING * `,
+	   WHERE id = $1`,
         [id, type, date, grade, id_subject, id_student]
       );
-
-      res.json(departament.rows[0]);
+      if (req?.params?.id) {
+        res?.sendStatus(200);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteJournals(req, res) {
@@ -135,23 +120,23 @@ class JournalsController {
       const { id } = req.params;
       await db.query("DELETE FROM journals WHERE id = $1", [id]);
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
-  async revertChanges(item, res) {
+  async revertChanges(item) {
     switch (item.operation) {
       case "INSERT":
-        await this.deleteJournals({ body: { ...item } }, res);
+        await this.deleteJournals({ body: { ...item } }, {});
         break;
       case "DELETE":
-        await this.createJournals({ body: { ...item } }, res);
+        await this.createJournals({ body: { ...item } }, {});
         break;
       case "UPDATE":
-        await this.updateJournals({ body: { ...item } }, res);
+        await this.updateJournals({ body: { ...item } }, {});
         break;
       default:
         break;
@@ -164,19 +149,19 @@ class JournalsController {
         const queryString = `select * from temp_journal where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
-        res.json("reverted");
+        res?.json("reverted");
         return;
       }
       const queryString = `select * from temp_journal order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
-        await this.revertChanges(item, res);
+        await this.revertChanges(item);
       });
-      res.json("reverted");
+      res?.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

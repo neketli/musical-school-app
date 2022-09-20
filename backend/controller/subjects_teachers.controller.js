@@ -18,18 +18,18 @@ class SubjectTeacherController {
         [id_subject, id_teacher]
       );
 
-      res.json(relation.rows[0]);
+      res?.json(relation.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllSubjectTeacher(req, res) {
     try {
       if (!Object.values(req.query).length) {
         const data = await db.query(`SELECT * FROM subjects_teachers`);
-        res.json(data.rows);
+        res?.json(data.rows);
         return;
       }
       if (req.query.teachers) {
@@ -39,7 +39,7 @@ class SubjectTeacherController {
           join subjects on subjects_teachers.id_subject = subjects.id
           JOIN teachers on subjects_teachers.id_teacher = teachers.id;`
         );
-        res.json(data.rows.map((item) => item.row.slice(1, -1).split(",")));
+        res?.json(data.rows.map((item) => item.row.slice(1, -1).split(",")));
         return;
       }
       const { id_subject, id_teacher } = req.query;
@@ -48,19 +48,19 @@ class SubjectTeacherController {
           "SELECT * FROM subjects_teachers WHERE id_teacher = $1",
           [id_teacher]
         );
-        res.json(data.rows[0]);
+        res?.json(data.rows[0]);
       }
       if (id_subject) {
         const data = await db.query(
           "SELECT * FROM subjects_teachers WHERE id_subject = $1",
           [id_subject]
         );
-        res.json(data.rows[0]);
+        res?.json(data.rows[0]);
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateSubjectTeacher(req, res) {
@@ -85,11 +85,11 @@ class SubjectTeacherController {
         [id, id_subject, id_teacher]
       );
 
-      res.json(data.rows[0]);
+      res?.json(data.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteSubjectTeacher(req, res) {
@@ -103,48 +103,48 @@ class SubjectTeacherController {
       const { id } = req.params;
       await db.query("DELETE FROM subjects_teachers WHERE id=$1", [id]);
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
-  async revertChanges(item, res) {
+  async revertChanges(item) {
     switch (item.operation) {
       case "INSERT":
-        await this.deleteSunjectsTeacher({ body: { ...item } }, res);
+        await this.deleteSubjectsTeacher({ body: { ...item } }, {});
         break;
       case "DELETE":
-        await this.createSunjectsTeacher({ body: { ...item } }, res);
+        await this.createSubjectsTeacher({ body: { ...item } }, {});
         break;
       case "UPDATE":
-        await this.updateSunjectsTeacher({ body: { ...item } }, res);
+        await this.updateSubjectsTeacher({ body: { ...item } }, {});
         break;
       default:
         break;
     }
   }
-  async undoSunjectsTeacher(req, res) {
+  async undoSubjectsTeacher(req, res) {
     try {
       const { op_id, limit = 1 } = req.body;
       if (op_id) {
         const queryString = `select * from temp_subjects_teachers where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
-        res.json("reverted");
+        res?.json("reverted");
         return;
       }
       const queryString = `select * from temp_subjects_teachers order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
-        await this.revertChanges(item, res);
+        await this.revertChanges(item);
       });
-      res.json("reverted");
+      res?.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

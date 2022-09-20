@@ -18,11 +18,11 @@ class GroupsController {
         [form, year, id_speciality]
       );
 
-      res.json(newGroups.rows[0]);
+      res?.json(newGroups.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getGroups(req, res) {
@@ -30,47 +30,38 @@ class GroupsController {
       const { id } = req.params;
       const groups = await db.query("SELECT * FROM groups WHERE id = $1", [id]);
 
-      res.json(groups.rows[0]);
+      res?.json(groups.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async getAllGroups(req, res) {
     try {
       const groups = await db.query("SELECT * FROM groups");
 
-      res.json(groups.rows);
+      res?.json(groups.rows);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async updateGroups(req, res) {
     try {
-      if (req.body.id) {
-        const { id, form, year, id_speciality } = req.body;
-        await db.query(
-          "UPDATE groups SET form = $2, year = $3, id_speciality = $4 WHERE id = $1",
-          [id, form, year, id_speciality]
-        );
-        return;
-      }
-
-      const { id } = req.params;
-      const { form, year, id_speciality } = req.body;
-      const departament = await db.query(
-        "UPDATE groups SET form = $2, year = $3, id_speciality = $4 WHERE id = $1 RETURNING *",
+      const { id, form, year, id_speciality } = req.body;
+      await db.query(
+        "UPDATE groups SET form = $2, year = $3, id_speciality = $4 WHERE id = $1",
         [id, form, year, id_speciality]
       );
-
-      res.json(departament.rows[0]);
+      if (req?.params?.id) {
+        res?.sendStatus(200);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
   async deleteGroups(req, res) {
@@ -84,29 +75,28 @@ class GroupsController {
       const { id } = req.params;
       await db.query("DELETE FROM groups WHERE id = $1", [id]);
 
-      res.json("ok");
+      res?.json("ok");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
-  async revertChanges(item, res) {
+  async revertChanges(item) {
     switch (item.operation) {
       case "INSERT":
-        await this.deleteGroups({ body: { ...item } }, res);
+        await this.deleteGroups({ body: { ...item } }, {});
         break;
       case "DELETE":
-        await this.createGroups({ body: { ...item } }, res);
+        await this.createGroups({ body: { ...item } }, {});
         break;
       case "UPDATE":
-        await this.updateGroups({ body: { ...item } }, res);
+        await this.updateGroups({ body: { ...item } }, {});
         break;
       default:
         break;
     }
   }
-
   async undoGroups(req, res) {
     try {
       const { op_id, limit = 1 } = req.body;
@@ -114,19 +104,19 @@ class GroupsController {
         const queryString = `select * from temp_groups where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
-        res.json("reverted");
+        res?.json("reverted");
         return;
       }
       const queryString = `select * from temp_groups order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
-        await this.revertChanges(item, res);
+        await this.revertChanges(item);
       });
-      res.json("reverted");
+      res?.json("reverted");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res.status(500).send(error);
+      res?.status(500).send(error);
     }
   }
 }

@@ -291,10 +291,12 @@ export default {
     async initActiveTable() {
       this.isLoading = true;
       this.tableColumns = this.activeService.getColumns();
-      await this.activeService.updateData();
       if (this.getUserInfo.role === "student") {
+        await this.activeService.updateData(this.getUserInfo.rid);
         this.tableData = await this.activeService.getData(this.getUserInfo.rid);
       } else {
+        await this.activeService.updateData();
+
         this.tableData = await this.activeService.getData();
       }
 

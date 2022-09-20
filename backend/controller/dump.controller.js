@@ -32,6 +32,7 @@ class dumpController {
 
     try {
       await dbDump.restore(file.name);
+      res?.sendStatus(200);
 
       setTimeout(() => {
         execute(`rm -rf ${file.name}`);
@@ -47,7 +48,6 @@ class dumpController {
       res?.status(500).send(error);
       return;
     }
-    res?.sendStatus(200);
   }
 }
 

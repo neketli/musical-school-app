@@ -22,6 +22,7 @@ const subjectsTeachersRouter = require("./routes/subjects_teachers.routes");
 const authRouter = require("./routes/auth.routes");
 const dumpRouter = require("./routes/dump.routes");
 const historyRouter = require("./routes/history.routes");
+const uptimeRouter = require("./routes/uptime.routes");
 
 const PORT = process.env.PORT || 8080;
 
@@ -54,6 +55,7 @@ app.use("/api", subjectsTeachersRouter);
 app.use("/api", authRouter);
 app.use("/api", dumpRouter);
 app.use("/api", historyRouter);
+app.use("/uptime", uptimeRouter);
 
 // eslint-disable-next-line no-console
 app.listen(PORT, () => console.log(`server started on port: ${PORT}`));

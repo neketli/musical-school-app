@@ -59,9 +59,7 @@ class ClassroomsController {
         [id, type, number, id_classroom]
       );
       if (req?.params?.id) {
-        if (req?.params?.id) {
-          res?.sendStatus(200);
-        }
+        res?.sendStatus(200);
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -79,7 +77,7 @@ class ClassroomsController {
 
       const { id } = req.params;
       await db.query("DELETE FROM classrooms WHERE id = $1", [id]);
-      res?.json("ok");
+      res?.sendStatus(200);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

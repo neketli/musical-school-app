@@ -19,12 +19,12 @@ router.get(
   students_groupsController.getAllStudentsGroups
 );
 router.put(
-  "/students_groups",
+  "/students_groups/:id",
   jwtAuthMiddleware,
   students_groupsController.updateStudentsGroups
 );
 router.delete(
-  "/students_groups",
+  "/students_groups/:id",
   jwtAuthMiddleware,
   students_groupsController.deleteStudentsGroups
 );

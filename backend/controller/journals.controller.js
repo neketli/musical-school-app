@@ -119,8 +119,7 @@ class JournalsController {
 
       const { id } = req.params;
       await db.query("DELETE FROM journals WHERE id = $1", [id]);
-
-      res?.json("ok");
+      res?.sendStatus(200);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

@@ -21,12 +21,12 @@ router.get(
   subjects_teachersController.getAllSubjectTeacher
 );
 router.put(
-  "/subjects_teachers",
+  "/subjects_teachers/:id",
   jwtAuthMiddleware,
   subjects_teachersController.updateSubjectTeacher
 );
 router.delete(
-  "/subjects_teachers",
+  "/subjects_teachers/:id",
   jwtAuthMiddleware,
   subjects_teachersController.deleteSubjectTeacher
 );

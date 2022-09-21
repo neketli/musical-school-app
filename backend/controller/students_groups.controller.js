@@ -77,25 +77,19 @@ class StudentsGroupsController {
   }
   async updateStudentsGroups(req, res) {
     try {
-      if (req.body.id) {
-        const { id, id_student, id_group } = req.body;
-        await db.query(
-          `UPDATE students_groups SET
-	  	id_student = $2, id_group = $3
-	   WHERE id=$1`,
-          [id, id_student, id_group]
-        );
-        return;
-      }
-      const { id } = req.params;
       const { id_student, id_group } = req.body;
+      let id = req.params ? req.params : req.body;
+      
       const data = await db.query(
         `UPDATE students_groups SET
-	  	id_student = $2, id_group = $3
-	   WHERE id=$1 returning *`,
+        id_student = $2, id_group = $3
+   WHERE id=$1 returnin *`,
         [id, id_student, id_group]
       );
-
+      
+      if (req.body.id) {
+        return;
+      }
       res?.json(data.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -107,18 +101,16 @@ class StudentsGroupsController {
     try {
       if (req.body.id) {
         const { id } = req.body;
-        await db.query("DELETE FROM students_groups WHERE id=$1", [id]);
+        await db.query("DELETE FROM students_groups WHERE id = $1", [id]);
         return;
       }
-
-      const { id_student, id_group } = req.body;
+      const { id } = req.params;
 
       await db.query(
-        "DELETE FROM students_groups WHERE id_student = $1, id_group = $2",
-        [id_student, id_group]
+        "DELETE FROM students_groups WHERE id = $1",
+        [id]
       );
-
-      res?.json("ok");
+      res?.sendStatus("200");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

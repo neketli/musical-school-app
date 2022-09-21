@@ -19,12 +19,12 @@ router.get(
   subjects_plansController.getAllSubjectPlan
 );
 router.put(
-  "/subjects_plans",
+  "/subjects_plans/:id",
   jwtAuthMiddleware,
   subjects_plansController.updateSubjectPlan
 );
 router.delete(
-  "/subjects_plans",
+  "/subjects_plans/:id",
   jwtAuthMiddleware,
   subjects_plansController.deleteSubjectPlan
 );

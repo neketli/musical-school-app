@@ -57,26 +57,19 @@ class SubjectPlanController {
   }
   async updateSubjectPlan(req, res) {
     try {
-      if (req.body.id) {
-        const { id, id_subject, id_plan } = req.body;
-        await db.query(
-          `UPDATE subjects_plans SET
-	  	id_subject = $2, id_plan = $3
-	   WHERE id=$1`,
-          [id, id_subject, id_plan]
-        );
-
-        return;
-      }
-
       const { id_subject, id_plan } = req.body;
+      let id = req.params ? req.params : req.body;
+      
       const data = await db.query(
         `UPDATE subjects_plans SET
-	  	id_subject = $1, id_plan = $2
-	   WHERE id_subject = $1, id_plan = $2 RETURNING * `,
-        [id_subject, id_plan]
+    id_subject = $2, id_plan = $3
+   WHERE id=$1 returnin *`,
+        [id, id_subject, id_plan]
       );
-
+      
+      if (req.body.id) {
+        return;
+      }
       res?.json(data.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -87,20 +80,20 @@ class SubjectPlanController {
   async deleteSubjectPlan(req, res) {
     try {
       if (req.body.id) {
-        const { id, id_subject, id_plan } = req.body;
+        const { id } = req.body;
         await db.query(
-          `UPDATE subjects_plans SET
-	  	id_subject = $2, id_plan = $3
-	   WHERE id=$1`,
-          [id, id_subject, id_plan]
+          "DELETE FROM subjects_plans WHERE id = $1",
+          [id]
         );
         return;
       }
 
       const { id } = req.params;
-      await db.query("DELETE FROM data WHERE id = $1", [id]);
-
-      res?.json("ok");
+      await db.query(
+        "DELETE FROM subjects_plans WHERE id = $1",
+        [id]
+      );
+      res?.sendStatus("200");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

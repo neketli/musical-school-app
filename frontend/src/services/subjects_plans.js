@@ -4,7 +4,7 @@ class SPService {
   constructor() {
     this.data = [];
     this.columns = [];
-    this.label = "Планы для предметов";
+    this.label = "Планы по предметам";
   }
 
   getColumns() {

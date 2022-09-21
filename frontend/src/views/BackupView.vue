@@ -60,7 +60,7 @@
           @close="updateTable"
         />
         <div class="flex items-center gap-6">
-          Вернуться назад на 
+          Вернуться назад на
           <BaseInput
             v-model.trim.number="historyLimit"
             class="max-w-[100px]"
@@ -90,13 +90,22 @@
         <BaseSpinner v-else />
       </div>
     </template>
-    <BaseSpinner v-else />
+    <BaseSpinner
+      v-else
+      class="h-full"
+    />
   </BaseLayout>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import { BaseTable, BaseInput, BaseFileInput, BaseButton, BaseSpinner } from "@/components";
+import {
+  BaseTable,
+  BaseInput,
+  BaseFileInput,
+  BaseButton,
+  BaseSpinner,
+} from "@/components";
 import { History } from "@/services";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import vSelect from "vue-select";
@@ -110,7 +119,7 @@ export default {
     BaseSpinner,
     BaseTable,
     BaseInput,
-    vSelect
+    vSelect,
   },
   data() {
     return {
@@ -197,7 +206,7 @@ export default {
       code: "",
       message: "",
       historyLimit: 1,
-      opId: '',
+      opId: "",
       isLoading: true,
       tableLoaded: false,
     };
@@ -260,24 +269,32 @@ export default {
 
       this.isLoading = false;
     },
-    async updateTable() {      
+    async updateTable() {
       this.tableLoaded = false;
-      this.tableData = await History.getData({table: this.selectedTable.value});
+      this.tableData = await History.getData({
+        table: this.selectedTable.value,
+      });
       this.tableColumns = await History.getColumns();
       this.tableLoaded = true;
     },
     async revertByLimit() {
-      await this.$axios.post(`${import.meta.env.VITE_API_URL}/${this.selectedTable.value}/undo`, {
-      limit: this.historyLimit,
-    });
-    await this.updateTable();
+      await this.$axios.post(
+        `${import.meta.env.VITE_API_URL}/${this.selectedTable.value}/undo`,
+        {
+          limit: this.historyLimit,
+        }
+      );
+      await this.updateTable();
     },
     async revertById() {
-      await this.$axios.post(`${import.meta.env.VITE_API_URL}/${this.selectedTable.value}/undo`, {
-      op_id: this.opId,
-    });
-    await this.updateTable();
-    }
+      await this.$axios.post(
+        `${import.meta.env.VITE_API_URL}/${this.selectedTable.value}/undo`,
+        {
+          op_id: this.opId,
+        }
+      );
+      await this.updateTable();
+    },
   },
 };
 </script>

@@ -7,60 +7,104 @@
     <h2 class="text-xl font-bold my-5 mx-3">
       {{ activeService.label }}
     </h2>
-
+    <!-- Main table -->
     <BaseTable
       v-if="!isLoading"
+      class="z-10"
       :columns="tableColumns"
       :data="tableData"
       :isEditable="canUserEdit"
       @onSave="save"
       @onRemove="remove"
-      @onAdd="showModal"
+      @onAdd="toggleMenu"
     />
-    <BaseSkelet v-else :size="200" />
+    <BaseSkelet
+      v-else
+      :size="200"
+    />
 
-    <div class="flex mt-10 gap-10">
-      <BaseTable
-        v-if="!isLoading"
-        :columns="service1.getColumns()"
-        :data="service1.data || []"
-        :title="service1.label"
-      />
-      <BaseSkelet v-else :size="200" />
+    <!-- Dropdown Menu -->
+    <Transition name="slide-fade">
+      <div
+        v-show="isMenuShow && !isLoading"
+        class="-mt-1 w-full"
+      >
+        <div
+          class="flex flex-col gap-5 rounded-b-xl p-10  bg-white shadow-md"
+        >
+          <!-- Content -->
+          <div class="flex w-full justify-between items-center gap-5">
+            <div class="flex flex-col gap-2 w-[50%]">
+              <!-- 1 sevice -->
+              <span class="text-gray-500">{{ firstService.label }}</span>
+              <vSelect
+                v-model="newItem[tableColumns[1]?.value]"
+                class="min-w-[25%]"
+                :options="firstSelect"
+              />
+            </div>
 
-      <BaseTable
-        v-if="!isLoading"
-        :columns="service2.getColumns()"
-        :data="service2.data || []"
-        :title="service2.label"
-      />
-      <BaseSkelet v-else :size="200" />
-    </div>
-
-    <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
-      <template #title> Добавить </template>
-
-      <div class="flex flex-col gap-4">
-        <!-- 1 sevice -->
-        <span class="text-gray-500">{{ service1.label }}</span>
-        <vSelect
-          v-model="newItem[tableColumns[1]?.value]"
-          :options="firstSelect"
-        />
-        <!-- 2 sevice -->
-        <span class="text-gray-500">{{ service2.label }}</span>
-        <vSelect
-          v-model="newItem[tableColumns[2]?.value]"
-          :options="secondSelect"
-        />
+            <div class="flex flex-col gap-2 w-[50%]">
+              <!-- 2 sevice -->
+              <span class="text-gray-500">{{ secondService.label }}</span>
+              <vSelect
+                v-model="newItem[tableColumns[2]?.value]"
+                class="min-w-[25%]"
+                :options="secondSelect"
+              />
+            </div>
+          </div>
+          <!-- Buttons -->
+          <div
+            class="gap-5 flex justify-center items-center"
+          >
+            <BaseButton
+              class="text-green-600 w-[20%]"
+              @click="add"
+            >
+              <i class="fa fa-check" />
+            </BaseButton>
+            <BaseButton
+              class="text-red-600 w-[20%]"
+              @click="cancel"
+            >
+              <i class="fa fa-times" />
+            </BaseButton>
+          </div>
+        </div>
       </div>
-    </BaseModal>
+    </Transition>
+
+    <!-- Bottom tables -->
+    <div class="flex mt-10 justify-between gap-10">
+      <BaseTable
+        v-if="!isLoading"
+        :columns="firstService.getColumns()"
+        :data="firstService.data || []"
+        :title="firstService.label"
+      />
+      <BaseSkelet
+        v-else
+        :size="200"
+      />
+
+      <BaseTable
+        v-if="!isLoading"
+        :columns="secondService.getColumns()"
+        :data="secondService.data || []"
+        :title="secondService.label"
+      />
+      <BaseSkelet
+        v-else
+        :size="200"
+      />
+    </div>
   </BaseLayout>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import { BaseTable, BaseModal, BaseSkelet } from "@/components";
+import { BaseTable, BaseButton, BaseSkelet } from "@/components";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import BaseLayout from "@/layouts/BaseLayout.vue";
@@ -79,7 +123,7 @@ export default {
   components: {
     BaseLayout,
     BaseTable,
-    BaseModal,
+    BaseButton,
     BaseSkelet,
     vSelect,
   },
@@ -100,25 +144,24 @@ export default {
 
       activeService: {},
 
-      service1: {},
-      service2: {},
+      firstService: {},
+      secondService: {},
 
       tableColumns: [],
       tableData: [],
       newItem: {},
 
       isLoading: true,
-      isModalShow: false,
-      canEdit: false,
+      isMenuShow: false,
     };
   },
   computed: {
     ...mapGetters(["getUserInfo"]),
     firstSelect() {
-      return this.service1.data.map((item) => Object.values(item).join(" "));
+      return this.firstService.data.map((item) => Object.values(item).join(" "));
     },
     secondSelect() {
-      return this.service2.data.map((item) => Object.values(item).join(" "));
+      return this.secondService.data.map((item) => Object.values(item).join(" "));
     },
     canUserEdit() {
       return !["student", "teacher"].includes(this.getUserInfo.role);
@@ -151,12 +194,14 @@ export default {
       this.isLoading = false;
     },
 
-    showModal() {
+    toggleMenu() {
       this.clearNewItem();
-      this.isModalShow = true;
+      this.isMenuShow = !this.isMenuShow;
     },
 
     async add() {
+      this.isMenuShow = false;
+
       if (Object.values(this.newItem).filter((item) => !item).length) {
         return;
       }
@@ -171,7 +216,6 @@ export default {
       this.tableData = await this.activeService.getData();
       this.clearNewItem();
       this.isLoading = false;
-      this.isModalShow = false;
     },
 
     async remove(id) {
@@ -192,7 +236,7 @@ export default {
 
     cancel() {
       this.clearNewItem();
-      this.isModalShow = false;
+      this.isMenuShow = false;
     },
 
     async initActiveTable() {
@@ -200,8 +244,8 @@ export default {
       this.tableColumns = this.activeService.getColumns();
       this.tableData = await this.activeService.getData();
 
-      await this.service1.getData();
-      await this.service2.getData();
+      await this.firstService.getData();
+      await this.secondService.getData();
 
       this.clearNewItem();
       this.isLoading = false;
@@ -210,20 +254,33 @@ export default {
     async setService(value) {
       if (value === "#subjects_plans") {
         this.activeService = SPService;
-        this.service1 = SubjectsService;
-        this.service2 = PlansService;
+        this.firstService = SubjectsService;
+        this.secondService = PlansService;
       }
       if (value === "#students_groups") {
         this.activeService = SGService;
-        this.service1 = StudentsService;
-        this.service2 = GroupsService;
+        this.firstService = StudentsService;
+        this.secondService = GroupsService;
       }
       if (value === "#subjects_teachers") {
         this.activeService = STService;
-        this.service1 = SubjectsService;
-        this.service2 = TeachersService;
+        this.firstService = SubjectsService;
+        this.secondService = TeachersService;
       }
     },
   },
 };
 </script>
+
+<style lang="scss">
+   
+  .slide-fade-enter-active,
+  .slide-fade-leave-active {
+    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter-from, .slide-fade-leave-to {
+    transform: translateY(-10px);
+    opacity: 0;
+    z-index: -2;
+  }
+</style>

@@ -65,26 +65,19 @@ class SubjectTeacherController {
   }
   async updateSubjectTeacher(req, res) {
     try {
-      if (req.body.id) {
-        const { id, id_subject, id_teacher } = req.body;
-        await db.query(
-          `UPDATE subjects_teachers SET
-	  	id_subject = $2, id_teacher = $3
-	   WHERE id=$1`,
-          [id, id_subject, id_teacher]
-        );
-        return;
-      }
-
-      const { id } = req.params;
       const { id_subject, id_teacher } = req.body;
+      let id = req.params ? req.params : req.body;
+      
       const data = await db.query(
         `UPDATE subjects_teachers SET
-	  	id_subject = $2, id_teacher = $3
-	   WHERE id=$1 returning *`,
+    id_subject = $2, id_teacher = $3
+   WHERE id=$1 returnin *`,
         [id, id_subject, id_teacher]
       );
-
+      
+      if (req.body.id) {
+        return;
+      }
       res?.json(data.rows[0]);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -102,8 +95,7 @@ class SubjectTeacherController {
 
       const { id } = req.params;
       await db.query("DELETE FROM subjects_teachers WHERE id=$1", [id]);
-
-      res?.json("ok");
+      res?.sendStatus(200);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

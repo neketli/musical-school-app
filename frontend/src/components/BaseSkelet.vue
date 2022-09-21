@@ -1,5 +1,8 @@
 <template>
-  <div class="skeleton" :style="{ height: `${size}px` }">
+  <div
+    class="skeleton"
+    :style="{ height: `${size}px` }"
+  >
     <div class="skeleton__loader" />
   </div>
 </template>

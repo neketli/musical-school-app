@@ -1,7 +1,10 @@
 <template>
   <div class="w-auto">
     <div class="h-full flex flex-col gap-2 px-2">
-      <template v-for="item in data" :key="item.value">
+      <template
+        v-for="item in data"
+        :key="item.value"
+      >
         <!-- Sidebar btns -->
         <button
           class="py-3 px-5 flex gap-3 items-center rounded-md border border-blue-100 bg-white text-gray-600 hover:bg-sky-600 hover:bg-opacity-10 transition-all cursor-pointer"

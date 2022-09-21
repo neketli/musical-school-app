@@ -9,19 +9,33 @@
         v-if="filter.value === 'restore'"
         class="flex flex-col gap-5"
       >
-        <BaseFileInput @fileUpload="fileUpload" />
+        <BaseFileInput @fileUpload="fileUpload">
+          <template #description>
+            <div class="mb-2 text-sm text-gray-500">
+              Перенесите файл резервной копии в эту область или
+              <span class="font-bold">нажмите</span> чтобы загрузить
+            </div>
+            <div class="mb-2 text-xs text-gray-500">
+              Файл должен быть в формате .tar, без кириллицы и пробелов в
+              названии
+            </div>
+          </template>
+        </BaseFileInput>
         <BaseButton @click="fileSubmit">
           Отправить
         </BaseButton>
-        <span
-          v-if="message"
-          class="text-xl text-clip mt-5"
-          :class="{
-            'text-green-500': code === 200,
-            'text-red-500': code !== 200,
-          }"
-        >
-          {{ message }}</span>
+        <Transition name="fade">
+          <span
+            v-if="message"
+            class="text-xl text-clip mt-5"
+            :class="{
+              'text-green-500': code === 200,
+              'text-orange-500': code === 500,
+              'text-red-500': code === 415,
+            }"
+          >
+            {{ message }}</span>
+        </Transition>
       </div>
       <div
         v-if="filter.value === 'backup'"
@@ -255,13 +269,21 @@ export default {
         );
         this.code = data.status;
       } catch (error) {
-        console.error(error);
         this.code = error.request.status;
       }
-      this.message =
-        this.code === 200
-          ? "База данных успешно восстановлена!"
-          : "Ошибка восстановления!";
+
+      switch (this.code) {
+        case 500:
+          this.message = "Возможна ошибка восстановления...";
+          break;
+        case 415:
+          this.message = "Ошибка восстановления, неверный тип файла!";
+          break;
+
+        default:
+          this.message = "База данных успешно восстановлена!";
+          break;
+      }
 
       setTimeout(() => {
         this.message = "";
@@ -281,7 +303,7 @@ export default {
       await this.$axios.post(
         `${import.meta.env.VITE_API_URL}/${this.selectedTable.value}/undo`,
         {
-          limit: this.historyLimit,
+          limit: this.historyLimit > 1 ? this.historyLimit : 1,
         }
       );
       await this.updateTable();
@@ -298,3 +320,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

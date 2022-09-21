@@ -14,7 +14,7 @@ class dumpController {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res?.status(500).send(error);
+      res?.status(500);
     }
   }
 
@@ -23,6 +23,11 @@ class dumpController {
     try {
       file = req.files.file;
       file.mv(file.name);
+
+      if (!file.name.match("[a-zA-Z0-9-_]*.tar")) {
+        res?.status(415).send("Invalid file type!");
+        return
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -45,7 +50,7 @@ class dumpController {
       execute(`rm -rf ${file.name}`);
       // eslint-disable-next-line no-console
       console.log(`Removed backup succefuly! Path: ./${file.name}`);
-      res?.status(500).send(error);
+      res?.status(500);
       return;
     }
   }

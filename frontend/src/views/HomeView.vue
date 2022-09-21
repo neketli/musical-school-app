@@ -19,10 +19,19 @@
       @onAdd="showModal"
       @onUndo="undo"
     />
-    <BaseSkelet v-else :size="200" />
+    <BaseSkelet
+      v-else
+      :size="200"
+    />
 
-    <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
-      <template #title> Добавить </template>
+    <BaseModal
+      v-model="isModalShow"
+      @confirm="add"
+      @cancel="cancel"
+    >
+      <template #title>
+        Добавить
+      </template>
 
       <div class="flex flex-col gap-4">
         <template v-for="column in tableColumns">
@@ -384,3 +393,4 @@ export default {
   },
 };
 </script>
+

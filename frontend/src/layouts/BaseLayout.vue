@@ -1,6 +1,9 @@
 <template>
   <div class="bg-sky-50 relative min-h-full">
-    <BaseHeader :data="headerData" @onLogOut="logOut" />
+    <BaseHeader
+      :data="headerData"
+      @onLogOut="logOut"
+    />
     <div class="flex container py-10">
       <BaseSidebar
         v-if="sidebarData"
@@ -10,7 +13,9 @@
         @setSubTab="setSubTab"
       />
       <div class="content w-full px-10">
-        <slot />
+        <transition-group name="fade-page">
+          <slot />
+        </transition-group>
       </div>
     </div>
   </div>
@@ -56,3 +61,16 @@ export default {
   },
 };
 </script>
+
+
+<style>
+  .fade-page-enter-active {
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .fade-page-enter-from,
+  .fade-page-leave-to {
+    opacity: 0;
+  }
+
+</style>

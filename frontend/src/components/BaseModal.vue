@@ -14,10 +14,16 @@
     <div
       class="flex-shrink-0 gap-5 border-t-2 flex justify-center items-center pt-4"
     >
-      <BaseButton class="text-green-600" @click="$emit('confirm', close)">
+      <BaseButton
+        class="text-green-600"
+        @click="$emit('confirm', close)"
+      >
         Подтвердить
       </BaseButton>
-      <BaseButton class="text-red-600" @click="$emit('cancel', close)">
+      <BaseButton
+        class="text-red-600"
+        @click="$emit('cancel', close)"
+      >
         Отмена
       </BaseButton>
     </div>

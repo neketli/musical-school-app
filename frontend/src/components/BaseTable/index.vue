@@ -14,7 +14,11 @@
           >
             {{ item.label }}
           </th>
-          <th v-if="isEditable" scope="col" class="py-3 px-6 text-right">
+          <th
+            v-if="isEditable"
+            scope="col"
+            class="py-3 px-6 text-right"
+          >
             Action
           </th>
         </tr>
@@ -36,24 +40,42 @@
     </table>
 
     <div class="flex justify-between px-5 py-3">
-      <div v-if="isEditable" class="flex gap-3">
-        <BaseButton class="text-green-400" @click="add">
+      <div
+        v-if="isEditable"
+        class="flex gap-3"
+      >
+        <BaseButton
+          class="text-green-400"
+          @click="add"
+        >
           <i class="fa fa-plus" />
         </BaseButton>
 
-        <BaseButton class="text-yellow-400" @click="undo">
+        <BaseButton
+          class="text-yellow-400"
+          @click="undo"
+        >
           <i class="fa fa-undo" />
         </BaseButton>
       </div>
 
-      <div v-if="isPagination" class="flex justify-center items-center gap-3">
-        <BaseButton class="text-black" @click="prev">
+      <div
+        v-if="isPagination"
+        class="flex justify-center items-center gap-3"
+      >
+        <BaseButton
+          class="text-black"
+          @click="prev"
+        >
           <i class="fa fa-angle-left" />
         </BaseButton>
         <div class="flex text-gray-500">
           {{ currentPage }} / {{ totalPages }}
         </div>
-        <BaseButton class="text-black" @click="next">
+        <BaseButton
+          class="text-black"
+          @click="next"
+        >
           <i class="fa fa-angle-right" />
         </BaseButton>
       </div>

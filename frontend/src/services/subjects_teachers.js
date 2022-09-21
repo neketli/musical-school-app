@@ -4,7 +4,7 @@ class STService {
   constructor() {
     this.data = [];
     this.columns = [];
-    this.label = "Список преподавателей и предметы которые они ведут.";
+    this.label = "Список преподавателей и предметы которые они ведут";
   }
 
   getColumns() {

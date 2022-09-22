@@ -48,6 +48,24 @@ NodeJs, Express, pg, cors, dotenv, jsonwebtoken.
 
 Есть ещё доп. роут: /uptime - возвращает аптайм работы приложения, отвечает 200 если всё ок, нужен для поддержания проверки работоспособности сервера.
 
+ #### Общее :large_blue_diamond:
+
+Менеджер пакетов: `yarn`
+**Run**
+```bash
+yarn dev
+```
+
+**Build frontend**
+```bash
+yarn build
+```
+
+**Start backend**
+```bash
+yarn build
+```
+
 **Если остались какие либо вопросы или предложения пишите мне**
 
  ### :musical_keyboard: Приятного пользования! :sunrise:

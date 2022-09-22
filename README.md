@@ -51,6 +51,7 @@ NodeJs, Express, pg, cors, dotenv, jsonwebtoken.
  #### Общее :large_blue_diamond:
 
 Менеджер пакетов: `yarn`
+
 **Run**
 ```bash
 yarn dev

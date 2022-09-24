@@ -6,11 +6,11 @@
 
 ## Фишечки :hammer_and_wrench:
 
-Реализовано на стаке PEVN.
+Реализовано на стеке PEVN.
 
 PosgreSQL, ExpressJS, Vue3, NodeJS.
 
-![PosgreSQL, ExpressJS, Vue3, NodeJS.](https://user-images.githubusercontent.com/48692866/191684871-6afcaa6b-90d1-481c-ad55-61962488436d.png)
+![pevn](https://user-images.githubusercontent.com/48692866/192093796-b049dea0-6110-480e-9fcd-023b59ec362a.png)
 
 Полностью самостоятельная и автономная фуллстек релаизация проекта. 
 

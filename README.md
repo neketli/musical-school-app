@@ -1,6 +1,6 @@
 # Musical school app :notes:
 
-[![Render](https://img.shields.io/badge/Render_deploy-success-lightgreen.svg)](render.com)
+[![Render](https://img.shields.io/badge/Render_deploy-success-lightgreen.svg)](https://www.render.com)
 ![license](https://img.shields.io/github/license/neketli/musical-school-app-vue3.svg)
 [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
 

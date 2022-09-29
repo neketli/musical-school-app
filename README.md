@@ -1,5 +1,9 @@
 # Musical school app :notes:
 
+[![Render](https://img.shields.io/badge/Render_deploy-success-lightgreen.svg)](render.com)
+![license](https://img.shields.io/github/license/neketli/musical-school-app-vue3.svg)
+[![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
+
 Приложение для учеников и сотрудников музыкальной школы. Реализовано в виде web-приложения.
 
 ![musicalSchool](https://user-images.githubusercontent.com/48692866/191684382-1ee908b1-c6cb-47ba-947f-d9e820cb347b.gif)
@@ -52,19 +56,19 @@ NodeJs, Express, pg, cors, dotenv, jsonwebtoken.
 
 Менеджер пакетов: `yarn`
 
-**Run**
+**Если вы хотите запустить проект у себя в режиме разработки: **
 ```bash
+// Установите зависимости в проекте на клиенте и на сервере
+yarn 
+
+// Для дальнейшего запуска не забудьте сконфигурировать .env файл в соотвествии с примерами в папках. 
+// Запускаем проекты в режиме разработки на портах - 5173 для фронта и 3000 для бэкенда. 
 yarn dev
-```
 
-**Build frontend**
-```bash
+// Для билда клиентской части
 yarn build
-```
-
-**Start backend**
-```bash
-yarn build
+// Запуск серверной части
+yarn start
 ```
 
 **Если остались какие либо вопросы или предложения пишите мне**

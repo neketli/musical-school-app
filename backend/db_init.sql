@@ -281,10 +281,10 @@ CREATE OR REPLACE FUNCTION departaments_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE TRIGGER departaments_audit AFTER INSERT OR UPDATE OR DELETE 
 ON departaments for EACH ROW EXECUTE 
 PROCEDURE departaments_audit_function();
+
 
 CREATE OR REPLACE FUNCTION plans_audit_function() RETURNS TRIGGER AS $$
 	BEGIN
@@ -536,4 +536,23 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER users_audit AFTER INSERT OR UPDATE OR DELETE 
 ON users for EACH ROW EXECUTE 
 PROCEDURE users_audit_function();
+
+
+-- CREATE OR REPLACE FUNCTION revert_departaments() RETURNS TRIGGER AS $$
+-- 	DECLARE
+-- 	curr_id integer;
+-- 	BEGIN
+-- 		curr_id = (SELECT id from old_table ot where op_id = (SELECT ot.op_id frm old_table ot));
+-- 		IF (SELECT operation from old_table ot where op_id = (SELECT ot.op_id frm old_table ot)) = 'INSERT' THEN
+-- 			DELETE FROM departaments where id = curr_id;
+-- 		ELSIF (SELECT operation from old_table ot where op_id = (SELECT ot.op_id frm old_table ot)) = 'UPDATE' THEN
+-- 			UPDATE departaments SET title = (SELECT title from temp_departaments where stamp = (SELECT MAX(stamp) from temp_departaments where id = curr_id));
+-- 		ELSIF TG_OP = 'DELETE' THEN
+-- 			INSERT INTO departaments values (curr_id, 
+-- 			(SELECT title from temp_departaments where stamp = (SELECT MAX(stamp) from temp_departaments where id = curr_id));
+-- 		END IF;
+-- 		RETURN NULL;
+-- 	END;
+-- $$ LANGUAGE plpgsql;
+
 

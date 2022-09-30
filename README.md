@@ -2,10 +2,9 @@
 
 [![Render](https://img.shields.io/badge/Render_deploy-success-success.svg)](https://www.render.com)
 [![frontend](https://img.shields.io/website?down_message=offline&label=client&up_message=online&url=https%3A%2F%2Fimg.shields.io%2Fwebsite%3Fstyle%3Dfor-the-badge%26url%3Dhttps%3A%2F%2Fmusical-school-app.onrender.com)](https://musical-school-app.onrender.com)
-![backend](https://img.shields.io/website?down_color=critical&label=server&up_color=success&url=https%3A%2F%2Fmusical-school.onrender.com%2Fuptime)
+![backend](https://img.shields.io/website?down_color=critical&label=server&up_color=success&url=https://musical-school.onrender.com/uptime)
 [![license](https://img.shields.io/github/license/neketli/musical-school-app-vue3.svg)](https://github.com/neketli/musical-school-app-vue3/blob/main/LICENSE)
 [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
-
 
 Приложение для учеников и сотрудников музыкальной школы. Реализовано в виде web-приложения.
 

@@ -38,7 +38,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/404",
+      path: "/:pathMatch(.*)*",
       name: "error",
       component: ErrorView,
     },

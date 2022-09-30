@@ -281,10 +281,10 @@ CREATE OR REPLACE FUNCTION departaments_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE TRIGGER departaments_audit AFTER INSERT OR UPDATE OR DELETE 
 ON departaments for EACH ROW EXECUTE 
 PROCEDURE departaments_audit_function();
+
 
 CREATE OR REPLACE FUNCTION plans_audit_function() RETURNS TRIGGER AS $$
 	BEGIN

@@ -145,13 +145,13 @@ class JournalsController {
     try {
       const { op_id, limit = 1 } = req.body;
       if (op_id) {
-        const queryString = `select * from temp_journal where op_id = ${op_id}`;
+        const queryString = `select * from temp_journals where op_id = ${op_id}`;
         const data = await db.query(queryString);
         await this.revertChanges(data.rows[0], res);
         res?.json("reverted");
         return;
       }
-      const queryString = `select * from temp_journal order by op_id desc limit ${limit};`;
+      const queryString = `select * from temp_journals order by op_id desc limit ${limit};`;
       const data = await db.query(queryString);
       data.rows.forEach(async (item) => {
         await this.revertChanges(item);

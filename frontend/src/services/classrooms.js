@@ -17,7 +17,7 @@ class ClassroomsService {
         value: "type",
       },
       {
-        label: "id отдела",
+        label: "id отделения",
         value: "id_departament",
       },
     ];

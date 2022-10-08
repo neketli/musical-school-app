@@ -22,7 +22,7 @@ class SpecialitysService {
         value: "instrument",
       },
       {
-        label: "id отдела",
+        label: "id отделения",
         value: "id_departament",
       },
     ];

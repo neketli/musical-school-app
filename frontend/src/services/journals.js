@@ -10,10 +10,6 @@ class JournalsService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Тип оценки",
         value: "type",
       },

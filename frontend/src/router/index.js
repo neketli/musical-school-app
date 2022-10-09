@@ -1,5 +1,12 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import { AuthView, HomeView, SetupView, BackupView, ErrorView } from "@/views";
+import {
+  AuthView,
+  HomeView,
+  SetupView,
+  BackupView,
+  ErrorView,
+  ProfileView,
+} from "@/views";
 import store from "@/store";
 
 const router = createRouter({
@@ -17,6 +24,14 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: ProfileView,
       meta: {
         requiresAuth: true,
       },

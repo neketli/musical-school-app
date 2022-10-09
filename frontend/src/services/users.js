@@ -11,10 +11,6 @@ class UsersService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Пользователь",
         value: "login",
       },

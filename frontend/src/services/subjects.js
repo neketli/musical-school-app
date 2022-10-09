@@ -10,10 +10,6 @@ class SubjectsService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Название",
         value: "title",
       },

@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-x-auto relative bg-white shadow-md sm:rounded-lg">
-    <div class="text-xl font-bold my-5 mx-3">
+    <div v-if="title" class="text-xl font-bold my-5 mx-3">
       {{ title }}
     </div>
     <table class="overflow-x-auto w-full text-sm text-left text-gray-500">
@@ -33,7 +33,7 @@
       </tbody>
     </table>
 
-    <div class="flex justify-between px-5 py-3">
+    <div v-if="isEditable || isPagination" class="flex justify-between px-5 py-3">
       <div v-if="isEditable" class="flex gap-3">
         <BaseButton class="text-green-400" @click="add">
           <i class="fa fa-plus" />

@@ -10,10 +10,6 @@ class STService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Преподаватель",
         value: "id_teacher",
       },
@@ -72,7 +68,10 @@ class STService {
   }
 
   async revertData(value = {}) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/subjects_teachers/undo`, value);
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/subjects_teachers/undo`,
+      value
+    );
     await this.updateData();
     return this.data;
   }

@@ -5,10 +5,6 @@ class ClassroomsService {
     this.data = [];
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Номер",
         value: "number",
       },

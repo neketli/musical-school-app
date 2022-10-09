@@ -7,3 +7,5 @@ export { default as BaseModal } from "./BaseModal.vue";
 export { default as BaseSkelet } from "./BaseSkelet.vue";
 export { default as BaseSpinner } from "./BaseSpinner.vue";
 export { default as BaseFileInput } from "./BaseFileInput.vue";
+
+export { default as StudentsGroup } from "./StudentsGroup.vue";

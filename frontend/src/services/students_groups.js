@@ -10,10 +10,6 @@ class SGService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Ученик",
         value: "id_student",
       },
@@ -67,7 +63,10 @@ class SGService {
   }
 
   async revertData(value = {}) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/students_groups/undo`, value);
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/students_groups/undo`,
+      value
+    );
     await this.updateData();
     return this.data;
   }

@@ -4,34 +4,26 @@ class GroupStudentService {
   constructor() {
     this.data = [];
     this.columns = [];
-    this.label = "Группы в которых я учусь";
+    this.label = "Мои группы";
   }
 
   getColumns() {
     this.columns = [
       {
-        label: "id Группы",
+        label: "Номер группы",
         value: "id_group",
       },
       {
-        label: "Фамилия",
-        value: "last_name",
+        label: "Форма обучения",
+        value: "form",
       },
       {
-        label: "Имя",
-        value: "first_name",
+        label: "Специальность",
+        value: "speciality",
       },
       {
-        label: "Отчество",
-        value: "patronymic",
-      },
-      {
-        label: "Дата рождения",
-        value: "birthdate",
-      },
-      {
-        label: "Телефон",
-        value: "phone",
+        label: "Инструмент",
+        value: "instrument",
       },
     ];
     return this.columns;
@@ -52,7 +44,10 @@ class GroupStudentService {
   }
 
   async revertData(value = {}) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/students_groups/undo`, value);
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/students_groups/undo`,
+      value
+    );
     await this.updateData();
     return this.data;
   }

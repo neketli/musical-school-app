@@ -62,7 +62,7 @@ class TeachersController {
 
       res?.json({
         ...teachers.rows[0],
-        birthdate: new Date(teachers[0].birthdate).toLocaleDateString(),
+        birthdate: new Date(teachers[0].birthdate).toLocaleDateString("ru-RU"),
       });
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -78,7 +78,7 @@ class TeachersController {
         teachers.rows.map((item) => {
           return {
             ...item,
-            birthdate: new Date(item.birthdate).toLocaleDateString(),
+            birthdate: new Date(item.birthdate).toLocaleDateString("ru-RU"),
           };
         })
       );

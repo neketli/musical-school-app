@@ -10,10 +10,6 @@ class PlansService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Номер плана",
         value: "number",
       },

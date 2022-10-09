@@ -19,19 +19,10 @@
       @onAdd="showModal"
       @onUndo="undo"
     />
-    <BaseSkelet
-      v-else
-      :size="200"
-    />
+    <BaseSkelet v-else :size="200" />
 
-    <BaseModal
-      v-model="isModalShow"
-      @confirm="add"
-      @cancel="cancel"
-    >
-      <template #title>
-        Добавить
-      </template>
+    <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
+      <template #title> Добавить </template>
 
       <div class="flex flex-col gap-4">
         <template v-for="column in tableColumns">
@@ -68,6 +59,20 @@ import {
 } from "@/services";
 
 const TABLES = [
+  // Students
+  {
+    value: "student_journal",
+    label: "Мои оценки",
+    icon: "fa-book",
+    readAccess: ["student"],
+  },
+  {
+    value: "teachers",
+    label: "Преподаватели",
+    icon: "fa-user-o",
+    editAccess: [],
+    readAccess: ["teacher", "student"],
+  },
   {
     value: "users",
     label: "Пользователи",
@@ -79,7 +84,7 @@ const TABLES = [
     label: "Отделения",
     icon: "fa-archive",
     editAccess: ["admin", "director"],
-    readAccess: ["teacher", "student", "head_teacher"],
+    readAccess: ["teacher", "head_teacher"],
   },
   {
     value: "speciality",
@@ -94,23 +99,13 @@ const TABLES = [
     icon: "fa-bookmark-o",
     editAccess: ["admin", "director", "head_teacher"],
     readAccess: ["teacher"],
-
-    supLabel: "Учебная часть",
-    subValue: "subjects_plans",
-  },
-  {
-    value: "subjects",
-    label: "Предметы",
-    icon: "fa-bookmark-o",
-    editAccess: [],
-    readAccess: ["student"],
   },
   {
     value: "classrooms",
     label: "Кабинеты",
     icon: "fa-key",
     editAccess: ["admin", "director", "head_teacher"],
-    readAccess: ["teacher", "student"],
+    readAccess: ["teacher"],
   },
   {
     value: "groups",
@@ -123,24 +118,12 @@ const TABLES = [
     subValue: "students_groups",
   },
   {
-    value: "student_group",
-    label: "Мои группы",
-    icon: "fa-users",
-    editAccess: [],
-    readAccess: ["student"],
-  },
-  {
     value: "journals",
     label: "Журналы",
     icon: "fa-book",
     editAccess: ["admin", "director", "head_teacher", "teacher"],
   },
-  {
-    value: "student_journal",
-    label: "Мои оценки",
-    icon: "fa-book",
-    readAccess: ["student"],
-  },
+
   {
     value: "plans",
     label: "Планы",
@@ -164,13 +147,6 @@ const TABLES = [
 
     supLabel: "Ответсвенные",
     subValue: "subjects_teachers",
-  },
-  {
-    value: "teachers",
-    label: "Преподаватели",
-    icon: "fa-user-o",
-    editAccess: [],
-    readAccess: ["teacher", "student"],
   },
 ];
 
@@ -393,4 +369,3 @@ export default {
   },
 };
 </script>
-

@@ -57,7 +57,7 @@ class JournalsController {
           journals.rows.map((item) => {
             return {
               ...item,
-              date: new Date(item.date).toLocaleDateString(),
+              date: new Date(item.date).toLocaleDateString('ru-RU'),
             };
           })
         );
@@ -76,7 +76,7 @@ class JournalsController {
             delete item.id_subject;
             return {
               ...item,
-              date: new Date(item.date).toLocaleDateString(),
+              date: new Date(item.date).toLocaleDateString('ru-RU'),
             };
           })
         );

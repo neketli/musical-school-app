@@ -35,27 +35,18 @@ class StudentsGroupsController {
       }
       const { id_student, id_group } = req.query;
       if (id_student) {
-        const response = await db.query(
-          queryString + " WHERE id_student = $1",
-          [id_student]
-        );
-        let condition = response.rows
-          .map((item) => `id_group = ${item?.id_group}`)
-          .join(" OR ");
-        queryString = `SELECT * 
-        FROM students_groups 
-        JOIN students ON students_groups.id=students.id 
-        WHERE `;
-        const groups = await db.query(queryString + condition);
+        queryString += ` JOIN groups ON students_groups.id_group=groups.id 
+    		JOIN speciality ON groups.id_speciality=speciality.id
+	 		WHERE id_student = $1`;
+
+        const groups = await db.query(queryString, [id_student]);
         res?.json(
           groups.rows.map((item) => {
             return {
               id_group: item.id_group,
-              last_name: item.last_name,
-              first_name: item.first_name,
-              patronymic: item.patronymic,
-              birthdate: new Date(item.birthdate).toLocaleDateString(),
-              phone: item.phone,
+              form: item.form,
+              speciality: item.title,
+              instrument: item.instrument,
             };
           })
         );
@@ -79,14 +70,14 @@ class StudentsGroupsController {
     try {
       const { id_student, id_group } = req.body;
       let id = req.params ? req.params : req.body;
-      
+
       const data = await db.query(
         `UPDATE students_groups SET
         id_student = $2, id_group = $3
    WHERE id=$1 returnin *`,
         [id, id_student, id_group]
       );
-      
+
       if (req.body.id) {
         return;
       }
@@ -106,10 +97,7 @@ class StudentsGroupsController {
       }
       const { id } = req.params;
 
-      await db.query(
-        "DELETE FROM students_groups WHERE id = $1",
-        [id]
-      );
+      await db.query("DELETE FROM students_groups WHERE id = $1", [id]);
       res?.sendStatus("200");
     } catch (error) {
       // eslint-disable-next-line no-console

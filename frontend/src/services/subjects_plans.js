@@ -10,10 +10,6 @@ class SPService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Предмет",
         value: "id_subject",
       },
@@ -65,7 +61,10 @@ class SPService {
   }
 
   async revertData(value = {}) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/subjects_plans/undo`, value);
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/subjects_plans/undo`,
+      value
+    );
     await this.updateData();
     return this.data;
   }

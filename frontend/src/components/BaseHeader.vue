@@ -3,10 +3,7 @@
     <div class="h-full flex justify-between items-center px-4">
       <!-- Nav links -->
       <div class="flex gap-5 items-center">
-        <router-link
-          to="/"
-          class="text-white text-2xl flex gap-2 items-center"
-        >
+        <router-link to="/" class="text-white text-2xl flex gap-2 items-center">
           <img
             src="@/assets/img/logo.png"
             class="w-12 h-12"
@@ -31,7 +28,11 @@
       </div>
       <div class="flex gap-5 items-center">
         <div class="user-data">
-          <span class="text-gray-300">{{ getUserInfo.login }}</span>
+          <router-link
+            to="/profile"
+            class="text-gray-300 hover:text-white hover:bg-sky-100 p-3 hover:bg-opacity-10 transition-all cursor-pointer rounded-md"
+            >{{ getUserInfo.login }}</router-link
+          >
         </div>
         <button
           class="log-out p-3 rounded-md text-gray-300 hover:text-white hover:bg-sky-100 hover:bg-opacity-10 transition-all cursor-pointer font-normal"

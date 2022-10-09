@@ -10,10 +10,6 @@ class GroupsService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Форма обучения",
         value: "form",
       },

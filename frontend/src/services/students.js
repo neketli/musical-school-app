@@ -10,10 +10,6 @@ class StudentsService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Имя",
         value: "first_name",
       },

@@ -10,10 +10,6 @@ class DepartamentsService {
   getColumns() {
     this.columns = [
       {
-        label: "id",
-        value: "id",
-      },
-      {
         label: "Название",
         value: "title",
       },
@@ -61,7 +57,10 @@ class DepartamentsService {
   }
 
   async revertData(value = {}) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/departaments/undo`, value);
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/departaments/undo`,
+      value
+    );
     await this.updateData();
     return this.data;
   }

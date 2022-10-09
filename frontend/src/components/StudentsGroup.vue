@@ -1,5 +1,10 @@
 <template>
-  <BaseTable v-if="!isLoading" :columns="tableColumns" :data="tableData" />
+  <BaseTable
+    v-if="!isLoading"
+    title="Мои группы"
+    :columns="tableColumns"
+    :data="tableData"
+  />
   <BaseSkelet v-else :size="200" />
 </template>
 

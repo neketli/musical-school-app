@@ -21,7 +21,8 @@
               <span>Заработная плата: {{ userData.salary }}</span>
             </template>
           </div>
-          <StudentsGroup title="Мои группы" v-if="userData.role === 'Ученик'" />
+          <StudentsGroup v-if="userData.role === 'Ученик'" />
+          <TeachersSubjects v-if="userData.role === 'Преподаватель'" />
         </div>
       </div>
     </div>
@@ -31,12 +32,13 @@
 <script>
 import { mapGetters } from "vuex";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { StudentsGroup } from "@/components";
+import { StudentsGroup, TeachersSubjects } from "@/components";
 
 export default {
   components: {
     BaseLayout,
     StudentsGroup,
+    TeachersSubjects,
   },
   data() {
     return {

@@ -45,10 +45,13 @@ class SubjectTeacherController {
       const { id_subject, id_teacher } = req.query;
       if (id_teacher) {
         const data = await db.query(
-          "SELECT * FROM subjects_teachers WHERE id_teacher = $1",
+          `SELECT * FROM subjects_teachers
+join subjects ON subjects_teachers.id_subject=subjects.id 
+WHERE id_teacher = $1;
+		   `,
           [id_teacher]
         );
-        res?.json(data.rows[0]);
+        res?.json(data.rows);
       }
       if (id_subject) {
         const data = await db.query(
@@ -67,14 +70,14 @@ class SubjectTeacherController {
     try {
       const { id_subject, id_teacher } = req.body;
       let id = req.params ? req.params : req.body;
-      
+
       const data = await db.query(
         `UPDATE subjects_teachers SET
     id_subject = $2, id_teacher = $3
    WHERE id=$1 returnin *`,
         [id, id_subject, id_teacher]
       );
-      
+
       if (req.body.id) {
         return;
       }

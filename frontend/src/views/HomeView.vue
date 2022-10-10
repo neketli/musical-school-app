@@ -43,11 +43,10 @@ import { mapGetters } from "vuex";
 import { BaseTable, BaseModal, BaseInput, BaseSkelet } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import {
-  ClassroomsService,
   DepartamentsService,
   GroupsService,
   JournalsService,
-  PlansService,
+  VedomostiService,
   SpecialityService,
   StudentsService,
   SubjectsService,
@@ -66,13 +65,7 @@ const TABLES = [
     icon: "fa-book",
     readAccess: ["student"],
   },
-  {
-    value: "teachers",
-    label: "Преподаватели",
-    icon: "fa-user-o",
-    editAccess: [],
-    readAccess: ["teacher", "student"],
-  },
+
   {
     value: "users",
     label: "Пользователи",
@@ -101,13 +94,6 @@ const TABLES = [
     readAccess: ["teacher"],
   },
   {
-    value: "classrooms",
-    label: "Кабинеты",
-    icon: "fa-key",
-    editAccess: ["admin", "director", "head_teacher"],
-    readAccess: ["teacher"],
-  },
-  {
     value: "groups",
     label: "Группы",
     icon: "fa-users",
@@ -121,15 +107,14 @@ const TABLES = [
     value: "journals",
     label: "Журналы",
     icon: "fa-book",
-    editAccess: ["admin", "director", "head_teacher", "teacher"],
-  },
-
-  {
-    value: "plans",
-    label: "Планы",
-    icon: "fa-columns",
     editAccess: ["admin", "director", "head_teacher"],
-    readAccess: ["teacher"],
+  },
+  {
+    value: "vedomosti",
+    label: "Ведомости",
+    icon: "fa-book",
+    link: "/vedomosti",
+    editAccess: ["teacher"],
   },
   {
     value: "students",
@@ -147,6 +132,13 @@ const TABLES = [
 
     supLabel: "Ответсвенные",
     subValue: "subjects_teachers",
+  },
+  {
+    value: "teachers",
+    label: "Преподаватели",
+    icon: "fa-user-o",
+    editAccess: [],
+    readAccess: ["teacher", "student"],
   },
 ];
 
@@ -313,13 +305,6 @@ export default {
           .filter((item) => item.value === "subjects")[0]
           .editAccess.includes(this.getUserInfo.role);
       }
-      if (value === "classrooms") {
-        this.activeService = ClassroomsService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "classrooms")[0]
-          .editAccess.includes(this.getUserInfo.role);
-      }
       if (value === "groups") {
         this.activeService = GroupsService;
 
@@ -334,12 +319,9 @@ export default {
           .filter((item) => item.value === "journals")[0]
           .editAccess.includes(this.getUserInfo.role);
       }
-      if (value === "plans") {
-        this.activeService = PlansService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "plans")[0]
-          .editAccess.includes(this.getUserInfo.role);
+      if (value === "vedomosti") {
+        this.activeService = VedomostiService;
+        this.canEdit = true;
       }
       if (value === "students") {
         this.activeService = StudentsService;

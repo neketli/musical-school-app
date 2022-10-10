@@ -10,3 +10,4 @@ export { default as BaseFileInput } from "./BaseFileInput.vue";
 
 export { default as StudentsGroup } from "./StudentsGroup.vue";
 export { default as TeachersSubjects } from "./TeachersSubjects.vue";
+export { default as VedomostiTable } from "./VedomostiTable/index.vue";

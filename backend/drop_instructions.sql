@@ -1,15 +1,12 @@
-DROP TABLE classrooms CASCADE;
 DROP TABLE departaments CASCADE;
 DROP TABLE groups CASCADE;
 DROP TABLE journals CASCADE;
-DROP TABLE plans CASCADE;
 DROP TABLE speciality CASCADE;
 DROP TABLE students CASCADE;
 DROP TABLE subjects CASCADE;
 DROP TABLE teachers CASCADE;
 -- n:n
 DROP TABLE students_groups CASCADE;
-DROP TABLE subjects_plans CASCADE;
 DROP TABLE subjects_teachers CASCADE;
 
 DROP TABLE temp_classrooms CASCADE;
@@ -39,3 +36,8 @@ DROP TRIGGER teachers_audit on teachers CASCADE;
 DROP TRIGGER students_groups_audit on students_groups CASCADE;
 DROP TRIGGER subjects_plans_audit on subjects_plans CASCADE;
 DROP TRIGGER subjects_teachers_audit on subjects_teachers CASCADE;
+
+-- Старое
+DROP TABLE plans CASCADE;
+DROP TABLE subjects_plans CASCADE;
+DROP TABLE classrooms CASCADE;

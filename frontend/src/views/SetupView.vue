@@ -18,20 +18,12 @@
       @onRemove="remove"
       @onAdd="toggleMenu"
     />
-    <BaseSkelet
-      v-else
-      :size="200"
-    />
+    <BaseSkelet v-else :size="200" />
 
     <!-- Dropdown Menu -->
     <Transition name="slide-fade">
-      <div
-        v-show="isMenuShow && !isLoading"
-        class="-mt-1 w-full"
-      >
-        <div
-          class="flex flex-col gap-5 rounded-b-xl p-10  bg-white shadow-md"
-        >
+      <div v-show="isMenuShow && !isLoading" class="-mt-1 w-full">
+        <div class="flex flex-col gap-5 rounded-b-xl p-10 bg-white shadow-md">
           <!-- Content -->
           <div class="flex w-full justify-between items-center gap-5">
             <div class="flex flex-col gap-2 w-[50%]">
@@ -55,19 +47,11 @@
             </div>
           </div>
           <!-- Buttons -->
-          <div
-            class="gap-5 flex justify-center items-center"
-          >
-            <BaseButton
-              class="text-green-600 w-[20%]"
-              @click="add"
-            >
+          <div class="gap-5 flex justify-center items-center">
+            <BaseButton class="text-green-600 w-[20%]" @click="add">
               <i class="fa fa-check" />
             </BaseButton>
-            <BaseButton
-              class="text-red-600 w-[20%]"
-              @click="cancel"
-            >
+            <BaseButton class="text-red-600 w-[20%]" @click="cancel">
               <i class="fa fa-times" />
             </BaseButton>
           </div>
@@ -83,10 +67,7 @@
         :data="firstService.data || []"
         :title="firstService.label"
       />
-      <BaseSkelet
-        v-else
-        :size="200"
-      />
+      <BaseSkelet v-else :size="200" />
 
       <BaseTable
         v-if="!isLoading"
@@ -94,10 +75,7 @@
         :data="secondService.data || []"
         :title="secondService.label"
       />
-      <BaseSkelet
-        v-else
-        :size="200"
-      />
+      <BaseSkelet v-else :size="200" />
     </div>
   </BaseLayout>
 </template>
@@ -110,12 +88,9 @@ import "vue-select/dist/vue-select.css";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import {
   GroupsService,
-  PlansService,
-  StudentsService,
   SubjectsService,
   TeachersService,
   SGService,
-  SPService,
   STService,
 } from "@/services";
 
@@ -158,10 +133,14 @@ export default {
   computed: {
     ...mapGetters(["getUserInfo"]),
     firstSelect() {
-      return this.firstService.data.map((item) => Object.values(item).join(" "));
+      return this.firstService.data.map((item) =>
+        Object.values(item).join(" ")
+      );
     },
     secondSelect() {
-      return this.secondService.data.map((item) => Object.values(item).join(" "));
+      return this.secondService.data.map((item) =>
+        Object.values(item).join(" ")
+      );
     },
     canUserEdit() {
       return !["student", "teacher"].includes(this.getUserInfo.role);
@@ -252,11 +231,6 @@ export default {
     },
 
     async setService(value) {
-      if (value === "#subjects_plans") {
-        this.activeService = SPService;
-        this.firstService = SubjectsService;
-        this.secondService = PlansService;
-      }
       if (value === "#students_groups") {
         this.activeService = SGService;
         this.firstService = StudentsService;
@@ -273,14 +247,14 @@ export default {
 </script>
 
 <style lang="scss">
-   
-  .slide-fade-enter-active,
-  .slide-fade-leave-active {
-    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  }
-  .slide-fade-enter-from, .slide-fade-leave-to {
-    transform: translateY(-10px);
-    opacity: 0;
-    z-index: -2;
-  }
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-10px);
+  opacity: 0;
+  z-index: -2;
+}
 </style>

@@ -6,6 +6,7 @@ import {
   BackupView,
   ErrorView,
   ProfileView,
+  VedomostiView,
 } from "@/views";
 import store from "@/store";
 
@@ -32,6 +33,14 @@ const router = createRouter({
       path: "/profile",
       name: "profile",
       component: ProfileView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/vedomosti",
+      name: "vedomosti",
+      component: VedomostiView,
       meta: {
         requiresAuth: true,
       },

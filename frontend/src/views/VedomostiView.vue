@@ -3,19 +3,38 @@
     :sidebarData="sidebarData"
     :headerData="headerData"
     @setFilter="setFilter"
-    @setSubTab="setSubTab"
   >
     <div class="text-xl font-bold my-5 mx-3">
       {{ activeService.label }}
     </div>
 
-    <VedomostiTable
-      v-if="!isLoading"
-      :columns="tableColumns"
-      :rows="tableRows"
-      :data="tableData"
-    />
-    <BaseSkelet v-else :size="200" />
+    <div class="flex">
+      <div class="flex flex-col bg-white">
+        <div
+          class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
+        >
+          Ученик \ Дата занятия
+        </div>
+        <template v-for="item in tableData" :key="item.name">
+          <div
+            class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
+          >
+            {{ item.name }}
+          </div>
+        </template>
+      </div>
+
+      <VedomostiTable
+        v-if="!isLoading"
+        :columns="tableColumns"
+        :data="tableData"
+        isEditable
+        @onRemove="remove"
+        @onAdd="add"
+        @onColumnSave="saveColumn"
+      />
+      <BaseSkelet v-else :size="200" />
+    </div>
   </BaseLayout>
 </template>
 
@@ -95,6 +114,38 @@ export default {
   methods: {
     async setFilter() {
       await this.$router.push(`/`);
+    },
+    remove(label) {
+      this.tableColumns = this.tableColumns.filter(
+        (item) => item.label !== label
+      );
+      this.tableData.forEach((item) => {
+        if (item[label]) {
+          delete item[label];
+        }
+      });
+    },
+    add() {
+      this.tableColumns.push({
+        label: "",
+      });
+      this.tableData.map((item) => (item[""] = ""));
+    },
+    saveColumn({ label, old }) {
+      if (old.label !== label) {
+        this.tableData.forEach((item) => {
+          Object.defineProperty(
+            item,
+            label,
+            Object.getOwnPropertyDescriptor(item, old.label)
+          );
+          delete item[old.label];
+        });
+        this.tableColumns = this.tableColumns.filter(
+          (item) => item.label !== old.label
+        );
+        this.tableColumns.push({ label });
+      }
     },
   },
 };

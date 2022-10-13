@@ -1,57 +1,37 @@
 <template>
   <div class="overflow-x-auto relative bg-white shadow-md sm:rounded-lg">
-    <table class="overflow-x-auto w-full text-sm text-left text-gray-500">
-      <thead class="overflow-x-auto text-xs text-gray-700 uppercase bg-gray-50">
+    <table class="w-full text-sm text-left text-gray-500">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
-          <th class="py-3 px-6 min-w-[100px]">Ученик</th>
           <th
             v-for="item in columns"
-            :key="item"
+            :key="item.label"
             scope="col"
-            class="py-3 px-6 min-w-[100px]"
+            class="py-3 px-6 min-w-[250px]"
           >
-            {{ item.label }}
+            <TableCell :data="item" @onSave="saveColumn" @onRemove="remove" />
+          </th>
+          <th v-if="isEditable" class="py-3 px-6 min-w-[100px]">
+            <BaseButton class="text-green-400" @click="add">
+              <i class="fa fa-plus" />
+            </BaseButton>
           </th>
         </tr>
       </thead>
-      <tbody>
-        <template
-          v-for="row in dataSource"
-          :key="row.stamp ? row.stamp : row.id"
-        >
-          <TableRow
-            :isEditable="isEditable"
-            :rowData="row"
-            @onSave="save"
-            @onCancel="cancel"
-            @onRemove="remove"
-          />
-        </template>
+      <tbody v-for="row in dataSource" :key="row">
+        <TableRow :rowData="row" />
       </tbody>
     </table>
-
-    <div v-if="isPagination" class="flex justify-between px-5 py-3">
-      <div v-if="isPagination" class="flex justify-center items-center gap-3">
-        <BaseButton class="text-black" @click="prev">
-          <i class="fa fa-angle-left" />
-        </BaseButton>
-        <div class="flex text-gray-500">
-          {{ currentPage }} / {{ totalPages }}
-        </div>
-        <BaseButton class="text-black" @click="next">
-          <i class="fa fa-angle-right" />
-        </BaseButton>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import { BaseButton } from "@/components";
 import TableRow from "./TableRow.vue";
+import TableCell from "./TableCell.vue";
 
 export default {
-  components: { BaseButton, TableRow },
+  components: { BaseButton, TableRow, TableCell },
   props: {
     data: {
       type: Array,
@@ -69,12 +49,14 @@ export default {
       type: String,
       default: "",
     },
-    paginationLimit: {
-      type: Number,
-      default: 6,
-    },
   },
-  emits: { onSave: null, onAdd: null, onRemove: null, onUndo: null },
+  emits: {
+    onSave: null,
+    onAdd: null,
+    onRemove: null,
+    onUndo: null,
+    onColumnSave: null,
+  },
   data() {
     return {
       dataSource: [],
@@ -99,16 +81,24 @@ export default {
     save(row) {
       this.$emit("onSave", row);
     },
+    saveColumn({ label, old }) {
+      this.$emit("onColumnSave", { label, old });
+    },
     add() {
       this.$emit("onAdd");
     },
     cancel() {
       this.dataSource.pop();
     },
-    remove(id) {
-      this.$emit("onRemove", id);
-      this.dataSource = this.dataSource.filter((item) => item.id != id);
+    remove({ label }) {
+      this.dataSource.forEach((item) => {
+        if (item[label]) {
+          delete item[label];
+        }
+      });
+      this.$emit("onRemove", label);
     },
+
     undo() {
       this.$emit("onUndo");
     },

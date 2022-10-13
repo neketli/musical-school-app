@@ -18,8 +18,7 @@ class GroupsService {
         value: "year",
       },
       {
-        label: "id специальности",
-        value: "id_speciality",
+        label: "Специальность",
       },
     ];
     return this.columns;

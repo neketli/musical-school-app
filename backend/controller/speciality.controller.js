@@ -41,7 +41,9 @@ class SpecialityController {
   }
   async getAllSpeciality(req, res) {
     try {
-      const speciality = await db.query("SELECT * FROM speciality");
+      const speciality = await db.query(
+        "SELECT speciality.id,speciality.title, speciality.instrument, departaments.title as departament FROM speciality JOIN departaments ON speciality.id_departament=departaments.id"
+      );
 
       res?.json(speciality.rows);
     } catch (error) {

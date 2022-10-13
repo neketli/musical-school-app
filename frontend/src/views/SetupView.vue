@@ -90,6 +90,7 @@ import {
   GroupsService,
   SubjectsService,
   TeachersService,
+  StudentsService,
   SGService,
   STService,
 } from "@/services";

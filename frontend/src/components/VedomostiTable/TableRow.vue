@@ -3,7 +3,7 @@
     <template v-for="key in rowKeys" :key="key">
       <td class="px-6 py-3">
         <!-- eslint-disable-next-line vue/no-mutating-props -->
-        <BaseInput :key="key" v-model="rowData[key]" />
+        <BaseInput v-if="key !== 'id'" :key="key" v-model="rowData[key]" />
       </td>
     </template>
   </tr>

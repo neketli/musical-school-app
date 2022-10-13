@@ -18,7 +18,7 @@ class SpecialitysService {
         value: "instrument",
       },
       {
-        label: "id отделения",
+        label: "отделение",
         value: "id_departament",
       },
     ];

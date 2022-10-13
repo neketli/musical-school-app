@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-x-auto relative bg-white shadow-md sm:rounded-lg">
+  <div class="overflow-x-auto flex-auto relative bg-white shadow-md sm:rounded-lg">
     <div v-if="title" class="text-xl font-bold my-5 mx-3">
       {{ title }}
     </div>
@@ -28,6 +28,7 @@
             @onSave="save"
             @onCancel="cancel"
             @onRemove="remove"
+			@click="rowClicked(row)"
           />
         </template>
       </tbody>
@@ -87,7 +88,7 @@ export default {
       default: 6,
     },
   },
-  emits: { onSave: null, onAdd: null, onRemove: null, onUndo: null },
+  emits: { onSave: null, onRowClicked: null, onAdd: null, onRemove: null, onUndo: null },
   data() {
     return {
       dataSource: [],
@@ -122,6 +123,9 @@ export default {
       this.$emit("onRemove", id);
       this.dataSource = this.dataSource.filter((item) => item.id != id);
     },
+	rowClicked(row) {
+      this.$emit("onRowClicked", row);
+	},
     undo() {
       this.$emit("onUndo");
     },

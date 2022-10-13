@@ -54,11 +54,23 @@ class StudentsGroupsController {
       }
 
       if (id_group) {
-        const data = await db.query(queryString + " WHERE id_group = $1", [
-          id_group,
-        ]);
+        queryString = `
+				SELECT students_groups.id, students.first_name, students.last_name, students.patronymic FROM students_groups
+		JOIN students on students_groups.id_student = students.id 
+		WHERE id_group = $1`;
 
-        res?.json(data.rows);
+        const data = await db.query(queryString, [id_group]);
+
+        const response = data.rows.map((item) => {
+          return {
+            id: item.id,
+            name: `${
+              item.last_name
+            } ${item.first_name[0].toUpperCase()}. ${item.patronymic[0].toUpperCase()}.`,
+          };
+        });
+
+        res?.json(response);
       }
     } catch (error) {
       // eslint-disable-next-line no-console

@@ -56,6 +56,7 @@ class TeachersController {
   async getTeachers(req, res) {
     try {
       const { id } = req.params;
+
       const teachers = await db.query("SELECT * FROM teachers WHERE id = $1", [
         id,
       ]);

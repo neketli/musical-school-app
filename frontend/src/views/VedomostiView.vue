@@ -162,16 +162,22 @@ export default {
       this.tableColumns.push({
         label: "",
       });
-      this.tableData.map((item) => (item[""] = ""));
     },
     saveColumn({ label, old }) {
+      if (!old.label) {
+        this.tableColumns = this.tableColumns.filter(
+          (item) => item.label !== ""
+        );
+        this.tableColumns.push({ label });
+
+        this.tableData.forEach((item) => {
+          item[label] = "";
+        });
+        return;
+      }
       if (old.label !== label) {
         this.tableData.forEach((item) => {
-          Object.defineProperty(
-            item,
-            label,
-            Object.getOwnPropertyDescriptor(item, old.label)
-          );
+          item[label] = item[old.label];
           delete item[old.label];
         });
         this.tableColumns = this.tableColumns.filter(

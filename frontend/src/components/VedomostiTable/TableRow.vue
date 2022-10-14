@@ -1,9 +1,9 @@
 <template>
   <tr class="bg-white border-b hover:bg-gray-50">
     <template v-for="key in rowKeys" :key="key">
-      <td class="px-6 py-3">
+      <td v-if="key !== 'id'" class="px-6 py-3">
         <!-- eslint-disable-next-line vue/no-mutating-props -->
-        <BaseInput v-if="key !== 'id'" :key="key" v-model="rowData[key]" />
+        <BaseInput :key="key" v-model="rowData[key]" />
       </td>
     </template>
   </tr>

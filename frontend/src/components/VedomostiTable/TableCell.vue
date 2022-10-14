@@ -7,6 +7,7 @@
     <BaseInput
       v-else
       v-model="dataSource.label"
+      placeholder="dd.mm.year"
       class="min-w-[150px]"
       @keyup.enter="save"
     />

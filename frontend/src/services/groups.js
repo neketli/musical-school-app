@@ -19,6 +19,7 @@ class GroupsService {
       },
       {
         label: "Специальность",
+        value: "id_speciality",
       },
     ];
     return this.columns;

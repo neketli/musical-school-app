@@ -1,9 +1,11 @@
 <template>
   <tr class="overflow-x-auto bg-white border-b hover:bg-gray-50">
     <template v-if="editMode">
-      <td v-for="key in rowKeys" :key="key" class="px-5 py-3 min-w-[100px]">
-        <BaseInput v-if="key !== 'id'" :key="key" v-model="row[key]" />
-      </td>
+      <template v-for="key in rowKeys">
+        <td v-if="key !== 'id'" :key="key" class="px-5 py-3 min-w-[100px]">
+          <BaseInput v-model="row[key]" />
+        </td>
+      </template>
     </template>
 
     <template v-else>

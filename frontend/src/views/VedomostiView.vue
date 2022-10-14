@@ -8,32 +8,45 @@
       {{ activeService.label }}
     </div>
 
-    <div v-if="activeGroup" class="flex">
-      <div class="flex flex-col bg-white">
-        <div
-          class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
-        >
-          Ученик \ Дата занятия
-        </div>
-        <template v-for="item in tableData" :key="item.name">
+    <div v-if="activeGroup" class="flex flex-col gap-8 justify-center">
+      <div class="flex flex-col gap-4">
+        <h3 class="text-lg">Выбор предмета</h3>
+        <vSelect
+          v-model="activeSubject"
+          class="min-w-[25%] bg-white"
+          :options="subjects"
+          placeholder="Предмет"
+          @option:selected="getData"
+        />
+      </div>
+
+      <div v-if="activeSubject" class="flex">
+        <div class="flex flex-col bg-white">
           <div
             class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
           >
-            {{ item.name }}
+            Ученик \ Дата занятия
           </div>
-        </template>
-      </div>
+          <template v-for="item in tableData" :key="item.name">
+            <div
+              class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
+            >
+              {{ item.name }}
+            </div>
+          </template>
+        </div>
 
-      <VedomostiTable
-        v-if="!isLoading"
-        :columns="tableColumns"
-        :data="tableData"
-        isEditable
-        @onRemove="remove"
-        @onAdd="add"
-        @onColumnSave="saveColumn"
-      />
-      <BaseSkelet v-else :size="200" />
+        <VedomostiTable
+          v-if="!isLoading"
+          :columns="tableColumns"
+          :data="tableData"
+          isEditable
+          @onRemove="remove"
+          @onAdd="add"
+          @onColumnSave="saveColumn"
+        />
+        <BaseSkelet v-else :size="200" />
+      </div>
     </div>
     <div v-else class="flex flex-auto">
       <BaseTable
@@ -53,6 +66,7 @@ import { mapGetters } from "vuex";
 import { BaseTable, BaseSkelet, VedomostiTable } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import { GroupsService } from "@/services";
+import vSelect from "vue-select";
 
 export default {
   components: {
@@ -60,6 +74,7 @@ export default {
     VedomostiTable,
     BaseSkelet,
     BaseTable,
+    vSelect,
   },
   data() {
     return {
@@ -69,31 +84,15 @@ export default {
 
       activeService: {},
 
-      tableColumns: [
-        {
-          label: "17.02",
-        },
-        {
-          label: "15.03",
-        },
-        {
-          label: "16.03",
-        },
-      ],
-      tableData: [
-        {
-          17.02: 3,
-          15.03: 5,
-          16.03: 4,
-
-          name: "Васюткин И.А.",
-        },
-      ],
+      tableColumns: [],
+      tableData: [],
       newItem: {},
 
       groupsData: {},
       groupsColumns: {},
       activeGroup: null,
+      subjects: [],
+      activeSubject: null,
 
       isLoading: true,
       isModalShow: false,
@@ -127,9 +126,25 @@ export default {
 
     this.groupsData = await GroupsService.getData();
     this.groupColumns = GroupsService.getColumns();
+
+    if (this.getUserInfo.role === "teacher") {
+      const { data } = await this.$axios.get(
+        `${import.meta.env.VITE_API_URL}/subjects_teachers?id_teacher=${
+          this.getUserInfo.rid
+        }`
+      );
+      this.subjects = data.map((item) => {
+        return {
+          id: item.id,
+          label: item.title,
+        };
+      });
+    }
+
     this.isLoading = false;
   },
   methods: {
+    async getData() {},
     async setFilter() {
       await this.$router.push(`/`);
     },
@@ -140,10 +155,6 @@ export default {
       this.activeGroup = true;
       this.tableData = data.map((item) => {
         return {
-          17.02: 3,
-          15.03: 5,
-          16.03: 4,
-
           ...item,
         };
       });

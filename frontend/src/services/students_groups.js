@@ -44,14 +44,12 @@ class SGService {
     return newData.data;
   }
 
-  async editData(students_groups) {
+  async editData(id, students_groups) {
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/students_groups/${students_groups.id}`,
+      `${import.meta.env.VITE_API_URL}/students_groups/${id}`,
       students_groups
     );
-    this.data = this.data.map(
-      (item) => (item = item.id === students_groups.id ? students_groups : item)
-    );
+
     return students_groups;
   }
 

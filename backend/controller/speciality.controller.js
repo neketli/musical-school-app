@@ -42,10 +42,19 @@ class SpecialityController {
   async getAllSpeciality(req, res) {
     try {
       const speciality = await db.query(
-        "SELECT speciality.id,speciality.title, speciality.instrument, departaments.title as departament FROM speciality JOIN departaments ON speciality.id_departament=departaments.id"
+        "SELECT speciality.id,speciality.title, speciality.instrument, departaments.id as id_departament, departaments.title as departament FROM speciality JOIN departaments ON speciality.id_departament=departaments.id"
       );
 
-      res?.json(speciality.rows);
+      const data = speciality.rows.map((item) => {
+        return {
+          id: item.id,
+          title: item.title,
+          instrument: item.instrument,
+          id_departament_select: `${item.id_departament} ${item.departament}`,
+        };
+      });
+
+      res?.json(data);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

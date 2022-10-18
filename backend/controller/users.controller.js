@@ -41,7 +41,28 @@ class UsersController {
     try {
       const users = await db.query("SELECT * FROM users");
 
-      res?.json(users.rows);
+      const response = [];
+      for (const item of users.rows) {
+        const role_select = item.role;
+        const rid = item.rid;
+        const table = role_select === "student" ? "students" : "teachers";
+
+        const peoples = await db.query(
+          `SELECT (first_name, last_name, patronymic, birthdate) FROM ${table} WHERE id = $1`,
+          [rid]
+        );
+        const rid_select = `${rid} ${peoples.rows[0].row.replaceAll(",", " ")}`;
+
+        delete item["role"];
+        delete item["rid"];
+        response.push({
+          ...item,
+          rid_select,
+          role_select,
+        });
+      }
+
+      res?.json(response);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

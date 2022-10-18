@@ -5,3 +5,4 @@ export { default as SetupView } from "./SetupView.vue";
 export { default as BackupView } from "./BackupView.vue";
 export { default as ProfileView } from "./ProfileView.vue";
 export { default as VedomostiView } from "./VedomostiView.vue";
+export { default as DiaryView } from "./DiaryView.vue";

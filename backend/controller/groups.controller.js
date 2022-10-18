@@ -40,14 +40,8 @@ class GroupsController {
   async getAllGroups(req, res) {
     try {
       const groups = await db.query(
-        "SELECT * FROM groups JOIN speciality ON groups.id_speciality=speciality.id "
+        "SELECT groups.id, groups.form, groups.year, speciality.title  FROM groups JOIN speciality ON groups.id_speciality=speciality.id "
       );
-
-      groups.rows.map((item) => {
-        delete item.id_speciality;
-        delete item.id_departament;
-        delete item.instrument;
-      });
 
       res?.json(groups.rows);
     } catch (error) {

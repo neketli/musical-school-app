@@ -11,20 +11,21 @@ class UsersService {
   getColumns() {
     this.columns = [
       {
-        label: "Пользователь",
+        label: "Логин",
         value: "login",
       },
       {
         label: "Пароль",
         value: "password",
       },
+
       {
-        label: "Группа",
-        value: "role",
+        label: "Пользователь",
+        value: "rid",
       },
       {
-        label: "r_id",
-        value: "rid",
+        label: "Группа",
+        value: "role_select",
       },
     ];
     return this.columns;

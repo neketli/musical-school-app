@@ -44,6 +44,10 @@ export default {
       type: Object,
       required: true,
     },
+    isEditable: {
+      type: Boolean,
+      required: true,
+    },
   },
   emits: { onSave: null, onRemove: null, onCancel: null },
   data() {
@@ -61,7 +65,7 @@ export default {
   },
   methods: {
     enterEditMode() {
-      if (this.editMode) return;
+      if (this.editMode || !this.isEditable) return;
       this.editMode = true;
       this.oldData = { ...this.data };
     },

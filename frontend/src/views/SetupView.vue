@@ -8,12 +8,14 @@
       {{ activeService.label }}
     </h2>
     <!-- Main table -->
-    <BaseTable
+    <SetupTable
       v-if="!isLoading"
       class="z-10"
       :columns="tableColumns"
       :data="tableData"
       :isEditable="canUserEdit"
+      :firstField="firstField"
+      :secondField="secondField"
       @onSave="save"
       @onRemove="remove"
       @onAdd="toggleMenu"
@@ -82,7 +84,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { BaseTable, BaseButton, BaseSkelet } from "@/components";
+import { SetupTable, BaseTable, BaseButton, BaseSkelet } from "@/components";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import BaseLayout from "@/layouts/BaseLayout.vue";
@@ -98,10 +100,11 @@ import {
 export default {
   components: {
     BaseLayout,
-    BaseTable,
     BaseButton,
     BaseSkelet,
+    BaseTable,
     vSelect,
+    SetupTable,
   },
   data() {
     return {
@@ -126,6 +129,9 @@ export default {
       tableColumns: [],
       tableData: [],
       newItem: {},
+
+      firstField: "",
+      secondField: "",
 
       isLoading: true,
       isMenuShow: false,
@@ -169,8 +175,20 @@ export default {
 
     async save(row) {
       this.isLoading = true;
-      await this.activeService.editData(row);
-      this.tableData = await this.activeService.getData();
+      if (row["id_student"]) {
+        await this.activeService.editData(row.id, {
+          id_student: +row.id_student.split(" ")[0],
+          id_group: +row.id_group.split(" ")[0],
+        });
+      } else if (row["id_teacher"]) {
+        await this.activeService.editData(row.id, {
+          id_teacher: +row.id_teacher.split(" ")[0],
+          id_subject: +row.id_subject.split(" ")[0],
+        });
+      } else {
+        await this.activeService.editData(row);
+      }
+      await this.updateTableData();
       this.isLoading = false;
     },
 
@@ -193,7 +211,8 @@ export default {
         ])
       );
       await this.activeService.addData(item);
-      this.tableData = await this.activeService.getData();
+      await this.updateTableData();
+
       this.clearNewItem();
       this.isLoading = false;
     },
@@ -201,7 +220,8 @@ export default {
     async remove(id) {
       this.isLoading = true;
       await this.activeService.removeData(id);
-      this.tableData = await this.activeService.getData();
+      await this.updateTableData();
+
       this.isLoading = false;
     },
 
@@ -227,6 +247,31 @@ export default {
       await this.firstService.getData();
       await this.secondService.getData();
 
+      this.tableData = this.tableData.map((item) => {
+        return {
+          ...item,
+          firstSelect: this.firstSelect,
+          secondSelect: this.secondSelect,
+        };
+      });
+
+      this.clearNewItem();
+      this.isLoading = false;
+    },
+
+    async updateTableData() {
+      this.isLoading = true;
+      await this.activeService.updateData();
+      this.tableData = await this.activeService.getData();
+
+      this.tableData = this.tableData.map((item) => {
+        return {
+          ...item,
+          firstSelect: this.firstSelect,
+          secondSelect: this.secondSelect,
+        };
+      });
+
       this.clearNewItem();
       this.isLoading = false;
     },
@@ -236,11 +281,17 @@ export default {
         this.activeService = SGService;
         this.firstService = StudentsService;
         this.secondService = GroupsService;
+
+        this.firstField = "id_student";
+        this.secondField = "id_group";
       }
       if (value === "#subjects_teachers") {
         this.activeService = STService;
-        this.firstService = TeachersService;
-        this.secondService = SubjectsService;
+        this.firstService = SubjectsService;
+        this.secondService = TeachersService;
+
+        this.firstField = "id_subject";
+        this.secondField = "id_teacher";
       }
     },
   },

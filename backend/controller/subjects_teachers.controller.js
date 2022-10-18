@@ -28,8 +28,23 @@ class SubjectTeacherController {
   async getAllSubjectTeacher(req, res) {
     try {
       if (!Object.values(req.query).length) {
-        const data = await db.query(`SELECT * FROM subjects_teachers`);
-        res?.json(data.rows);
+        const data =
+          await db.query(`SELECT subjects_teachers.id, teachers.id as id_teacher, teachers.last_name,teachers.first_name,teachers.patronymic,
+			subjects.id as id_subject, subjects.title
+          FROM subjects_teachers
+          join subjects on subjects_teachers.id_subject = subjects.id
+          JOIN teachers on subjects_teachers.id_teacher = teachers.id;`);
+
+        const result = data.rows.map((item) => {
+          return {
+            id: item.id,
+            id_subject: `${item.id_subject} ${item.title}`,
+            id_teacher: `${item.id_teacher} ${
+              item.last_name
+            } ${item.first_name[0].toUpperCase()}. ${item.patronymic[0].toUpperCase()}.`,
+          };
+        });
+        res?.json(result);
         return;
       }
       if (req.query.teachers) {
@@ -69,12 +84,12 @@ WHERE id_teacher = $1;
   async updateSubjectTeacher(req, res) {
     try {
       const { id_subject, id_teacher } = req.body;
-      let id = req.params ? req.params : req.body;
+      let { id } = req.params ? req.params : req.body;
 
       const data = await db.query(
         `UPDATE subjects_teachers SET
     id_subject = $2, id_teacher = $3
-   WHERE id=$1 returnin *`,
+   WHERE id = $1 RETURNING *`,
         [id, id_subject, id_teacher]
       );
 

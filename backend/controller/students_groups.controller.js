@@ -27,15 +27,30 @@ class StudentsGroupsController {
   }
   async getAllStudentsGroups(req, res) {
     try {
-      let queryString = "SELECT * FROM students_groups";
+      let queryString = `SELECT students_groups.id, students_groups.id_student, students_groups.id_group,
+        students.first_name,students.last_name, students.patronymic, groups.year,groups.form, speciality.title FROM students_groups 
+		JOIN students on students_groups.id_student = students.id
+		JOIN groups on students_groups.id_group = groups.id
+		JOIN speciality ON groups.id_speciality=speciality.id 
+    ORDER by students_groups.id
+		`;
       if (!Object.values(req.query).length) {
         const data = await db.query(queryString);
-        res?.json(data.rows);
+        const result = data.rows.map((item) => {
+          return {
+            id: item.id,
+            id_student: `${item.id_student} | ${
+              item.last_name
+            } ${item.first_name[0].toUpperCase()}. ${item.patronymic[0].toUpperCase()}.`,
+            id_group: `${item.id_group} | Год: ${item.year} Форма: ${item.form} | Отделение: ${item.title}`,
+          };
+        });
+        res?.json(result);
         return;
       }
       const { id_student, id_group } = req.query;
       if (id_student) {
-        queryString += ` JOIN groups ON students_groups.id_group=groups.id 
+        queryString = `SELECT * FROM students_groups JOIN groups ON students_groups.id_group=groups.id 
     		JOIN speciality ON groups.id_speciality=speciality.id
 	 		WHERE id_student = $1`;
 
@@ -81,12 +96,12 @@ class StudentsGroupsController {
   async updateStudentsGroups(req, res) {
     try {
       const { id_student, id_group } = req.body;
-      let id = req.params ? req.params : req.body;
+      let { id } = req.params ? req.params : req.body;
 
       const data = await db.query(
         `UPDATE students_groups SET
         id_student = $2, id_group = $3
-   WHERE id=$1 returnin *`,
+   WHERE id = $1 RETURNING *`,
         [id, id_student, id_group]
       );
 

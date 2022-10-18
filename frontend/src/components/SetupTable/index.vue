@@ -27,7 +27,8 @@
           <TableRow
             :isEditable="isEditable"
             :rowData="row"
-            :includeId="includeId"
+            :firstField="firstField"
+            :secondField="secondField"
             @onSave="save"
             @onCancel="cancel"
             @onRemove="remove"
@@ -85,10 +86,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    includeId: {
-      type: Boolean,
-      default: false,
-    },
     title: {
       type: String,
       default: "",
@@ -96,6 +93,14 @@ export default {
     paginationLimit: {
       type: Number,
       default: 6,
+    },
+    firstField: {
+      type: String,
+      required: true,
+    },
+    secondField: {
+      type: String,
+      required: true,
     },
   },
   emits: {

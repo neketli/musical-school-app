@@ -7,6 +7,7 @@ import {
   ErrorView,
   ProfileView,
   VedomostiView,
+  DiaryView,
 } from "@/views";
 import store from "@/store";
 
@@ -41,6 +42,14 @@ const router = createRouter({
       path: "/vedomosti",
       name: "vedomosti",
       component: VedomostiView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/dnevnik",
+      name: "diary",
+      component: DiaryView,
       meta: {
         requiresAuth: true,
       },

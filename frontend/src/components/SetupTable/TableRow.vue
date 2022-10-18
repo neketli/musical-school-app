@@ -1,40 +1,30 @@
 <template>
   <tr class="overflow-x-auto bg-white border-b hover:bg-gray-50">
     <template v-if="editMode">
-      <template v-for="key in rowKeys">
-        <td
-          v-if="key === 'id' && includeId"
-          :key="key"
-          class="px-5 py-3 min-w-[100px]"
-        >
-          {{ row[key] }}
-        </td>
-        <td
-          v-if="key !== 'id' && !key.includes('_select')"
-          :key="key"
-          class="px-5 py-3 min-w-[100px]"
-        >
-          <BaseInput v-model="row[key]" />
-        </td>
-        <td
-          v-if="key.includes('_select') && !key.includes('-options')"
-          :key="key"
-          class="px-5 py-3 min-w-[100px]"
-        >
-          <vSelect v-model="row[key]" :options="row[`${key}-options`]" />
-        </td>
-      </template>
+      <td class="px-5 py-3 min-w-[100px]">
+        <vSelect
+          v-model="row[firstField]"
+          class="min-w-[25%]"
+          :options="row.firstSelect"
+        />
+      </td>
+
+      <td class="px-5 py-3 min-w-[100px]">
+        <vSelect
+          v-model="row[secondField]"
+          class="min-w-[25%]"
+          :options="row.secondSelect"
+        />
+      </td>
     </template>
 
     <template v-else>
-      <template v-for="key in rowKeys" :key="key">
-        <td
-          v-if="(key !== 'id' && !key.includes('-options')) || includeId"
-          class="px-5 py-3"
-        >
-          {{ row[key] }}
-        </td>
-      </template>
+      <td class="px-5 py-3">
+        {{ row[firstField] }}
+      </td>
+      <td class="px-5 py-3">
+        {{ row[secondField] }}
+      </td>
     </template>
     <!-- Edit mode buttons -->
     <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
@@ -63,13 +53,12 @@
 </template>
 
 <script>
-import { BaseButton, BaseInput } from "@/components";
+import { BaseButton } from "@/components";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 export default {
   components: {
     BaseButton,
-    BaseInput,
     vSelect,
   },
   props: {
@@ -81,9 +70,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    includeId: {
-      type: Boolean,
-      default: false,
+    firstField: {
+      type: String,
+      required: true,
+    },
+    secondField: {
+      type: String,
+      required: true,
     },
   },
   emits: { onSave: null, onRemove: null, onCancel: null },

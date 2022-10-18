@@ -1,5 +1,7 @@
 <template>
-  <div class="overflow-x-auto flex-auto relative bg-white shadow-md sm:rounded-lg">
+  <div
+    class="overflow-x-auto flex-auto relative bg-white shadow-md sm:rounded-lg"
+  >
     <table class="w-full text-sm text-left text-gray-500">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
@@ -9,7 +11,12 @@
             scope="col"
             class="py-3 px-6 min-w-[250px]"
           >
-            <TableCell :data="item" @onSave="saveColumn" @onRemove="remove" />
+            <TableCell
+              :isEditable="isEditable"
+              :data="item"
+              @onSave="saveColumn"
+              @onRemove="remove"
+            />
           </th>
           <th v-if="isEditable" class="py-3 px-6 min-w-[100px]">
             <BaseButton class="text-green-400" @click="add">
@@ -19,7 +26,7 @@
         </tr>
       </thead>
       <tbody v-for="row in dataSource" :key="row">
-        <TableRow :rowData="row" />
+        <TableRow :isEditable="isEditable" :rowData="row" />
       </tbody>
     </table>
   </div>

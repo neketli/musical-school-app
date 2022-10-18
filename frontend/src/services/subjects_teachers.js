@@ -47,17 +47,12 @@ class STService {
     return newData.data;
   }
 
-  async editData(subjects_teachers) {
+  async editData(id, subjects_teachers) {
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/subjects_teachers/${
-        subjects_teachers.id
-      }`,
+      `${import.meta.env.VITE_API_URL}/subjects_teachers/${id}`,
       subjects_teachers
     );
-    this.data = this.data.map(
-      (item) =>
-        (item = item.id === subjects_teachers.id ? subjects_teachers : item)
-    );
+
     return subjects_teachers;
   }
 

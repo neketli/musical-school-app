@@ -27,11 +27,22 @@
       <div class="flex flex-col gap-4">
         <template v-for="column in tableColumns">
           <BaseInput
-            v-if="column.value !== 'id'"
+            v-if="!column.value.includes('id')"
             :key="column.label"
             v-model="newItem[column.value]"
             :label="column.label"
           />
+          <div
+            v-if="column.value === 'id_departament'"
+            :key="column.label"
+            class="flex flex-col"
+          >
+            {{ column.label }}
+            <vSelect
+              @option:selected="slectedDepartament"
+              :options="selectOptions"
+            />
+          </div>
         </template>
       </div>
     </BaseModal>
@@ -39,6 +50,8 @@
 </template>
 
 <script>
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 import { mapGetters } from "vuex";
 import { BaseTable, BaseModal, BaseInput, BaseSkelet } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
@@ -149,6 +162,7 @@ export default {
     BaseModal,
     BaseInput,
     BaseSkelet,
+    vSelect,
   },
   data() {
     return {
@@ -157,10 +171,10 @@ export default {
       filter: {},
 
       activeService: {},
-
       tableColumns: [],
       tableData: [],
       newItem: {},
+      selectOptions: [],
 
       isLoading: true,
       isModalShow: false,
@@ -207,7 +221,14 @@ export default {
 
     async save(row) {
       this.isLoading = true;
-      await this.activeService.editData(row);
+      if (row["id_departament"]) {
+        await this.activeService.editData({
+          ...row,
+          id_departament: row.id_departament.split(" ")[0],
+        });
+      } else {
+        await this.activeService.editData(row);
+      }
       this.tableData = await this.activeService.getData();
       this.isLoading = false;
     },
@@ -219,11 +240,17 @@ export default {
       this.isLoading = false;
     },
 
-    showModal() {
+    async showModal() {
       this.clearNewItem();
+      if (this.tableColumns.filter((item) => item.value === "id_departament")) {
+        const data = await DepartamentsService.getData();
+        this.selectOptions = data.map((item) => Object.values(item).join(" "));
+      }
       this.isModalShow = true;
     },
-
+    slectedDepartament(option) {
+      this.newItem["id_departament"] = option.split(" ")[0];
+    },
     async add() {
       if (
         !Object.keys(this.newItem).includes("rid") &&

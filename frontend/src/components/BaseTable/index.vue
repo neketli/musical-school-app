@@ -1,5 +1,7 @@
 <template>
-  <div class="overflow-x-auto flex-auto relative bg-white shadow-md sm:rounded-lg">
+  <div
+    class="overflow-x-auto flex-auto relative bg-white shadow-md sm:rounded-lg"
+  >
     <div v-if="title" class="text-xl font-bold my-5 mx-3">
       {{ title }}
     </div>
@@ -28,13 +30,16 @@
             @onSave="save"
             @onCancel="cancel"
             @onRemove="remove"
-			@click="rowClicked(row)"
+            @click="rowClicked(row)"
           />
         </template>
       </tbody>
     </table>
 
-    <div v-if="isEditable || isPagination" class="flex justify-between px-5 py-3">
+    <div
+      v-if="isEditable || isPagination"
+      class="flex justify-between px-5 py-3"
+    >
       <div v-if="isEditable" class="flex gap-3">
         <BaseButton class="text-green-400" @click="add">
           <i class="fa fa-plus" />
@@ -88,7 +93,13 @@ export default {
       default: 6,
     },
   },
-  emits: { onSave: null, onRowClicked: null, onAdd: null, onRemove: null, onUndo: null },
+  emits: {
+    onSave: null,
+    onRowClicked: null,
+    onAdd: null,
+    onRemove: null,
+    onUndo: null,
+  },
   data() {
     return {
       dataSource: [],
@@ -123,9 +134,9 @@ export default {
       this.$emit("onRemove", id);
       this.dataSource = this.dataSource.filter((item) => item.id != id);
     },
-	rowClicked(row) {
+    rowClicked(row) {
       this.$emit("onRowClicked", row);
-	},
+    },
     undo() {
       this.$emit("onUndo");
     },

@@ -169,7 +169,19 @@ export default {
 
     async save(row) {
       this.isLoading = true;
-      await this.activeService.editData(row);
+      if (row["id_student"]) {
+        await this.activeService.editData(row.id, {
+          id_student: +row.id_student.split(" ")[0],
+          id_group: +row.id_group.split(" ")[0],
+        });
+      } else if (row["id_teacher"]) {
+        await this.activeService.editData(row.id, {
+          id_teacher: +row.id_teacher.split(" ")[0],
+          id_subject: +row.id_subject.split(" ")[0],
+        });
+      } else {
+        await this.activeService.editData(row);
+      }
       this.tableData = await this.activeService.getData();
       this.isLoading = false;
     },
@@ -239,8 +251,8 @@ export default {
       }
       if (value === "#subjects_teachers") {
         this.activeService = STService;
-        this.firstService = TeachersService;
-        this.secondService = SubjectsService;
+        this.secondService = TeachersService;
+        this.firstService = SubjectsService;
       }
     },
   },

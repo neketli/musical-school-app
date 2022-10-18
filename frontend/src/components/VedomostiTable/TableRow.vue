@@ -35,7 +35,9 @@ export default {
   },
   computed: {
     rowKeys() {
-      return Object.keys(this.rowData).filter((item) => item !== "name");
+      return Object.keys(this.rowData).filter(
+        (item) => item !== "name" && !item.includes("-id_journal")
+      );
     },
   },
   methods: {

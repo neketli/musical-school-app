@@ -30,7 +30,7 @@
               <!-- 1 sevice -->
               <span class="text-gray-500">{{ firstService.label }}</span>
               <vSelect
-                v-model="newItem[tableColumns[1]?.value]"
+                v-model="newItem[tableColumns[0]?.value]"
                 class="min-w-[25%]"
                 :options="firstSelect"
               />
@@ -40,7 +40,7 @@
               <!-- 2 sevice -->
               <span class="text-gray-500">{{ secondService.label }}</span>
               <vSelect
-                v-model="newItem[tableColumns[2]?.value]"
+                v-model="newItem[tableColumns[1]?.value]"
                 class="min-w-[25%]"
                 :options="secondSelect"
               />
@@ -180,18 +180,18 @@ export default {
     },
 
     async add() {
-      this.isMenuShow = false;
-
       if (Object.values(this.newItem).filter((item) => !item).length) {
         return;
       }
+      this.isLoading = true;
+      this.isMenuShow = false;
+
       const item = Object.fromEntries(
         Object.entries(this.newItem).map((item) => [
           item[0],
           item[1].split(" ")[0],
         ])
       );
-      this.isLoading = true;
       await this.activeService.addData(item);
       this.tableData = await this.activeService.getData();
       this.clearNewItem();
@@ -239,8 +239,8 @@ export default {
       }
       if (value === "#subjects_teachers") {
         this.activeService = STService;
-        this.firstService = SubjectsService;
-        this.secondService = TeachersService;
+        this.firstService = TeachersService;
+        this.secondService = SubjectsService;
       }
     },
   },

@@ -21,7 +21,7 @@
       </div>
 
       <div v-if="activeSubject" class="flex">
-        <div class="flex flex-col bg-white">
+        <div class="flex flex-col bg-white h-full">
           <div
             class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
           >
@@ -29,23 +29,26 @@
           </div>
           <template v-for="item in tableData" :key="item.name">
             <div
-              class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
+              class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px] rounded-sm"
             >
               {{ item.name }}
             </div>
           </template>
         </div>
 
-        <VedomostiTable
-          v-if="!isLoading"
-          :columns="tableColumns"
-          :data="tableData"
-          isEditable
-          @onRemove="remove"
-          @onAdd="add"
-          @onColumnSave="saveColumn"
-        />
-        <BaseSkelet v-else :size="200" />
+        <div class="flex overflow-auto flex-col gap-4">
+          <VedomostiTable
+            v-if="!isLoading"
+            :columns="tableColumns"
+            :data="tableData"
+            isEditable
+            @onRemove="remove"
+            @onAdd="add"
+            @onColumnSave="saveColumn"
+          />
+          <BaseSkelet v-else :size="200" />
+          <BaseButton @click="save">Сохранить</BaseButton>
+        </div>
       </div>
     </div>
     <div v-else class="flex flex-auto">
@@ -63,9 +66,14 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { BaseTable, BaseSkelet, VedomostiTable } from "@/components";
+import {
+  BaseTable,
+  BaseSkelet,
+  BaseButton,
+  VedomostiTable,
+} from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { GroupsService } from "@/services";
+import { GroupsService, JournalsService } from "@/services";
 import vSelect from "vue-select";
 
 export default {
@@ -74,6 +82,7 @@ export default {
     VedomostiTable,
     BaseSkelet,
     BaseTable,
+    BaseButton,
     vSelect,
   },
   data() {
@@ -89,6 +98,8 @@ export default {
       newItem: {},
 
       groupsData: {},
+      initialData: {},
+      removeList: [],
       groupsColumns: {},
       activeGroup: null,
       subjects: [],
@@ -144,7 +155,52 @@ export default {
     this.isLoading = false;
   },
   methods: {
-    async getData() {},
+    async getData() {
+      this.isLoading = true;
+      const journalsData = await JournalsService.getData();
+
+      this.tableData = this.tableData.map((item) => {
+        const obj = {};
+        for (const data of journalsData) {
+          if (
+            data.id_subject == this.activeSubject.id &&
+            data.id_student == item.id
+          ) {
+            obj[data.date] = data.grade;
+            obj[`${data.date}-id_journal`] = data.id;
+          }
+        }
+
+        return {
+          id: item.id,
+          name: item.name,
+          ...obj,
+        };
+      });
+
+      this.tableColumns = Object.keys(this.tableData[0])
+        .filter(
+          (item) =>
+            item !== "id" && item !== "name" && !item.includes("-id_journal")
+        )
+        .map((item) => {
+          return {
+            label: item,
+          };
+        });
+
+      this.tableData.forEach((i) => {
+        this.tableColumns.forEach((j) => {
+          if (i[j.label] == undefined) {
+            i[j.label] = "";
+          }
+        });
+      });
+
+      this.initialData = [...this.tableData];
+
+      this.isLoading = false;
+    },
     async setFilter() {
       await this.$router.push(`/`);
     },
@@ -159,13 +215,15 @@ export default {
         };
       });
     },
-    remove(label) {
+    async remove(label) {
       this.tableColumns = this.tableColumns.filter(
         (item) => item.label !== label
       );
-      this.tableData.forEach((item) => {
+      this.tableData.forEach(async (item) => {
+        this.removeList.push(item[`${label}-id_journal`]);
         if (item[label]) {
           delete item[label];
+          delete item[`${label}-id_journal`];
         }
       });
     },
@@ -174,7 +232,7 @@ export default {
         label: "",
       });
     },
-    saveColumn({ label, old }) {
+    async saveColumn({ label, old }) {
       if (!old.label) {
         this.tableColumns = this.tableColumns.filter(
           (item) => item.label !== ""
@@ -187,15 +245,65 @@ export default {
         return;
       }
       if (old.label !== label) {
-        this.tableData.forEach((item) => {
-          item[label] = item[old.label];
-          delete item[old.label];
+        this.tableData.forEach(async (item) => {
+          const oldDate = old.label;
+          await JournalsService.editData({
+            id: item[`${oldDate}-id_journal`],
+            grade: item[oldDate],
+            date: label,
+            type: "",
+            id_student: item.id,
+            id_subject: this.activeSubject.id,
+          });
+          item[`${label}-id_journal`] = item[`${oldDate}-id_journal`];
+          item[label] = item[oldDate];
+          delete item[oldDate];
+          delete item[`${oldDate}-id_journal`];
         });
         this.tableColumns = this.tableColumns.filter(
           (item) => item.label !== old.label
         );
         this.tableColumns.push({ label });
       }
+    },
+    async save() {
+      this.isLoading = true;
+      if (this.removeList.length) {
+        this.removeList.forEach(async (id) => {
+          await JournalsService.removeData(id);
+        });
+      }
+
+      await this.tableData.forEach(async (item) => {
+        Object.keys(item)
+          .filter((i) => i !== "id" && i !== "name")
+          .forEach(async (data) => {
+            if (this.removeList.filter((k) => k === item[data]).length) return;
+            if (data.includes("-id_journal")) {
+              const date = data.replace("-id_journal", "");
+              await JournalsService.editData({
+                id: item[data],
+                grade: item[date],
+                date,
+                type: "",
+                id_student: item.id,
+                id_subject: this.activeSubject.id,
+              });
+            } else if (!item[`${data}-id_journal`]) {
+              await JournalsService.addData({
+                grade: item[data],
+                date: data,
+                type: "",
+                id_student: item.id,
+                id_subject: this.activeSubject.id,
+              });
+            }
+          });
+      });
+
+      this.removeList = [];
+      //   await this.getData();
+      this.isLoading = false;
     },
   },
 };

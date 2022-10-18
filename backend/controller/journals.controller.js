@@ -52,12 +52,12 @@ class JournalsController {
   async getAllJournals(req, res) {
     try {
       if (!Object.values(req.query).length) {
-        const journals = await db.query("SELECT * FROM journals");
+        const journals = await db.query("SELECT * FROM journals ORDER BY id");
         res?.json(
           journals.rows.map((item) => {
             return {
               ...item,
-              date: new Date(item.date).toLocaleDateString('ru-RU'),
+              date: new Date(item.date).toLocaleDateString("ru-RU"),
             };
           })
         );
@@ -76,7 +76,7 @@ class JournalsController {
             delete item.id_subject;
             return {
               ...item,
-              date: new Date(item.date).toLocaleDateString('ru-RU'),
+              date: new Date(item.date).toLocaleDateString("ru-RU"),
             };
           })
         );
@@ -89,17 +89,20 @@ class JournalsController {
   }
   async updateJournals(req, res) {
     try {
-      const { id, type, date, grade, id_subject, id_student } = req.body;
-      await db.query(
-        `UPDATE journals SET
+      if (req.body.id) {
+        const { id, type, date, grade, id_subject, id_student } = req.body;
+        await db.query(
+          `UPDATE journals SET
 	  	type = $2,
 		date = $3,
 		grade = $4,
 		id_subject = $5,
 		id_student = $6
 	   WHERE id = $1`,
-        [id, type, date, grade, id_subject, id_student]
-      );
+          [id, type, date, grade, id_subject, id_student]
+        );
+      }
+
       if (req?.params?.id) {
         res?.sendStatus(200);
       }

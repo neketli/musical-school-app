@@ -12,7 +12,7 @@ class SubjectTeacherController {
         return;
       }
 
-      const { id_subject, id_teacher } = req.body;
+      const { id_teacher, id_subject } = req.body;
       const relation = await db.query(
         `INSERT INTO subjects_teachers (id_subject, id_teacher) VALUES ($1, $2) RETURNING *`,
         [id_subject, id_teacher]

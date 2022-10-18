@@ -10,12 +10,12 @@ class STService {
   getColumns() {
     this.columns = [
       {
-        label: "Преподаватель",
-        value: "id_teacher",
-      },
-      {
         label: "Предмет",
         value: "id_subject",
+      },
+      {
+        label: "Преподаватель",
+        value: "id_teacher",
       },
     ];
     return this.columns;
@@ -38,7 +38,10 @@ class STService {
   async addData(subjects_teachers) {
     const newData = await axios.post(
       `${import.meta.env.VITE_API_URL}/subjects_teachers`,
-      subjects_teachers
+      {
+        id_teacher: subjects_teachers.id_teacher,
+        id_subject: subjects_teachers.id_subject,
+      }
     );
     this.data.push(newData.data);
     return newData.data;

@@ -27,7 +27,9 @@
       <div class="flex flex-col gap-4">
         <template v-for="column in tableColumns">
           <BaseInput
-            v-if="!column.value.includes('id')"
+            v-if="
+              !column.value.includes('id') && column.value !== 'role_select'
+            "
             :key="column.label"
             v-model="newItem[column.value]"
             :label="column.label"
@@ -39,8 +41,35 @@
           >
             {{ column.label }}
             <vSelect
-              @option:selected="slectedDepartament"
               :options="selectOptions"
+              @option:selected="slectedDepartament"
+            />
+          </div>
+          <div
+            v-if="column.value === 'role_select'"
+            :key="column.label"
+            class="flex flex-col"
+          >
+            {{ column.label }}
+
+            <vSelect
+              v-model="newItem[column.value]"
+              :reduce="(item) => item.label"
+              :options="roles"
+              @option:selected="selectedRole"
+            />
+          </div>
+          <div
+            v-if="column.value === 'rid'"
+            :key="column.label"
+            class="flex flex-col"
+          >
+            {{ column.label }}
+
+            <vSelect
+              v-model="newItem[column.value]"
+              :options="selectOptions"
+              @option:selected="selectedRid"
             />
           </div>
         </template>
@@ -66,8 +95,6 @@ import {
   TeachersService,
   TSService,
   UsersService,
-  GroupStudentService,
-  StudentJournalService,
 } from "@/services";
 
 const TABLES = [
@@ -90,27 +117,27 @@ const TABLES = [
     label: "Отделения",
     icon: "fa-archive",
     editAccess: ["admin", "director"],
-    readAccess: ["teacher", "head_teacher"],
+    readAccess: ["teacher"],
   },
   {
     value: "speciality",
     label: "Специальности",
     icon: "fa-graduation-cap",
-    editAccess: ["admin", "director", "head_teacher"],
+    editAccess: ["admin", "director"],
     readAccess: ["teacher", "student"],
   },
   {
     value: "subjects",
     label: "Предметы",
     icon: "fa-bookmark-o",
-    editAccess: ["admin", "director", "head_teacher"],
+    editAccess: ["admin", "director"],
     readAccess: ["teacher"],
   },
   {
     value: "groups",
     label: "Группы",
     icon: "fa-users",
-    editAccess: ["admin", "director", "head_teacher"],
+    editAccess: ["admin", "director"],
     readAccess: ["teacher"],
 
     supLabel: "Списки учеников",
@@ -120,27 +147,27 @@ const TABLES = [
     value: "journals",
     label: "Журналы",
     icon: "fa-book",
-    editAccess: ["admin", "director", "head_teacher"],
+    editAccess: [],
   },
   {
     value: "vedomosti",
     label: "Ведомости",
     icon: "fa-book",
     link: "/vedomosti",
-    editAccess: ["teacher"],
+    editAccess: ["admin", "director", "teacher"],
   },
   {
     value: "students",
     label: "Ученики",
     icon: "fa-user",
-    editAccess: ["admin", "director", "head_teacher"],
+    editAccess: ["admin", "director"],
     readAccess: ["teacher"],
   },
   {
     value: "teachers",
     label: "Преподаватели",
     icon: "fa-user-o",
-    editAccess: ["admin", "director", "head_teacher"],
+    editAccess: ["admin", "director"],
     readAccess: [],
 
     supLabel: "Ответсвенные",
@@ -175,6 +202,11 @@ export default {
       tableData: [],
       newItem: {},
       selectOptions: [],
+      roles: [
+        { label: "student" },
+        { label: "teacher" },
+        { label: "director" },
+      ],
 
       isLoading: true,
       isModalShow: false,
@@ -221,36 +253,63 @@ export default {
 
     async save(row) {
       this.isLoading = true;
-      if (row["id_departament"]) {
+      if (row["id_departament_select"]) {
         await this.activeService.editData({
           ...row,
-          id_departament: row.id_departament.split(" ")[0],
+          id_departament: row.id_departament_select.split(" ")[0],
+        });
+      } else if (row["rid_select"]) {
+        await this.activeService.editData({
+          ...row,
+          rid: row.rid_select.split(" ")[0],
+          role: row.role_select.label,
         });
       } else {
         await this.activeService.editData(row);
       }
-      this.tableData = await this.activeService.getData();
+      await this.initActiveTable();
       this.isLoading = false;
     },
 
     async undo() {
       this.isLoading = true;
       await this.activeService.revertData();
-      this.tableData = await this.activeService.getData();
+      await this.initActiveTable();
       this.isLoading = false;
     },
 
     async showModal() {
       this.clearNewItem();
-      if (this.tableColumns.filter((item) => item.value === "id_departament")) {
+      if (
+        this.tableColumns.filter((item) => item.value === "id_departament")
+          .length
+      ) {
         const data = await DepartamentsService.getData();
         this.selectOptions = data.map((item) => Object.values(item).join(" "));
+      } else if (
+        this.tableColumns.filter((item) => item.value === "role_select").length
+      ) {
+        const teachers = await TeachersService.getData();
+        const students = await StudentsService.getData();
+        this.selectOptions = [
+          "- Список преподавателей -",
+          ...teachers.map((item) => Object.values(item).join(" ")),
+          "- Список учеников -",
+          ...students.map((item) => Object.values(item).join(" ")),
+        ];
       }
       this.isModalShow = true;
     },
     slectedDepartament(option) {
       this.newItem["id_departament"] = option.split(" ")[0];
     },
+    selectedRid(option) {
+      this.newItem["rid"] = option.split(" ")[0];
+    },
+    selectedRole(option) {
+      this.newItem["role"] = option.label;
+    },
+
     async add() {
       if (
         !Object.keys(this.newItem).includes("rid") &&
@@ -260,8 +319,9 @@ export default {
       }
       this.isLoading = true;
       await this.activeService.addData(this.newItem);
-      this.tableData = await this.activeService.getData();
-      this.clearNewItem();
+
+      await this.initActiveTable();
+
       this.isLoading = false;
       this.isModalShow = false;
     },
@@ -269,7 +329,7 @@ export default {
     async remove(id) {
       this.isLoading = true;
       await this.activeService.removeData(id);
-      this.tableData = await this.activeService.getData();
+      await this.initActiveTable();
       this.isLoading = false;
     },
 
@@ -295,8 +355,43 @@ export default {
         this.tableData = await this.activeService.getData(this.getUserInfo.rid);
       } else {
         await this.activeService.updateData();
-
         this.tableData = await this.activeService.getData();
+      }
+
+      if (
+        this.tableColumns.filter((item) => item.value === "id_departament")
+          .length
+      ) {
+        const data = await DepartamentsService.getData();
+        this.tableData = this.tableData.map((item) => {
+          return {
+            ...item,
+            "id_departament_select-options": data.map((item) =>
+              Object.values(item).join(" ")
+            ),
+          };
+        });
+      }
+
+      if (
+        this.tableColumns.filter((item) => item.value === "role_select").length
+      ) {
+        const teachers = await TeachersService.getData();
+        const students = await StudentsService.getData();
+        const selectOptions = [
+          "- Список преподавателей -",
+          ...teachers.map((item) => Object.values(item).join(" ")),
+          "- Список учеников -",
+          ...students.map((item) => Object.values(item).join(" ")),
+        ];
+
+        this.tableData = this.tableData.map((item) => {
+          return {
+            ...item,
+            "rid_select-options": selectOptions,
+            "role_select-options": this.roles,
+          };
+        });
       }
 
       this.clearNewItem();
@@ -367,12 +462,6 @@ export default {
         this.canEdit = this.sidebarData
           .filter((item) => item.value === "teachers")[0]
           .editAccess.includes(this.getUserInfo.role);
-      }
-      if (value === "student_group") {
-        this.activeService = GroupStudentService;
-      }
-      if (value === "student_journal") {
-        this.activeService = StudentJournalService;
       }
     },
   },

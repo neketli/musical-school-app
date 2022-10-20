@@ -47,17 +47,18 @@
             @onColumnSave="saveColumn"
           />
           <BaseSkelet v-else :size="200" />
-          <BaseButton @click="save">Сохранить</BaseButton>
+          <BaseButton @click="save"> Сохранить </BaseButton>
         </div>
       </div>
     </div>
     <div v-else class="flex flex-auto">
       <BaseTable
-        title="Выбор группы"
         v-if="!isLoading"
-        @onRowClicked="setGroup"
+        title="Выбор группы"
         :data="groupsData"
         :columns="groupColumns"
+        includeId
+        @onRowClicked="setGroup"
       />
       <BaseSkelet v-else :size="200" />
     </div>
@@ -143,6 +144,16 @@ export default {
         `${import.meta.env.VITE_API_URL}/subjects_teachers?id_teacher=${
           this.getUserInfo.rid
         }`
+      );
+      this.subjects = data.map((item) => {
+        return {
+          id: item.id,
+          label: item.title,
+        };
+      });
+    } else if (this.getUserInfo.role === "admin") {
+      const { data } = await this.$axios.get(
+        `${import.meta.env.VITE_API_URL}/subjects`
       );
       this.subjects = data.map((item) => {
         return {

@@ -50,7 +50,7 @@ class SpecialityController {
           id: item.id,
           title: item.title,
           instrument: item.instrument,
-          id_departament: `${item.id_departament} ${item.departament}`,
+          id_departament_select: `${item.id_departament} ${item.departament}`,
         };
       });
 

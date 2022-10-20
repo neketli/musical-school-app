@@ -8,7 +8,9 @@
           <i class="fa fa-user text-6xl text-blue-400" />
         </div>
         <div class="flex flex-col gap-4">
-          <div class="font-bold font-2xl block">{{ userData.role }}</div>
+          <div class="font-bold font-2xl block">
+            {{ userData.role }}
+          </div>
           <div v-if="getUserInfo.rid" class="flex flex-col gap-2">
             <span>ФИО: {{ userData.full_name }}</span>
             <span>Дата рождения: {{ userData.birthdate }}</span>
@@ -52,6 +54,18 @@ export default {
   },
   async created() {
     const role = this.getUserInfo.role;
+
+    const { data } = await this.$axios.get(
+      `${import.meta.env.VITE_API_URL}/${
+        role === "student" ? "students/" : "teachers/"
+      }${this.getUserInfo.rid}`
+    );
+    this.userData = {
+      ...data,
+      role: role === "student" ? "Ученик" : "Преподаватель",
+      full_name: `${data.last_name} ${data.first_name} ${data.patronymic}`,
+    };
+
     if (role === "admin") {
       this.headerData = [
         {
@@ -64,19 +78,8 @@ export default {
         },
       ];
 
-      this.userData = { role: "Администратор" };
+      this.userData = { ...this.userData, role: "Администратор" };
     }
-
-    const { data } = await this.$axios.get(
-      `${import.meta.env.VITE_API_URL}/${
-        role === "student" ? "students/" : "teachers/"
-      }${this.getUserInfo.rid}`
-    );
-    this.userData = {
-      role: role === "student" ? "Ученик" : "Преподаватель",
-      ...data,
-      full_name: `${data.last_name} ${data.first_name} ${data.patronymic}`,
-    };
   },
 };
 </script>

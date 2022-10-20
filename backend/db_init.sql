@@ -26,7 +26,7 @@ CREATE TABLE students (
     id SERIAL PRIMARY KEY,
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
-    patronymic character varying(50) NOT NULL,
+    patronymic character varying(50),
     phone character varying(20),
     parents_phone character varying(20) NOT NULL,
     birthdate date NOT NULL

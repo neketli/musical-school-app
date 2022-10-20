@@ -27,10 +27,12 @@ class StudentsGroupsController {
   }
   async getAllStudentsGroups(req, res) {
     try {
-      let queryString = `SELECT * FROM students_groups 
+      let queryString = `SELECT students_groups.id, students_groups.id_student, students_groups.id_group,
+        students.first_name,students.last_name, students.patronymic, groups.year,groups.form, speciality.title FROM students_groups 
 		JOIN students on students_groups.id_student = students.id
 		JOIN groups on students_groups.id_group = groups.id
 		JOIN speciality ON groups.id_speciality=speciality.id 
+    ORDER by students_groups.id
 		`;
       if (!Object.values(req.query).length) {
         const data = await db.query(queryString);

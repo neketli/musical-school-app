@@ -3,6 +3,13 @@
     <template v-if="editMode">
       <template v-for="key in rowKeys">
         <td
+          v-if="key === 'id' && includeId"
+          :key="key"
+          class="px-5 py-3 min-w-[100px]"
+        >
+          {{ row[key] }}
+        </td>
+        <td
           v-if="key !== 'id' && !key.includes('_select')"
           :key="key"
           class="px-5 py-3 min-w-[100px]"

@@ -14,6 +14,7 @@
       :columns="tableColumns"
       :data="tableData"
       :isEditable="canEdit"
+      :includeId="activeService.label === 'Группы'"
       @onSave="save"
       @onRemove="remove"
       @onAdd="showModal"
@@ -44,6 +45,18 @@
               <vSelect
                 :options="selectOptions"
                 @option:selected="slectedDepartament"
+              />
+            </div>
+            <!-- TODO: Закончить -->
+            <div
+              v-if="column.value === 'id_speciality'"
+              :key="column.label"
+              class="flex flex-col"
+            >
+              {{ column.label }}
+              <vSelect
+                :options="selectOptions"
+                @option:selected="selectedSpeciality"
               />
             </div>
             <div

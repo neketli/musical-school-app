@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center" @click.self="enterEditMode">
-    <div v-if="!editMode || !isEditable">
+    <div v-if="!editMode">
       {{ dataSource.label }}
     </div>
 
@@ -42,6 +42,10 @@ export default {
   props: {
     data: {
       type: Object,
+      required: true,
+    },
+    isEditable: {
+      type: Boolean,
       required: true,
     },
   },

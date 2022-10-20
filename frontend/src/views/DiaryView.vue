@@ -127,23 +127,33 @@ export default {
           id: this.getUserInfo.rid,
           name,
         },
-      ].map((item) => {
-        const obj = {};
-        for (const data of journalsData) {
-          if (
-            data.id_subject == this.activeSubject.id &&
-            data.id_student == item.id
-          ) {
-            obj[data.date] = data.grade;
+      ]
+        .map((item) => {
+          const obj = {};
+          for (const data of journalsData) {
+            if (
+              data.id_subject == this.activeSubject.id &&
+              data.id_student == item.id
+            ) {
+              obj[data.date] = data.grade;
+            }
           }
-        }
 
-        return {
-          id: item.id,
-          name: item.name,
-          ...obj,
-        };
-      });
+          return {
+            id: item.id,
+            name: item.name,
+            ...obj,
+          };
+        })
+        .map((item) => {
+          Object.keys(item).forEach((element) => {
+            if (!item[element]) {
+              delete item[element];
+            }
+          });
+
+          return item;
+        });
 
       this.tableColumns = Object.keys(this.tableData[0])
         .filter(

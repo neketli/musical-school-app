@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center" @click.self="enterEditMode">
-    <div v-if="!editMode">
+    <div v-if="!editMode || !isEditable">
       {{ dataSource.label }}
     </div>
 
@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     enterEditMode() {
-      if (this.editMode) return;
+      if (this.editMode || !this.isEditable) return;
       this.editMode = true;
       this.oldData = { ...this.data };
     },

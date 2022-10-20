@@ -3,7 +3,10 @@
     <template v-for="key in rowKeys" :key="key">
       <td v-if="key !== 'id'" class="px-6 py-3">
         <!-- eslint-disable-next-line vue/no-mutating-props -->
-        <BaseInput :key="key" v-model="rowData[key]" />
+        <BaseInput v-if="isEditable" :key="key" v-model="rowData[key]" />
+        <template v-else>
+          {{ rowData[key] }}
+        </template>
       </td>
     </template>
   </tr>

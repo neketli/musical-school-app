@@ -21,60 +21,62 @@
     />
     <BaseSkelet v-else :size="200" />
 
-    <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
-      <template #title> Добавить </template>
+    <template v-if="canEdit">
+      <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
+        <template #title> Добавить </template>
 
-      <div class="flex flex-col gap-4">
-        <template v-for="column in tableColumns">
-          <BaseInput
-            v-if="
-              !column.value.includes('id') && column.value !== 'role_select'
-            "
-            :key="column.label"
-            v-model="newItem[column.value]"
-            :label="column.label"
-          />
-          <div
-            v-if="column.value === 'id_departament'"
-            :key="column.label"
-            class="flex flex-col"
-          >
-            {{ column.label }}
-            <vSelect
-              :options="selectOptions"
-              @option:selected="slectedDepartament"
-            />
-          </div>
-          <div
-            v-if="column.value === 'role_select'"
-            :key="column.label"
-            class="flex flex-col"
-          >
-            {{ column.label }}
-
-            <vSelect
+        <div class="flex flex-col gap-4">
+          <template v-for="column in tableColumns">
+            <BaseInput
+              v-if="
+                !column.value.includes('id') && column.value !== 'role_select'
+              "
+              :key="column.label"
               v-model="newItem[column.value]"
-              :reduce="(item) => item.label"
-              :options="roles"
-              @option:selected="selectedRole"
+              :label="column.label"
             />
-          </div>
-          <div
-            v-if="column.value === 'rid'"
-            :key="column.label"
-            class="flex flex-col"
-          >
-            {{ column.label }}
+            <div
+              v-if="column.value === 'id_departament'"
+              :key="column.label"
+              class="flex flex-col"
+            >
+              {{ column.label }}
+              <vSelect
+                :options="selectOptions"
+                @option:selected="slectedDepartament"
+              />
+            </div>
+            <div
+              v-if="column.value === 'role_select'"
+              :key="column.label"
+              class="flex flex-col"
+            >
+              {{ column.label }}
 
-            <vSelect
-              v-model="newItem[column.value]"
-              :options="selectOptions"
-              @option:selected="selectedRid"
-            />
-          </div>
-        </template>
-      </div>
-    </BaseModal>
+              <vSelect
+                v-model="newItem[column.value]"
+                :reduce="(item) => item.label"
+                :options="roles"
+                @option:selected="selectedRole"
+              />
+            </div>
+            <div
+              v-if="column.value === 'rid'"
+              :key="column.label"
+              class="flex flex-col"
+            >
+              {{ column.label }}
+
+              <vSelect
+                v-model="newItem[column.value]"
+                :options="selectOptions"
+                @option:selected="selectedRid"
+              />
+            </div>
+          </template>
+        </div>
+      </BaseModal>
+    </template>
   </BaseLayout>
 </template>
 
@@ -99,12 +101,6 @@ import {
 
 const TABLES = [
   // Students
-  {
-    value: "student_journal",
-    label: "Мои оценки",
-    icon: "fa-book",
-    readAccess: ["student"],
-  },
 
   {
     value: "users",
@@ -179,6 +175,14 @@ const TABLES = [
     icon: "fa-user-o",
     editAccess: [],
     readAccess: ["teacher", "student"],
+  },
+
+  {
+    value: "student_journal",
+    label: "Мои оценки",
+    icon: "fa-book",
+    link: "/dnevnik",
+    readAccess: ["student"],
   },
 ];
 

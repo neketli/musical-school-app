@@ -4,7 +4,7 @@
     :headerData="headerData"
     @setFilter="setFilter"
   >
-    <div v-if="activeGroup" class="flex flex-col gap-8 justify-center">
+    <div class="flex flex-col gap-8 justify-center">
       <div class="flex flex-col gap-4">
         <h3 class="text-lg">Выбор предмета</h3>
         <vSelect
@@ -19,13 +19,13 @@
       <div v-if="activeSubject" class="flex">
         <div class="flex flex-col bg-white h-full">
           <div
-            class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
+            class="py-2 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[45px] min-w-[200px]"
           >
-            Ученик \ Дата занятия
+            Дата занятий:
           </div>
           <template v-for="item in tableData" :key="item.name">
             <div
-              class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px] rounded-sm"
+              class="py-2 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[45px] min-w-[200px] rounded-sm"
             >
               {{ item.name }}
             </div>
@@ -37,40 +37,22 @@
             v-if="!isLoading"
             :columns="tableColumns"
             :data="tableData"
-            isEditable
             @onRemove="remove"
             @onAdd="add"
             @onColumnSave="saveColumn"
           />
           <BaseSkelet v-else :size="200" />
-          <BaseButton @click="save"> Сохранить </BaseButton>
         </div>
       </div>
-    </div>
-    <div v-else class="flex flex-auto">
-      <BaseTable
-        v-if="!isLoading"
-        title="Выбор группы"
-        :data="groupsData"
-        :columns="groupColumns"
-        includeId
-        @onRowClicked="setGroup"
-      />
-      <BaseSkelet v-else :size="200" />
     </div>
   </BaseLayout>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import {
-  BaseTable,
-  BaseSkelet,
-  BaseButton,
-  VedomostiTable,
-} from "@/components";
+import { BaseSkelet, BaseButton, VedomostiTable } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { GroupsService, JournalsService } from "@/services";
+import { JournalsService } from "@/services";
 import vSelect from "vue-select";
 
 export default {
@@ -78,7 +60,6 @@ export default {
     BaseLayout,
     VedomostiTable,
     BaseSkelet,
-    BaseTable,
     BaseButton,
     vSelect,
   },
@@ -93,7 +74,6 @@ export default {
       newItem: {},
 
       groupsData: {},
-      initialData: {},
       removeList: [],
       groupsColumns: {},
       activeGroup: null,
@@ -116,46 +96,18 @@ export default {
         icon: "fa-chevron-left",
       },
     ];
-    this.headerData =
-      this.getUserInfo.role === "admin"
-        ? [
-            {
-              value: "/",
-              label: "Школа",
-            },
-            {
-              value: "/backup",
-              label: "Резервные копии",
-            },
-          ]
-        : [];
 
-    this.groupsData = await GroupsService.getData();
-    this.groupColumns = GroupsService.getColumns();
+    this.setGroup();
 
-    if (this.getUserInfo.role === "teacher") {
-      const { data } = await this.$axios.get(
-        `${import.meta.env.VITE_API_URL}/subjects_teachers?id_teacher=${
-          this.getUserInfo.rid
-        }`
-      );
-      this.subjects = data.map((item) => {
-        return {
-          id: item.id,
-          label: item.title,
-        };
-      });
-    } else if (this.getUserInfo.role === "admin") {
-      const { data } = await this.$axios.get(
-        `${import.meta.env.VITE_API_URL}/subjects`
-      );
-      this.subjects = data.map((item) => {
-        return {
-          id: item.id,
-          label: item.title,
-        };
-      });
-    }
+    const { data } = await this.$axios.get(
+      `${import.meta.env.VITE_API_URL}/subjects`
+    );
+    this.subjects = data.map((item) => {
+      return {
+        id: item.id,
+        label: item.title,
+      };
+    });
 
     this.isLoading = false;
   },
@@ -164,7 +116,19 @@ export default {
       this.isLoading = true;
       const journalsData = await JournalsService.getData();
 
-      this.tableData = this.tableData.map((item) => {
+      const { data } = await this.$axios.get(
+        `${import.meta.env.VITE_API_URL}/students/${this.getUserInfo.rid}`
+      );
+      const name = `${
+        data.last_name
+      } ${data.first_name[0].toUpperCase()}. ${data.patronymic[0].toUpperCase()}.`;
+
+      this.tableData = [
+        {
+          id: this.getUserInfo.rid,
+          name,
+        },
+      ].map((item) => {
         const obj = {};
         for (const data of journalsData) {
           if (
@@ -172,7 +136,6 @@ export default {
             data.id_student == item.id
           ) {
             obj[data.date] = data.grade;
-            obj[`${data.date}-id_journal`] = data.id;
           }
         }
 
@@ -201,8 +164,6 @@ export default {
           }
         });
       });
-
-      this.initialData = [...this.tableData];
 
       this.isLoading = false;
     },

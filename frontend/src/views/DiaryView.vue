@@ -50,7 +50,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { BaseSkelet, BaseButton, VedomostiTable } from "@/components";
+import { BaseSkelet, VedomostiTable } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import { JournalsService } from "@/services";
 import vSelect from "vue-select";
@@ -60,7 +60,6 @@ export default {
     BaseLayout,
     VedomostiTable,
     BaseSkelet,
-    BaseButton,
     vSelect,
   },
   data() {

@@ -1,7 +1,10 @@
 <template>
   <div class="w-auto">
     <div class="h-full flex flex-col gap-2 px-2">
-      <template v-for="item in data" :key="item.value">
+      <template
+        v-for="item in data"
+        :key="item.value"
+      >
         <!-- Sidebar btns -->
         <router-link
           v-if="item.link"

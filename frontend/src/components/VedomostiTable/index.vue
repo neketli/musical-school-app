@@ -18,15 +18,27 @@
               @onRemove="remove"
             />
           </th>
-          <th v-if="isEditable" class="py-3 px-6 min-w-[100px]">
-            <BaseButton class="text-green-400" @click="add">
+          <th
+            v-if="isEditable"
+            class="py-3 px-6 min-w-[100px]"
+          >
+            <BaseButton
+              class="text-green-400"
+              @click="add"
+            >
               <i class="fa fa-plus" />
             </BaseButton>
           </th>
         </tr>
       </thead>
-      <tbody v-for="row in dataSource" :key="row">
-        <TableRow :isEditable="isEditable" :rowData="row" />
+      <tbody
+        v-for="row in dataSource"
+        :key="row"
+      >
+        <TableRow
+          :isEditable="isEditable"
+          :rowData="row"
+        />
       </tbody>
     </table>
   </div>

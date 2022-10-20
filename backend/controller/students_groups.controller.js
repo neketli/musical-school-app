@@ -70,7 +70,7 @@ class StudentsGroupsController {
 
       if (id_group) {
         queryString = `
-				SELECT students_groups.id, students.first_name, students.last_name, students.patronymic FROM students_groups
+				SELECT students_groups.id_student as id, students.first_name, students.last_name, students.patronymic FROM students_groups
 		JOIN students on students_groups.id_student = students.id 
 		WHERE id_group = $1`;
 
@@ -79,6 +79,7 @@ class StudentsGroupsController {
         const response = data.rows.map((item) => {
           return {
             id: item.id,
+            id_student: item.id_student,
             name: `${
               item.last_name
             } ${item.first_name[0].toUpperCase()}. ${item.patronymic[0].toUpperCase()}.`,

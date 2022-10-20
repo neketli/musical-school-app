@@ -1,5 +1,8 @@
 <template>
-  <div class="flex items-center" @click.self="enterEditMode">
+  <div
+    class="flex items-center"
+    @click.self="enterEditMode"
+  >
     <div v-if="!editMode">
       {{ dataSource.label }}
     </div>
@@ -11,15 +14,27 @@
       class="min-w-[150px]"
       @keyup.enter="save"
     />
-    <div v-if="editMode" class="flex text-right justify-end">
+    <div
+      v-if="editMode"
+      class="flex text-right justify-end"
+    >
       <template v-if="editMode">
-        <BaseButton class="text-green-400 mx-2" @click="save">
+        <BaseButton
+          class="text-green-400 mx-2"
+          @click="save"
+        >
           <i class="fa fa-check" />
         </BaseButton>
-        <BaseButton class="text-red-400 mx-2" @click="cancel">
+        <BaseButton
+          class="text-red-400 mx-2"
+          @click="cancel"
+        >
           <i class="fa fa-times" />
         </BaseButton>
-        <BaseButton class="text-red-400 mx-2" @click="remove">
+        <BaseButton
+          class="text-red-400 mx-2"
+          @click="remove"
+        >
           <i class="fa fa-trash-o" />
         </BaseButton>
       </template>

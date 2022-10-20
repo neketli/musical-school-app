@@ -12,7 +12,7 @@ class JournalsController {
         id_subject,
         id_student) 
         VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-          [id, type, date, grade, id_subject, id_student]
+          [id, type, date, grade ? grade : null, id_subject, id_student]
         );
         return;
       }
@@ -25,7 +25,7 @@ class JournalsController {
         id_subject,
         id_student) 
         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-        [type, date, grade, id_subject, id_student]
+        [type, date, grade ? grade : null, id_subject, id_student]
       );
 
       res?.json(newStudent.rows[0]);
@@ -99,7 +99,7 @@ class JournalsController {
 		id_subject = $5,
 		id_student = $6
 	   WHERE id = $1`,
-          [id, type, date, grade, id_subject, id_student]
+          [id, type, date, grade ? grade : null, id_subject, id_student]
         );
       }
 

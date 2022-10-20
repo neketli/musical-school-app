@@ -40,10 +40,24 @@ class GroupsController {
   async getAllGroups(req, res) {
     try {
       const groups = await db.query(
-        "SELECT groups.id, groups.form, groups.year, speciality.title  FROM groups JOIN speciality ON groups.id_speciality=speciality.id "
+        `SELECT groups.id, 
+        groups.form, 
+        groups.year, 
+        speciality.id as id_speciality,
+        speciality.title  
+         FROM groups JOIN speciality ON groups.id_speciality=speciality.id`
       );
 
-      res?.json(groups.rows);
+      const response = groups.rows.map((item) => {
+        return {
+          id: item.id,
+          form: item.form,
+          year: item.year,
+          id_speciality_select: `${item.id_speciality} ${item.title}`,
+        };
+      });
+
+      res?.json(response);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

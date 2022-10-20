@@ -1,15 +1,27 @@
 <template>
-  <div v-if="!isLoading" class="flex flex-col gap-2">
-    <h3 class="text-xl font-bold">Список моих предметов</h3>
+  <div
+    v-if="!isLoading"
+    class="flex flex-col gap-2"
+  >
+    <h3 class="text-xl font-bold">
+      Список моих предметов
+    </h3>
     <div class="flex flex-col gap-4">
       <ul>
-        <li class="ml-4" v-for="subject in sujectsList" :key="subject.id">
+        <li
+          v-for="subject in sujectsList"
+          :key="subject.id"
+          class="ml-4"
+        >
           <i class="fa fa-check-circle-o" /> {{ subject.title }}
         </li>
       </ul>
     </div>
   </div>
-  <BaseSkelet v-else :size="200" />
+  <BaseSkelet
+    v-else
+    :size="200"
+  />
 </template>
 
 <script>

@@ -118,14 +118,14 @@ CREATE TABLE temp_students (
     id bigint NOT NULL,
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
-    patronymic character varying(50) NOT NULL,
+    patronymic character varying(50),
     phone character varying(20),
     parents_phone character varying(20) NOT NULL,
-	birthdate date NOT NULL,
+    birthdate date NOT NULL,
 
     operation         char(6)   NOT NULL,
     stamp             timestamp NOT NULL,
-	op_id SERIAL PRIMARY KEY
+    op_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE temp_teachers (
@@ -154,9 +154,9 @@ CREATE TABLE temp_subjects (
 
 CREATE TABLE temp_journals (
     id bigint NOT NULL,
-    type character varying(50) NOT NULL,
+    type character varying(50),
     date date NOT NULL,
-    grade smallint NOT NULL,
+    grade smallint,
     id_student bigint NOT NULL,
     id_subject bigint NOT NULL,
 

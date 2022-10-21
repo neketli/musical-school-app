@@ -20,11 +20,17 @@
       @onRemove="remove"
       @onAdd="toggleMenu"
     />
-    <BaseSkelet v-else :size="200" />
+    <BaseSkelet
+      v-else
+      :size="200"
+    />
 
     <!-- Dropdown Menu -->
     <Transition name="slide-fade">
-      <div v-show="isMenuShow && !isLoading" class="-mt-1 w-full">
+      <div
+        v-show="isMenuShow && !isLoading"
+        class="-mt-1 w-full"
+      >
         <div class="flex flex-col gap-5 rounded-b-xl p-10 bg-white shadow-md">
           <!-- Content -->
           <div class="flex w-full justify-between items-center gap-5">
@@ -50,10 +56,16 @@
           </div>
           <!-- Buttons -->
           <div class="gap-5 flex justify-center items-center">
-            <BaseButton class="text-green-600 w-[20%]" @click="add">
+            <BaseButton
+              class="text-green-600 w-[20%]"
+              @click="add"
+            >
               <i class="fa fa-check" />
             </BaseButton>
-            <BaseButton class="text-red-600 w-[20%]" @click="cancel">
+            <BaseButton
+              class="text-red-600 w-[20%]"
+              @click="cancel"
+            >
               <i class="fa fa-times" />
             </BaseButton>
           </div>
@@ -69,7 +81,10 @@
         :data="firstService.data || []"
         :title="firstService.label"
       />
-      <BaseSkelet v-else :size="200" />
+      <BaseSkelet
+        v-else
+        :size="200"
+      />
 
       <BaseTable
         v-if="!isLoading"
@@ -77,7 +92,10 @@
         :data="secondService.data || []"
         :title="secondService.label"
       />
-      <BaseSkelet v-else :size="200" />
+      <BaseSkelet
+        v-else
+        :size="200"
+      />
     </div>
   </BaseLayout>
 </template>

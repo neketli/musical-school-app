@@ -21,13 +21,19 @@
           :key="key"
           class="px-5 py-3 min-w-[100px]"
         >
-          <vSelect v-model="row[key]" :options="row[`${key}-options`]" />
+          <vSelect
+            v-model="row[key]"
+            :options="row[`${key}-options`]"
+          />
         </td>
       </template>
     </template>
 
     <template v-else>
-      <template v-for="key in rowKeys" :key="key">
+      <template
+        v-for="key in rowKeys"
+        :key="key"
+      >
         <td
           v-if="(key !== 'id' || includeId) && !key.includes('-options')"
           class="px-5 py-3"
@@ -37,12 +43,21 @@
       </template>
     </template>
     <!-- Edit mode buttons -->
-    <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
+    <div
+      v-if="isEditable"
+      class="flex gap-5 px-5 py-3 text-right justify-end"
+    >
       <template v-if="editMode">
-        <BaseButton class="text-green-400 mx-2" @click="save">
+        <BaseButton
+          class="text-green-400 mx-2"
+          @click="save"
+        >
           <i class="fa fa-check" />
         </BaseButton>
-        <BaseButton class="text-red-400 mx-2" @click="cancel">
+        <BaseButton
+          class="text-red-400 mx-2"
+          @click="cancel"
+        >
           <i class="fa fa-times" />
         </BaseButton>
         <BaseButton
@@ -54,7 +69,10 @@
         </BaseButton>
       </template>
       <template v-else>
-        <BaseButton class="mx-2" @click="toggleEditMode">
+        <BaseButton
+          class="mx-2"
+          @click="toggleEditMode"
+        >
           <i class="fa fa-pencil" />
         </BaseButton>
       </template>

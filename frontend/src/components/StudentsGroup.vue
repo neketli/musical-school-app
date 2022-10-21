@@ -5,7 +5,10 @@
     :columns="tableColumns"
     :data="tableData"
   />
-  <BaseSkelet v-else :size="200" />
+  <BaseSkelet
+    v-else
+    :size="200"
+  />
 </template>
 
 <script>

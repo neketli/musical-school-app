@@ -20,11 +20,20 @@
       @onAdd="showModal"
       @onUndo="undo"
     />
-    <BaseSkelet v-else :size="200" />
+    <BaseSkelet
+      v-else
+      :size="200"
+    />
 
     <template v-if="canEdit">
-      <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
-        <template #title> Добавить </template>
+      <BaseModal
+        v-model="isModalShow"
+        @confirm="add"
+        @cancel="cancel"
+      >
+        <template #title>
+          Добавить
+        </template>
 
         <div class="flex flex-col gap-4">
           <template v-for="column in tableColumns">
@@ -47,7 +56,6 @@
                 @option:selected="slectedDepartament"
               />
             </div>
-            <!-- TODO: Закончить -->
             <div
               v-if="column.value === 'id_speciality'"
               :key="column.label"
@@ -275,6 +283,11 @@ export default {
           ...row,
           id_departament: row.id_departament_select.split(" ")[0],
         });
+      } else if (row["id_speciality_select"]) {
+        await this.activeService.editData({
+          ...row,
+          id_speciality: row.id_speciality_select.split(" ")[0],
+        });
       } else if (row["rid_select"]) {
         await this.activeService.editData({
           ...row,
@@ -304,6 +317,14 @@ export default {
         const data = await DepartamentsService.getData();
         this.selectOptions = data.map((item) => Object.values(item).join(" "));
       } else if (
+        this.tableColumns.filter((item) => item.value === "id_speciality")
+          .length
+      ) {
+        const data = await SpecialityService.getData();
+        this.selectOptions = data.map((item) =>
+          Object.values(item).slice(0, 2).join(" ")
+        );
+      } else if (
         this.tableColumns.filter((item) => item.value === "role_select").length
       ) {
         const teachers = await TeachersService.getData();
@@ -319,6 +340,10 @@ export default {
     },
     slectedDepartament(option) {
       this.newItem["id_departament"] = option.split(" ")[0];
+    },
+    selectedSpeciality(option) {
+      console.log(option);
+      this.newItem["id_speciality"] = option.split(" ")[0];
     },
     selectedRid(option) {
       this.newItem["rid"] = option.split(" ")[0];
@@ -388,6 +413,22 @@ export default {
             ),
           };
         });
+      }
+
+      if (
+        this.tableColumns.filter((item) => item.value === "id_speciality")
+          .length
+      ) {
+        const data = await SpecialityService.getData();
+        this.tableData = this.tableData.map((item) => {
+          return {
+            ...item,
+            "id_speciality_select-options": data.map((item) =>
+              Object.values(item).slice(0, 2).join(" ")
+            ),
+          };
+        });
+        console.log(this.tableData);
       }
 
       if (

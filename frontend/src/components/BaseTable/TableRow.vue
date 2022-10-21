@@ -29,7 +29,7 @@
     <template v-else>
       <template v-for="key in rowKeys" :key="key">
         <td
-          v-if="(key !== 'id' && !key.includes('-options')) || includeId"
+          v-if="(key !== 'id' || includeId) && !key.includes('-options')"
           class="px-5 py-3"
         >
           {{ row[key] }}

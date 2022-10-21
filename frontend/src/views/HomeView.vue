@@ -20,20 +20,11 @@
       @onAdd="showModal"
       @onUndo="undo"
     />
-    <BaseSkelet
-      v-else
-      :size="200"
-    />
+    <BaseSkelet v-else :size="200" />
 
     <template v-if="canEdit">
-      <BaseModal
-        v-model="isModalShow"
-        @confirm="add"
-        @cancel="cancel"
-      >
-        <template #title>
-          Добавить
-        </template>
+      <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
+        <template #title> Добавить </template>
 
         <div class="flex flex-col gap-4">
           <template v-for="column in tableColumns">
@@ -342,7 +333,6 @@ export default {
       this.newItem["id_departament"] = option.split(" ")[0];
     },
     selectedSpeciality(option) {
-      console.log(option);
       this.newItem["id_speciality"] = option.split(" ")[0];
     },
     selectedRid(option) {
@@ -428,7 +418,6 @@ export default {
             ),
           };
         });
-        console.log(this.tableData);
       }
 
       if (

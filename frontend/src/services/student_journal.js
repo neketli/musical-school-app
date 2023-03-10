@@ -12,18 +12,22 @@ class StudentJournalService {
       {
         label: "Тип оценки",
         value: "type",
+        type: "input",
       },
       {
         label: "Дата выставления",
         value: "date",
+        type: "input",
       },
       {
         label: "Оценка",
         value: "grade",
+        type: "input",
       },
       {
         label: "Предмет",
         value: "title",
+        type: "input",
       },
     ];
     return this.columns;

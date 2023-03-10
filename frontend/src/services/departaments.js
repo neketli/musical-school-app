@@ -12,6 +12,7 @@ class DepartamentsService {
       {
         label: "Название",
         value: "title",
+        type: "input",
       },
     ];
     return this.columns;

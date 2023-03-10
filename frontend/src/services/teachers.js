@@ -10,32 +10,39 @@ class TeachersService {
   getColumns() {
     this.columns = [
       {
-        label: "Имя",
-        value: "first_name",
-      },
-      {
         label: "Фамилия",
         value: "last_name",
+        type: "input",
+      },
+      {
+        label: "Имя",
+        value: "first_name",
+        type: "input",
       },
       {
         label: "Отчество",
         value: "patronymic",
+        type: "input",
       },
       {
         label: "Зарплата",
         value: "salary",
+        type: "input",
       },
       {
         label: "Должность",
         value: "position",
+        type: "input",
       },
       {
         label: "Телефон",
         value: "phone",
+        type: "input",
       },
       {
         label: "Дата рождения",
         value: "birthdate",
+        type: "date",
       },
     ];
     return this.columns;

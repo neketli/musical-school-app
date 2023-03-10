@@ -13,19 +13,29 @@ class UsersService {
       {
         label: "Логин",
         value: "login",
+        type: "input",
       },
       {
         label: "Пароль",
         value: "password",
+        type: "input",
       },
-
       {
         label: "Пользователь",
         value: "rid",
+        type: "select",
       },
       {
         label: "Группа",
         value: "role_select",
+
+        type: "select",
+        selectOptions: [
+          { label: "Ученик", value: "student", key: "role" },
+          { label: "Преподаватель", value: "teacher", key: "role" },
+          { label: "Директор", value: "director", key: "role" },
+          { label: "Администратор", value: "admin", key: "role" },
+        ],
       },
     ];
     return this.columns;

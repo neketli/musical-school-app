@@ -44,10 +44,20 @@
     <template v-else>
       <template v-for="key in rowKeys" :key="key">
         <td
-          v-if="(key !== 'id' || includeId) && !key.includes('-options')"
+          v-if="
+            (key !== 'id' || includeId) &&
+            !key.includes('-options') &&
+            !key.includes('date')
+          "
           class="px-5 py-3"
         >
           {{ row[key] }}
+        </td>
+        <td
+          v-if="(key !== 'id' || includeId) && key.includes('date')"
+          class="px-5 py-3"
+        >
+          {{ new Date(row[key]).toLocaleDateString("ru-RU") }}
         </td>
       </template>
     </template>

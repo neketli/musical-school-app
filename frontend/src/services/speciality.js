@@ -12,14 +12,17 @@ class SpecialitysService {
       {
         label: "Название",
         value: "title",
+        type: "input",
       },
       {
         label: "Основной инструмент",
         value: "instrument",
+        type: "input",
       },
       {
         label: "Отделение",
         value: "id_departament",
+        type: "select",
       },
     ];
     return this.columns;

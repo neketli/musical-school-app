@@ -12,10 +12,12 @@ class STService {
       {
         label: "Предмет",
         value: "id_subject",
+        type: "select",
       },
       {
         label: "Преподаватель",
         value: "id_teacher",
+        type: "select",
       },
     ];
     return this.columns;

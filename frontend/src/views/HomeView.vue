@@ -20,78 +20,40 @@
       @onAdd="showModal"
       @onUndo="undo"
     />
-    <BaseSkelet
-      v-else
-      :size="200"
-    />
-
+    <BaseSkelet v-else :size="200" />
     <template v-if="canEdit">
-      <BaseModal
-        v-model="isModalShow"
-        @confirm="add"
-        @cancel="cancel"
-      >
-        <template #title>
-          Добавить
-        </template>
+      <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
+        <template #title> Добавить </template>
 
         <div class="flex flex-col gap-4">
           <template v-for="column in tableColumns">
             <BaseInput
-              v-if="
-                !column.value.includes('id') && column.value !== 'role_select'
-              "
+              v-if="column.type === 'input'"
               :key="column.label"
               v-model="newItem[column.value]"
               :label="column.label"
             />
             <div
-              v-if="column.value === 'id_departament'"
+              v-if="column.type === 'select'"
               :key="column.label"
-              class="flex flex-col"
+              class="flex flex-col text-gray-600 gap-2"
             >
               {{ column.label }}
               <vSelect
-                :options="selectOptions"
-                @option:selected="slectedDepartament"
+                :options="column.selectOptions || selectOptions"
+                @option:selected="selectCallback"
               />
             </div>
             <div
-              v-if="column.value === 'id_speciality'"
+              v-if="column.type === 'date'"
               :key="column.label"
-              class="flex flex-col"
+              class="flex flex-col text-gray-600 gap-2"
             >
               {{ column.label }}
-              <vSelect
-                :options="selectOptions"
-                @option:selected="selectedSpeciality"
-              />
-            </div>
-            <div
-              v-if="column.value === 'role_select'"
-              :key="column.label"
-              class="flex flex-col"
-            >
-              {{ column.label }}
-
-              <vSelect
+              <VueDatePicker
                 v-model="newItem[column.value]"
-                :reduce="(item) => item.label"
-                :options="roles"
-                @option:selected="selectedRole"
-              />
-            </div>
-            <div
-              v-if="column.value === 'rid'"
-              :key="column.label"
-              class="flex flex-col"
-            >
-              {{ column.label }}
-
-              <vSelect
-                v-model="newItem[column.value]"
-                :options="selectOptions"
-                @option:selected="selectedRid"
+                :enableTimePicker="false"
+                locale="ru"
               />
             </div>
           </template>
@@ -104,6 +66,8 @@
 <script>
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import { mapGetters } from "vuex";
 import { BaseTable, BaseModal, BaseInput, BaseSkelet } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
@@ -120,92 +84,7 @@ import {
   UsersService,
 } from "@/services";
 
-const TABLES = [
-  // Students
-
-  {
-    value: "users",
-    label: "Пользователи",
-    icon: "fa-user-circle-o",
-    editAccess: ["admin"],
-  },
-  {
-    value: "departaments",
-    label: "Отделения",
-    icon: "fa-archive",
-    editAccess: ["admin", "director"],
-    readAccess: ["teacher"],
-  },
-  {
-    value: "speciality",
-    label: "Специальности",
-    icon: "fa-graduation-cap",
-    editAccess: ["admin", "director"],
-    readAccess: ["teacher", "student"],
-  },
-  {
-    value: "subjects",
-    label: "Предметы",
-    icon: "fa-bookmark-o",
-    editAccess: ["admin", "director"],
-    readAccess: ["teacher"],
-  },
-  {
-    value: "groups",
-    label: "Группы",
-    icon: "fa-users",
-    editAccess: ["admin", "director"],
-    readAccess: ["teacher"],
-
-    supLabel: "Списки учеников",
-    subValue: "students_groups",
-  },
-  {
-    value: "journals",
-    label: "Журналы",
-    icon: "fa-book",
-    editAccess: [],
-  },
-  {
-    value: "vedomosti",
-    label: "Ведомости",
-    icon: "fa-book",
-    link: "/vedomosti",
-    editAccess: ["admin", "director", "teacher"],
-  },
-  {
-    value: "students",
-    label: "Ученики",
-    icon: "fa-user",
-    editAccess: ["admin", "director"],
-    readAccess: ["teacher"],
-  },
-  {
-    value: "teachers",
-    label: "Преподаватели",
-    icon: "fa-user-o",
-    editAccess: ["admin", "director"],
-    readAccess: [],
-
-    supLabel: "Ответсвенные",
-    subValue: "subjects_teachers",
-  },
-  {
-    value: "teachers",
-    label: "Преподаватели",
-    icon: "fa-user-o",
-    editAccess: [],
-    readAccess: ["teacher", "student"],
-  },
-
-  {
-    value: "student_journal",
-    label: "Мои оценки",
-    icon: "fa-book",
-    link: "/dnevnik",
-    readAccess: ["student"],
-  },
-];
+import { TABLES } from "@/helpers/tables";
 
 export default {
   components: {
@@ -215,6 +94,7 @@ export default {
     BaseInput,
     BaseSkelet,
     vSelect,
+    VueDatePicker,
   },
   data() {
     return {
@@ -227,11 +107,6 @@ export default {
       tableData: [],
       newItem: {},
       selectOptions: [],
-      roles: [
-        { label: "student" },
-        { label: "teacher" },
-        { label: "director" },
-      ],
 
       isLoading: true,
       isModalShow: false,
@@ -247,19 +122,20 @@ export default {
         item?.editAccess?.includes(this.getUserInfo.role) ||
         item?.readAccess?.includes(this.getUserInfo.role)
     );
-    this.headerData =
-      this.getUserInfo.role === "admin"
-        ? [
-            {
-              value: "/",
-              label: "Школа",
-            },
-            {
-              value: "/backup",
-              label: "Резервные копии",
-            },
-          ]
-        : [];
+
+    if (this.getUserInfo.role === "admin") {
+      this.headerData = [
+        {
+          value: "/",
+          label: "Школа",
+        },
+        {
+          value: "/backup",
+          label: "Резервные копии",
+        },
+      ];
+    }
+
     this.setFilter(this.sidebarData[0]);
     await this.initActiveTable();
     this.isLoading = false;
@@ -281,18 +157,18 @@ export default {
       if (row["id_departament_select"]) {
         await this.activeService.editData({
           ...row,
-          id_departament: row.id_departament_select.split(" ")[0],
+          id_departament: row.id_departament_select.id,
         });
       } else if (row["id_speciality_select"]) {
         await this.activeService.editData({
           ...row,
-          id_speciality: row.id_speciality_select.split(" ")[0],
+          id_speciality: row.id_speciality_select.id,
         });
       } else if (row["rid_select"]) {
         await this.activeService.editData({
           ...row,
-          rid: row.rid_select.split(" ")[0],
-          role: row.role_select.label,
+          rid: row.rid_select.id,
+          role: row.role_select?.value || row.role_select,
         });
       } else {
         await this.activeService.editData(row);
@@ -310,45 +186,47 @@ export default {
 
     async showModal() {
       this.clearNewItem();
-      if (
-        this.tableColumns.filter((item) => item.value === "id_departament")
-          .length
-      ) {
+      if (this.tableColumns.find((item) => item.value === "id_departament")) {
         const data = await DepartamentsService.getData();
-        this.selectOptions = data.map((item) => Object.values(item).join(" "));
-      } else if (
-        this.tableColumns.filter((item) => item.value === "id_speciality")
-          .length
-      ) {
+        this.selectOptions = data.map((item) => ({
+          id: item.id,
+          label: item.title,
+          key: "id_departament",
+        }));
+      }
+
+      if (this.tableColumns.find((item) => item.value === "id_speciality")) {
         const data = await SpecialityService.getData();
+        console.log(data);
         this.selectOptions = data.map((item) =>
           Object.values(item).slice(0, 2).join(" ")
         );
-      } else if (
-        this.tableColumns.filter((item) => item.value === "role_select").length
-      ) {
+      }
+
+      if (this.tableColumns.find((item) => item.value === "role_select")) {
         const teachers = await TeachersService.getData();
         const students = await StudentsService.getData();
         this.selectOptions = [
           "- Список преподавателей -",
-          ...teachers.map((item) => Object.values(item).join(" ")),
+          ...teachers.map((item) => ({
+            label: `${item.last_name} ${item.first_name} ${item.patronymic} ${item.birthdate}`,
+            id: item.id,
+            key: "rid",
+          })),
           "- Список учеников -",
-          ...students.map((item) => Object.values(item).join(" ")),
+          ...students.map((item) => ({
+            label: `${item.last_name} ${item.first_name} ${item.patronymic} ${item.birthdate}`,
+            id: item.id,
+            key: "rid",
+          })),
         ];
       }
+
       this.isModalShow = true;
     },
-    slectedDepartament(option) {
-      this.newItem["id_departament"] = option.split(" ")[0];
-    },
-    selectedSpeciality(option) {
-      this.newItem["id_speciality"] = option.split(" ")[0];
-    },
-    selectedRid(option) {
-      this.newItem["rid"] = option.split(" ")[0];
-    },
-    selectedRole(option) {
-      this.newItem["role"] = option.label;
+
+    selectCallback({ key, id, value }) {
+      this.newItem[key] = id || value;
     },
 
     async add() {
@@ -399,10 +277,7 @@ export default {
         this.tableData = await this.activeService.getData();
       }
 
-      if (
-        this.tableColumns.filter((item) => item.value === "id_departament")
-          .length
-      ) {
+      if (this.tableColumns.find((item) => item.value === "id_departament")) {
         const data = await DepartamentsService.getData();
         this.tableData = this.tableData.map((item) => {
           return {
@@ -414,10 +289,7 @@ export default {
         });
       }
 
-      if (
-        this.tableColumns.filter((item) => item.value === "id_speciality")
-          .length
-      ) {
+      if (this.tableColumns.find((item) => item.value === "id_speciality")) {
         const data = await SpecialityService.getData();
         this.tableData = this.tableData.map((item) => {
           return {
@@ -428,24 +300,32 @@ export default {
           };
         });
       }
-
-      if (
-        this.tableColumns.filter((item) => item.value === "role_select").length
-      ) {
+      if (this.tableColumns.find((item) => item.value === "role_select")) {
         const teachers = await TeachersService.getData();
         const students = await StudentsService.getData();
-        const selectOptions = [
+
+        const usersOptions = [
           "- Список преподавателей -",
-          ...teachers.map((item) => Object.values(item).join(" ")),
+          ...teachers.map((item) => ({
+            label: `${item.last_name} ${item.first_name} ${item.patronymic} ${item.birthdate}`,
+            id: item.id,
+            key: "role",
+          })),
           "- Список учеников -",
-          ...students.map((item) => Object.values(item).join(" ")),
+          ...students.map((item) => ({
+            label: `${item.last_name} ${item.first_name} ${item.patronymic} ${item.birthdate}`,
+            id: item.id,
+            key: "role",
+          })),
         ];
 
         this.tableData = this.tableData.map((item) => {
           return {
             ...item,
-            "rid_select-options": selectOptions,
-            "role_select-options": this.roles,
+            "rid_select-options": usersOptions,
+            "role_select-options": this.tableColumns.find(
+              (item) => item.value === "role_select"
+            ).selectOptions,
           };
         });
       }
@@ -455,69 +335,66 @@ export default {
     },
 
     setService(value) {
-      if (value === "users") {
-        this.activeService = UsersService;
+      switch (value) {
+        case "users":
+          this.activeService = UsersService;
+          this.canEdit = this.sidebarData
+            .find((item) => item.value === "users")
+            .editAccess.includes(this.getUserInfo.role);
+          break;
+        case "departaments":
+          this.activeService = DepartamentsService;
+          this.canEdit = this.sidebarData
+            .find((item) => item.value === "departaments")
+            .editAccess.includes(this.getUserInfo.role);
+          break;
+        case "speciality":
+          this.activeService = SpecialityService;
+          this.canEdit = this.sidebarData
+            .find((item) => item.value === "speciality")
+            .editAccess.includes(this.getUserInfo.role);
+          break;
+        case "subjects":
+          this.activeService = SubjectsService;
+          this.canEdit = this.sidebarData
+            .find((item) => item.value === "subjects")
+            .editAccess.includes(this.getUserInfo.role);
+          break;
+        case "groups":
+          this.activeService = GroupsService;
+          this.canEdit = this.sidebarData
+            .find((item) => item.value === "groups")
+            .editAccess.includes(this.getUserInfo.role);
+          break;
+        case "journals":
+          this.activeService = JournalsService;
+          this.canEdit = this.sidebarData
+            .find((item) => item.value === "journals")
+            .editAccess.includes(this.getUserInfo.role);
+          break;
+        case "vedomosti":
+          this.activeService = VedomostiService;
+          this.canEdit = true;
+          break;
+        case "students":
+          this.activeService = StudentsService;
+          this.canEdit = this.sidebarData
+            .find((item) => item.value === "students")
+            .editAccess.includes(this.getUserInfo.role);
+          break;
+        case "teachers":
+          this.activeService = ["student", "teacher"].includes(
+            this.getUserInfo.role
+          )
+            ? TSService
+            : TeachersService;
 
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "users")[0]
-          .editAccess.includes(this.getUserInfo.role);
-      }
-      if (value === "departaments") {
-        this.activeService = DepartamentsService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "departaments")[0]
-          .editAccess.includes(this.getUserInfo.role);
-      }
-      if (value === "speciality") {
-        this.activeService = SpecialityService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "speciality")[0]
-          .editAccess.includes(this.getUserInfo.role);
-      }
-      if (value === "subjects") {
-        this.activeService = SubjectsService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "subjects")[0]
-          .editAccess.includes(this.getUserInfo.role);
-      }
-      if (value === "groups") {
-        this.activeService = GroupsService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "groups")[0]
-          .editAccess.includes(this.getUserInfo.role);
-      }
-      if (value === "journals") {
-        this.activeService = JournalsService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "journals")[0]
-          .editAccess.includes(this.getUserInfo.role);
-      }
-      if (value === "vedomosti") {
-        this.activeService = VedomostiService;
-        this.canEdit = true;
-      }
-      if (value === "students") {
-        this.activeService = StudentsService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "students")[0]
-          .editAccess.includes(this.getUserInfo.role);
-      }
-      if (value === "teachers") {
-        this.activeService = ["student", "teacher"].includes(
-          this.getUserInfo.role
-        )
-          ? TSService
-          : TeachersService;
-
-        this.canEdit = this.sidebarData
-          .filter((item) => item.value === "teachers")[0]
-          .editAccess.includes(this.getUserInfo.role);
+          this.canEdit = this.sidebarData
+            .find((item) => item.value === "teachers")
+            .editAccess.includes(this.getUserInfo.role);
+          break;
+        default:
+          break;
       }
     },
   },

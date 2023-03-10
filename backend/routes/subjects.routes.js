@@ -1,37 +1,25 @@
 const Router = require("express");
 const router = new Router();
-const departamentController = require("../controller/subjects.controller");
+const subjectsController = require("../controller/subjects.controller");
 const jwtAuthMiddleware = require("../middleware/auth");
 
-router.post(
-  "/subjects",
-  jwtAuthMiddleware,
-  departamentController.createSubjects
-);
+router.post("/subjects", jwtAuthMiddleware, subjectsController.createSubjects);
 router.post(
   "/subjects/undo",
   jwtAuthMiddleware,
-  departamentController.undoSubjects.bind(departamentController)
+  subjectsController.undoSubjects.bind(subjectsController)
 );
-router.get(
-  "/subjects/:id",
-  jwtAuthMiddleware,
-  departamentController.getSubjects
-);
-router.get(
-  "/subjects",
-  jwtAuthMiddleware,
-  departamentController.getAllSubjectss
-);
+router.get("/subjects/:id", jwtAuthMiddleware, subjectsController.getSubjects);
+router.get("/subjects", jwtAuthMiddleware, subjectsController.getAllSubjectss);
 router.put(
   "/subjects/:id",
   jwtAuthMiddleware,
-  departamentController.updateSubjects
+  subjectsController.updateSubjects
 );
 router.delete(
   "/subjects/:id",
   jwtAuthMiddleware,
-  departamentController.deleteSubjects
+  subjectsController.deleteSubjects
 );
 
 module.exports = router;

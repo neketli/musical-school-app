@@ -12,6 +12,7 @@ class SubjectsService {
       {
         label: "Название",
         value: "title",
+        type: "input",
       },
     ];
     return this.columns;

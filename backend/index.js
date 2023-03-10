@@ -14,6 +14,7 @@ const routes = {
   journalsRouter: require("./routes/journals.routes"),
   usersRouter: require("./routes/users.routes"),
   studentsGroupsRouter: require("./routes/students_groups.routes"),
+  subjectsRouter: require("./routes/subjects.routes"),
   subjectsTeachersRouter: require("./routes/subjects_teachers.routes"),
   authRouter: require("./routes/auth.routes"),
   dumpRouter: require("./routes/dump.routes"),

@@ -12,22 +12,27 @@ class JournalsService {
       {
         label: "Тип оценки",
         value: "type",
+        type: "input",
       },
       {
         label: "Дата выставления",
         value: "date",
+        type: "date",
       },
       {
         label: "Оценка",
         value: "grade",
+        type: "input",
       },
       {
         label: "id ученика",
         value: "id_student",
+        type: "select",
       },
       {
         label: "id предмета",
         value: "id_subject",
+        type: "select",
       },
     ];
     return this.columns;

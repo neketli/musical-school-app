@@ -16,14 +16,17 @@ class GroupsService {
       {
         label: "Форма обучения",
         value: "form",
+        type: "input",
       },
       {
         label: "Год обучения",
         value: "year",
+        type: "input",
       },
       {
         label: "Специальность",
         value: "id_speciality",
+        type: "select",
       },
     ];
     return this.columns;

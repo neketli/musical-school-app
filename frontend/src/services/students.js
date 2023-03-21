@@ -10,28 +10,34 @@ class StudentsService {
   getColumns() {
     this.columns = [
       {
-        label: "Имя",
-        value: "first_name",
-      },
-      {
         label: "Фамилия",
         value: "last_name",
+        type: "input",
+      },
+      {
+        label: "Имя",
+        value: "first_name",
+        type: "input",
       },
       {
         label: "Отчество",
         value: "patronymic",
+        type: "input",
       },
       {
         label: "Телефон",
         value: "phone",
+        type: "input",
       },
       {
         label: "Телефон родителей",
         value: "parents_phone",
+        type: "input",
       },
       {
         label: "Дата рождения",
         value: "birthdate",
+        type: "date",
       },
     ];
     return this.columns;

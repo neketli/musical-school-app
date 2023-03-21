@@ -12,10 +12,12 @@ class SGService {
       {
         label: "Ученик",
         value: "id_student",
+        type: "select",
       },
       {
         label: "Группа",
         value: "id_group",
+        type: "select",
       },
     ];
     return this.columns;

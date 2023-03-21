@@ -40,7 +40,6 @@ class UsersController {
   async getAllUsers(req, res) {
     try {
       const users = await db.query("SELECT * FROM users");
-
       const response = [];
       for (const item of users.rows) {
         const role_select = item.role;
@@ -51,7 +50,7 @@ class UsersController {
           `SELECT (first_name, last_name, patronymic, birthdate) FROM ${table} WHERE id = $1`,
           [rid]
         );
-        const rid_select = `${rid} ${peoples.rows[0].row.replaceAll(",", " ")}`;
+        const rid_select = peoples.rows[0].row.replaceAll(",", " ");
 
         delete item["role"];
         delete item["rid"];

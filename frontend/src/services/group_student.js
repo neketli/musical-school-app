@@ -12,18 +12,22 @@ class GroupStudentService {
       {
         label: "Номер группы",
         value: "id_group",
+        type: "input",
       },
       {
         label: "Форма обучения",
         value: "form",
+        type: "input",
       },
       {
         label: "Специальность",
         value: "speciality",
+        type: "input",
       },
       {
         label: "Инструмент",
         value: "instrument",
+        type: "input",
       },
     ];
     return this.columns;

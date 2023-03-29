@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   experimental: {
     reactivityTransform: true,
   },
-  css: ["~/assets/css/tailwind.css"],
+  css: ["~/assets/css/normalize.css", "~/assets/css/tailwind.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -21,6 +21,7 @@ export default defineNuxtConfig({
   colorMode: {
     classSuffix: "",
   },
+
   devtools: {
     vscode: {},
   },

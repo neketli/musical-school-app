@@ -1,19 +1,9 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
   <tr class="bg-white border-b hover:bg-gray-50">
-    <template
-      v-for="key in rowKeys"
-      :key="key"
-    >
-      <td
-        v-if="key !== 'id'"
-        class="px-6 py-3"
-      >
-        <BaseInput
-          v-if="isEditable"
-          :key="key"
-          v-model="rowData[key]"
-        />
+    <template v-for="key in rowKeys" :key="key">
+      <td v-if="key !== 'id'" class="px-6 py-3">
+        <BaseInput v-if="isEditable" :key="key" v-model="rowData[key]" />
         <template v-else>
           {{ rowData[key] }}
         </template>
@@ -23,7 +13,6 @@
 </template>
 
 <script>
-import { BaseInput } from "@/components";
 export default {
   components: {
     BaseInput,

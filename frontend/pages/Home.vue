@@ -69,7 +69,6 @@ import "vue-select/dist/vue-select.css";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { mapGetters } from "vuex";
-import { BaseTable, BaseModal, BaseInput, BaseSkelet } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import {
   DepartamentsService,

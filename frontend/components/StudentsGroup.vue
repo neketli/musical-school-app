@@ -1,5 +1,5 @@
 <template>
-  <Table
+  <BaseTable
     v-if="!isLoading"
     title="Мои группы"
     :columns="tableColumns"
@@ -14,7 +14,7 @@ import { GroupStudentService } from "@/services";
 
 export default {
   components: {
-    Table,
+    BaseTable,
     Skelet,
   },
   data() {

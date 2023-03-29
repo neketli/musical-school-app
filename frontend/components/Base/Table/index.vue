@@ -42,25 +42,25 @@
       class="flex justify-between px-5 py-3"
     >
       <div v-if="isEditable" class="flex gap-3">
-        <Button class="text-green-400" @click="add">
+        <BaseButton class="text-green-400" @click="add">
           <i class="fa fa-plus" />
-        </Button>
+        </BaseButton>
 
-        <Button class="text-yellow-400" @click="undo">
+        <BaseButton class="text-yellow-400" @click="undo">
           <i class="fa fa-undo" />
-        </Button>
+        </BaseButton>
       </div>
 
       <div v-if="isPagination" class="flex justify-center items-center gap-3">
-        <Button class="text-black" @click="prev">
+        <BaseButton class="text-black" @click="prev">
           <i class="fa fa-angle-left" />
-        </Button>
+        </BaseButton>
         <div class="flex text-gray-500">
           {{ currentPage }} / {{ totalPages }}
         </div>
-        <Button class="text-black" @click="next">
+        <BaseButton class="text-black" @click="next">
           <i class="fa fa-angle-right" />
-        </Button>
+        </BaseButton>
       </div>
     </div>
   </div>
@@ -70,7 +70,7 @@
 import TableRow from "./TableRow.vue";
 
 export default {
-  components: { Button, TableRow },
+  components: { BaseButton, TableRow },
   props: {
     data: {
       type: Array,

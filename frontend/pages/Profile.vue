@@ -1,9 +1,7 @@
 <template>
   <BaseLayout :headerData="headerData">
     <div class="flex gap-8 flex-col">
-      <h2 class="text-3xl">
-        Профиль
-      </h2>
+      <h2 class="text-3xl">Профиль</h2>
 
       <div class="flex gap-10 px-8">
         <div class="flex h-[100px] items-center px-8 rounded-lg bg-sky-200">
@@ -13,10 +11,7 @@
           <div class="font-bold font-2xl block">
             {{ userData.role }}
           </div>
-          <div
-            v-if="getUserInfo.rid"
-            class="flex flex-col gap-2"
-          >
+          <div v-if="getUserInfo.rid" class="flex flex-col gap-2">
             <span>ФИО: {{ userData.full_name }}</span>
             <span>Дата рождения: {{ userData.birthdate }}</span>
             <span>Номер телефона: {{ userData.phone }}</span>
@@ -39,7 +34,6 @@
 <script>
 import { mapGetters } from "vuex";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { StudentsGroup, TeachersSubjects } from "@/components";
 
 export default {
   components: {

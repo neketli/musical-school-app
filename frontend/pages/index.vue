@@ -25,10 +25,6 @@
 
 <script>
 export default {
-  components: {
-    BaseInput,
-    BaseButton,
-  },
   data() {
     return {
       login: "",

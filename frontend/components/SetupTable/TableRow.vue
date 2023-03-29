@@ -27,21 +27,12 @@
       </td>
     </template>
     <!-- Edit mode buttons -->
-    <div
-      v-if="isEditable"
-      class="flex gap-5 px-5 py-3 text-right justify-end"
-    >
+    <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
       <template v-if="editMode">
-        <BaseButton
-          class="text-green-400 mx-2"
-          @click="save"
-        >
+        <BaseButton class="text-green-400 mx-2" @click="save">
           <i class="fa fa-check" />
         </BaseButton>
-        <BaseButton
-          class="text-red-400 mx-2"
-          @click="cancel"
-        >
+        <BaseButton class="text-red-400 mx-2" @click="cancel">
           <i class="fa fa-times" />
         </BaseButton>
         <BaseButton
@@ -53,10 +44,7 @@
         </BaseButton>
       </template>
       <template v-else>
-        <BaseButton
-          class="mx-2"
-          @click="toggleEditMode"
-        >
+        <BaseButton class="mx-2" @click="toggleEditMode">
           <i class="fa fa-pencil" />
         </BaseButton>
       </template>
@@ -65,7 +53,6 @@
 </template>
 
 <script>
-import { BaseButton } from "@/components";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 export default {

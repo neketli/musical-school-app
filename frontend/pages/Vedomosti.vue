@@ -4,14 +4,9 @@
     :headerData="headerData"
     @setFilter="setFilter"
   >
-    <div
-      v-if="activeGroup"
-      class="flex flex-col gap-8 justify-center"
-    >
+    <div v-if="activeGroup" class="flex flex-col gap-8 justify-center">
       <div class="flex flex-col gap-4">
-        <h3 class="text-lg">
-          Выбор предмета
-        </h3>
+        <h3 class="text-lg">Выбор предмета</h3>
         <vSelect
           v-model="activeSubject"
           class="min-w-[25%] bg-white"
@@ -21,20 +16,14 @@
         />
       </div>
 
-      <div
-        v-if="activeSubject"
-        class="flex"
-      >
+      <div v-if="activeSubject" class="flex">
         <div class="flex flex-col bg-white h-full">
           <div
             class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
           >
             Ученик \ Дата занятия
           </div>
-          <template
-            v-for="item in tableData"
-            :key="item.name"
-          >
+          <template v-for="item in tableData" :key="item.name">
             <div
               class="py-3 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px] rounded-sm"
             >
@@ -53,20 +42,12 @@
             @onAdd="add"
             @onColumnSave="saveColumn"
           />
-          <BaseSkelet
-            v-else
-            :size="200"
-          />
-          <BaseButton @click="save">
-            Сохранить
-          </BaseButton>
+          <BaseSkelet v-else :size="200" />
+          <BaseButton @click="save"> Сохранить </BaseButton>
         </div>
       </div>
     </div>
-    <div
-      v-else
-      class="flex flex-auto"
-    >
+    <div v-else class="flex flex-auto">
       <BaseTable
         v-if="!isLoading"
         title="Выбор группы"
@@ -75,22 +56,14 @@
         includeId
         @onRowClicked="setGroup"
       />
-      <BaseSkelet
-        v-else
-        :size="200"
-      />
+      <BaseSkelet v-else :size="200" />
     </div>
   </BaseLayout>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import {
-  BaseTable,
-  BaseSkelet,
-  BaseButton,
-  VedomostiTable,
-} from "@/components";
+
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import { GroupsService, JournalsService } from "@/services";
 import vSelect from "vue-select";

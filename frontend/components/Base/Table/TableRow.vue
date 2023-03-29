@@ -16,7 +16,7 @@
           :key="key"
           class="px-5 py-3 min-w-[100px]"
         >
-          <Input v-model="row[key]" />
+          <BaseInput v-model="row[key]" />
         </td>
         <td
           v-if="key.includes('_select') && !key.includes('-options')"
@@ -61,27 +61,27 @@
         </td>
       </template>
     </template>
-    <!-- Edit mode buttons -->
+    <!-- Edit mode BaseButtons -->
     <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
       <template v-if="editMode">
-        <Button class="text-green-400 mx-2" @click="save">
+        <BaseButton class="text-green-400 mx-2" @click="save">
           <i class="fa fa-check" />
-        </Button>
-        <Button class="text-red-400 mx-2" @click="cancel">
+        </BaseButton>
+        <BaseButton class="text-red-400 mx-2" @click="cancel">
           <i class="fa fa-times" />
-        </Button>
-        <Button
-          v-if="!isButtonDisabled"
+        </BaseButton>
+        <BaseButton
+          v-if="!isBaseButtonDisabled"
           class="text-red-400 mx-2"
           @click="remove"
         >
           <i class="fa fa-trash-o" />
-        </Button>
+        </BaseButton>
       </template>
       <template v-else>
-        <Button class="mx-2" @click="toggleEditMode">
+        <BaseButton class="mx-2" @click="toggleEditMode">
           <i class="fa fa-pencil" />
-        </Button>
+        </BaseButton>
       </template>
     </div>
   </tr>
@@ -94,8 +94,8 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 export default {
   components: {
-    Button,
-    Input,
+    BaseButton,
+    BaseInput,
     vSelect,
     VueDatePicker,
   },
@@ -125,7 +125,7 @@ export default {
     rowKeys() {
       return Object.keys(this.row);
     },
-    isButtonDisabled() {
+    isBaseButtonDisabled() {
       // return Object.values(this.row).some((item) => !item);
       return false;
     },
@@ -142,12 +142,12 @@ export default {
       this.editMode = !this.editMode;
     },
     save() {
-      if (this.isButtonDisabled) return;
+      if (this.isBaseButtonDisabled) return;
       this.$emit("onSave", { ...this.row });
       this.toggleEditMode();
     },
     cancel() {
-      if (this.isButtonDisabled) {
+      if (this.isBaseButtonDisabled) {
         this.$emit("onCancel");
       }
       this.row = { ...this.oldRow };

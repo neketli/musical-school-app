@@ -5,8 +5,8 @@ import { defineStore } from "pinia";
 // store user logic
 export const useUserStore = defineStore({
   state: () => ({
-    user: JSON.parse(localStorage.getItem("user")) || {},
-    token: localStorage.getItem("token") || "",
+    user: {}, // JSON.parse(localStorage.getItem("user")) || {},
+    token: "", // localStorage.getItem("token") || "",
     status: "",
   }),
   getters: {
@@ -54,7 +54,7 @@ export const useUserStore = defineStore({
         this.status = "error";
       }
     },
-    async logout({ commit }) {
+    logout() {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       delete axios.defaults.headers.common.Authorization;

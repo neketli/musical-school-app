@@ -96,7 +96,7 @@
 <script>
 import { mapState } from "pinia";
 import vSelect from "vue-select";
-import { useUserStore } from "~/stores/user";
+import { useAuthUserStore } from "~/stores/user";
 import {
   BaseTable,
   BaseInput,
@@ -209,7 +209,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUserStore, ["getUserInfo"]),
+    ...mapState(useAuthUserStore, ["getUserInfo"]),
   },
   async created() {
     this.selectedTable = this.tablesList[0];

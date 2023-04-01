@@ -8,15 +8,8 @@
           Музыкальная школа
         </div>
         <form class="flex flex-col gap-6">
-          <BaseInput
-            v-model="login"
-            placeholder="Логин"
-          />
-          <BaseInput
-            v-model="password"
-            type="password"
-            placeholder="Пароль"
-          />
+          <BaseInput v-model="login" placeholder="Логин" />
+          <BaseInput v-model="password" type="password" placeholder="Пароль" />
           <BaseButton
             class="max-w-xs mx-[auto]"
             @keyup.enter="auth"
@@ -31,7 +24,9 @@
 </template>
 
 <script>
+import { mapActions } from "pinia";
 import { BaseInput, BaseButton } from "@/components";
+import { useUserStore } from "~/stores/user";
 
 export default {
   components: {
@@ -45,9 +40,10 @@ export default {
     };
   },
   methods: {
+    ...mapActions(useUserStore, { loginAction: "login" }),
     async auth() {
       try {
-        await this.$store.dispatch("login", {
+        await this.loginAction({
           login: this.login,
           password: this.password,
         });

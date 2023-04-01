@@ -3,7 +3,7 @@ import CryptoJS from "crypto-js";
 import { defineStore } from "pinia";
 
 // store user logic
-export const useAuthUserStore = defineStore({
+export const useUserStore = defineStore({
   state: () => ({
     user: JSON.parse(localStorage.getItem("user")) || {},
     token: localStorage.getItem("token") || "",
@@ -30,7 +30,7 @@ export const useAuthUserStore = defineStore({
         "user",
         JSON.stringify({ login: user.login, role: user.role, rid: user.rid })
       );
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
     },
     async login(user) {
       this.status = "loading";
@@ -57,7 +57,7 @@ export const useAuthUserStore = defineStore({
     async logout({ commit }) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      delete axios.defaults.headers.common["Authorization"];
+      delete axios.defaults.headers.common.Authorization;
       this.$reset();
     },
   },

@@ -3,10 +3,7 @@
     <div class="h-full flex justify-between items-center px-4">
       <!-- Nav links -->
       <div class="flex gap-5 items-center">
-        <router-link
-          to="/"
-          class="text-white text-2xl flex gap-2 items-center"
-        >
+        <router-link to="/" class="text-white text-2xl flex gap-2 items-center">
           <img
             src="@/assets/img/logo.png"
             class="w-12 h-12"
@@ -50,7 +47,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useUserStore } from "~/stores/user";
+
 export default {
   props: {
     data: {
@@ -60,7 +59,7 @@ export default {
   },
   emits: { onLogOut: null },
   computed: {
-    ...mapGetters(["getUserInfo"]),
+    ...mapState(useUserStore, ["getUserInfo"]),
   },
   methods: {
     logOut() {

@@ -20,17 +20,11 @@
       @onRemove="remove"
       @onAdd="toggleMenu"
     />
-    <BaseSkelet
-      v-else
-      :size="200"
-    />
+    <BaseSkelet v-else :size="200" />
 
     <!-- Dropdown Menu -->
     <Transition name="slide-fade">
-      <div
-        v-show="isMenuShow && !isLoading"
-        class="-mt-1 w-full"
-      >
+      <div v-show="isMenuShow && !isLoading" class="-mt-1 w-full">
         <div class="flex flex-col gap-5 rounded-b-xl p-10 bg-white shadow-md">
           <!-- Content -->
           <div class="flex w-full justify-between items-center gap-5">
@@ -56,16 +50,10 @@
           </div>
           <!-- Buttons -->
           <div class="gap-5 flex justify-center items-center">
-            <BaseButton
-              class="text-green-600 w-[20%]"
-              @click="add"
-            >
+            <BaseButton class="text-green-600 w-[20%]" @click="add">
               <i class="fa fa-check" />
             </BaseButton>
-            <BaseButton
-              class="text-red-600 w-[20%]"
-              @click="cancel"
-            >
+            <BaseButton class="text-red-600 w-[20%]" @click="cancel">
               <i class="fa fa-times" />
             </BaseButton>
           </div>
@@ -81,10 +69,7 @@
         :data="firstService.data || []"
         :title="firstService.label"
       />
-      <BaseSkelet
-        v-else
-        :size="200"
-      />
+      <BaseSkelet v-else :size="200" />
 
       <BaseTable
         v-if="!isLoading"
@@ -92,18 +77,16 @@
         :data="secondService.data || []"
         :title="secondService.label"
       />
-      <BaseSkelet
-        v-else
-        :size="200"
-      />
+      <BaseSkelet v-else :size="200" />
     </div>
   </BaseLayout>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { SetupTable, BaseTable, BaseButton, BaseSkelet } from "@/components";
+import { mapState } from "pinia";
 import vSelect from "vue-select";
+import { useUserStore } from "~/stores/user";
+import { SetupTable, BaseTable, BaseButton, BaseSkelet } from "@/components";
 import "vue-select/dist/vue-select.css";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import {
@@ -156,7 +139,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserInfo"]),
+    ...mapState(useUserStore, ["getUserInfo"]),
     firstSelect() {
       return this.firstService.data.map((item) =>
         Object.values(item).join(" ")
@@ -193,12 +176,12 @@ export default {
 
     async save(row) {
       this.isLoading = true;
-      if (row["id_student"]) {
+      if (row.id_student) {
         await this.activeService.editData(row.id, {
           id_student: +row.id_student.split(" ")[0],
           id_group: +row.id_group.split(" ")[0],
         });
-      } else if (row["id_teacher"]) {
+      } else if (row.id_teacher) {
         await this.activeService.editData(row.id, {
           id_teacher: +row.id_teacher.split(" ")[0],
           id_subject: +row.id_subject.split(" ")[0],

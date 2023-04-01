@@ -5,14 +5,12 @@
     :columns="tableColumns"
     :data="tableData"
   />
-  <BaseSkelet
-    v-else
-    :size="200"
-  />
+  <BaseSkelet v-else :size="200" />
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useUserStore } from "~/stores/user";
 import { BaseTable, BaseSkelet } from "@/components";
 import { GroupStudentService } from "@/services";
 
@@ -34,7 +32,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserInfo"]),
+    ...mapState(useUserStore, ["getUserInfo"]),
   },
 
   async created() {

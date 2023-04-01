@@ -68,7 +68,9 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { mapGetters } from "vuex";
+
+import { mapState } from "pinia";
+import { useUserStore } from "~/stores/user";
 import { BaseTable, BaseModal, BaseInput, BaseSkelet } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import {
@@ -114,7 +116,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserInfo"]),
+    ...mapState(useUserStore, ["getUserInfo"]),
   },
   async created() {
     this.sidebarData = TABLES.filter(
@@ -154,17 +156,17 @@ export default {
 
     async save(row) {
       this.isLoading = true;
-      if (row["id_departament_select"]) {
+      if (row.id_departament_select) {
         await this.activeService.editData({
           ...row,
           id_departament: row.id_departament_select.id,
         });
-      } else if (row["id_speciality_select"]) {
+      } else if (row.id_speciality_select) {
         await this.activeService.editData({
           ...row,
           id_speciality: row.id_speciality_select.id,
         });
-      } else if (row["rid_select"]) {
+      } else if (row.rid_select) {
         await this.activeService.editData({
           ...row,
           rid: row.rid_select.id,

@@ -5,10 +5,7 @@
     @setFilter="setFilter"
   >
     <template v-if="!isLoading">
-      <div
-        v-if="filter.value === 'restore'"
-        class="flex flex-col gap-5"
-      >
+      <div v-if="filter.value === 'restore'" class="flex flex-col gap-5">
         <BaseFileInput @fileUpload="fileUpload">
           <template #description>
             <div class="mb-2 text-sm text-gray-500">
@@ -21,9 +18,7 @@
             </div>
           </template>
         </BaseFileInput>
-        <BaseButton @click="fileSubmit">
-          Отправить
-        </BaseButton>
+        <BaseButton @click="fileSubmit"> Отправить </BaseButton>
         <Transition name="fade">
           <span
             v-if="message"
@@ -34,7 +29,8 @@
               'text-red-500': code === 415,
             }"
           >
-            {{ message }}</span>
+            {{ message }}</span
+          >
         </Transition>
       </div>
       <div
@@ -43,18 +39,13 @@
       >
         <p class="text-gray-500 text-xl">
           На этой странице вы можете
-          <span class="font-bold">скачать <i class="fa fa-cloud-download" />
+          <span class="font-bold"
+            >скачать <i class="fa fa-cloud-download" />
           </span>
           резервную копию школьной базы данных для дальнейшего восстановления
         </p>
-        <a
-          ref="download"
-          class="hidden"
-        />
-        <BaseButton
-          class="w-[30%]"
-          @click="download"
-        >
+        <a ref="download" class="hidden" />
+        <BaseButton class="w-[30%]" @click="download">
           Скачать <i class="fa fa-download" />
         </BaseButton>
       </div>
@@ -75,14 +66,9 @@
         />
         <div class="flex items-center gap-6">
           Вернуться назад на
-          <BaseInput
-            v-model.trim.number="historyLimit"
-            class="max-w-[100px]"
-          />
+          <BaseInput v-model.trim.number="historyLimit" class="max-w-[100px]" />
           операций
-          <BaseButton @click="revertByLimit">
-            Применить
-          </BaseButton>
+          <BaseButton @click="revertByLimit"> Применить </BaseButton>
         </div>
 
         <div class="flex items-center gap-3">
@@ -92,9 +78,7 @@
             class="max-w-[100px]"
             placeholder="op_id"
           />
-          <BaseButton @click="revertById">
-            Применить
-          </BaseButton>
+          <BaseButton @click="revertById"> Применить </BaseButton>
         </div>
         <BaseTable
           v-if="tableLoaded"
@@ -105,15 +89,14 @@
         <BaseSpinner v-else />
       </div>
     </template>
-    <BaseSpinner
-      v-else
-      class="h-full"
-    />
+    <BaseSpinner v-else class="h-full" />
   </BaseLayout>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import vSelect from "vue-select";
+import { useUserStore } from "~/stores/user";
 import {
   BaseTable,
   BaseInput,
@@ -123,7 +106,6 @@ import {
 } from "@/components";
 import { History } from "@/services";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
 export default {
@@ -227,7 +209,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserInfo"]),
+    ...mapState(useUserStore, ["getUserInfo"]),
   },
   async created() {
     this.selectedTable = this.tablesList[0];
@@ -252,7 +234,7 @@ export default {
 
       const fileName =
         data.headers["content-disposition"].match("[a-zA-Z0-9-_]*.tar");
-      let file = new Blob([data.data], { type: "application/x-tar" });
+      const file = new Blob([data.data], { type: "application/x-tar" });
 
       a.href = URL.createObjectURL(file);
       a.download = fileName;
@@ -261,7 +243,7 @@ export default {
     async fileSubmit() {
       this.isLoading = true;
 
-      let formData = new FormData();
+      const formData = new FormData();
       formData.append("file", this.file);
       try {
         const data = await this.$axios.post(

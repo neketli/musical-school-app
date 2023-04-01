@@ -6,9 +6,7 @@
   >
     <div class="flex flex-col gap-8 justify-center">
       <div class="flex flex-col gap-4">
-        <h3 class="text-lg">
-          Выбор предмета
-        </h3>
+        <h3 class="text-lg">Выбор предмета</h3>
         <vSelect
           v-model="activeSubject"
           class="min-w-[25%] bg-white"
@@ -18,20 +16,14 @@
         />
       </div>
 
-      <div
-        v-if="activeSubject"
-        class="flex"
-      >
+      <div v-if="activeSubject" class="flex">
         <div class="flex flex-col bg-white h-full">
           <div
             class="py-2 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[45px] min-w-[200px]"
           >
             Дата занятий:
           </div>
-          <template
-            v-for="item in tableData"
-            :key="item.name"
-          >
+          <template v-for="item in tableData" :key="item.name">
             <div
               class="py-2 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[45px] min-w-[200px] rounded-sm"
             >
@@ -49,10 +41,7 @@
             @onAdd="add"
             @onColumnSave="saveColumn"
           />
-          <BaseSkelet
-            v-else
-            :size="200"
-          />
+          <BaseSkelet v-else :size="200" />
         </div>
       </div>
     </div>
@@ -60,11 +49,12 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import vSelect from "vue-select";
+import { useUserStore } from "~/stores/user";
 import { BaseSkelet, VedomostiTable } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import { JournalsService } from "@/services";
-import vSelect from "vue-select";
 
 export default {
   components: {
@@ -96,7 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserInfo"]),
+    ...mapState(useUserStore, ["getUserInfo"]),
   },
   async created() {
     this.sidebarData = [

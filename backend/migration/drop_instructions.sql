@@ -36,8 +36,3 @@ DROP TRIGGER teachers_audit on teachers CASCADE;
 DROP TRIGGER students_groups_audit on students_groups CASCADE;
 DROP TRIGGER subjects_plans_audit on subjects_plans CASCADE;
 DROP TRIGGER subjects_teachers_audit on subjects_teachers CASCADE;
-
--- Старое
-DROP TABLE plans CASCADE;
-DROP TABLE subjects_plans CASCADE;
-DROP TABLE classrooms CASCADE;

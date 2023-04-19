@@ -34,10 +34,15 @@ class StudentJournalService {
   }
 
   async updateData(value) {
-    const journals = await axios.get(
-      `${import.meta.env.VITE_API_URL}/journals?id_student=${value}`
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/journals`,
+      {
+        params: {
+          id_student: value,
+        },
+      }
     );
-    this.data = journals.data;
+    this.data = data;
   }
 
   async getData(value) {

@@ -12,13 +12,15 @@ class HistoryService {
       value
     );
     this.data = data.rows;
-    this.columns = data.columns.map(item => {return {
-      label: item,
-      value: item
-    }});
+    this.columns = data.columns.map((item) => {
+      return {
+        label: item,
+        value: item,
+      };
+    });
   }
 
-  // {table: 'table_name', limit?: 10, op_id?: ?} 
+  // {table: 'table_name', limit?: 10, op_id?: ?}
   async getData(value) {
     await this.updateData(value);
     return this.data;

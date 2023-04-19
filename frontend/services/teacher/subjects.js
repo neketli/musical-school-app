@@ -26,10 +26,10 @@ class TSService {
   }
 
   async updateData() {
-    const subjects_teachers = await axios.get(
+    const { data } = await axios.get(
       `${import.meta.env.VITE_API_URL}/subjects_teachers?teachers=true`
     );
-    this.data = subjects_teachers.data;
+    this.data = data;
   }
 
   async getData() {

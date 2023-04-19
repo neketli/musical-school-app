@@ -1,12 +1,12 @@
 -- Create a new database called 'Musical_School'
--- CREATE DATABASE musical_school;
+CREATE DATABASE IF NOT EXISTS musical_school;
 
-CREATE TABLE departaments (
+CREATE TABLE IF NOT EXISTS departaments (
     id SERIAL PRIMARY KEY,
     title character varying(50) NOT NULL
 );
 
-CREATE TABLE speciality (
+CREATE TABLE IF NOT EXISTS speciality (
     id SERIAL PRIMARY KEY,
     title character varying(50) NOT NULL,
     instrument character varying(40) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE speciality (
 	FOREIGN KEY (id_departament) REFERENCES departaments (id) ON DELETE CASCADE
 );
 
-CREATE TABLE groups (
+CREATE TABLE IF NOT EXISTS groups (
     id SERIAL PRIMARY KEY,
     form character varying(10) NOT NULL,
     year integer NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE groups (
 	FOREIGN KEY (id_speciality) REFERENCES speciality (id) ON DELETE CASCADE
 );
 
-CREATE TABLE students (
+CREATE TABLE IF NOT EXISTS students (
     id SERIAL PRIMARY KEY,
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE students (
     birthdate date NOT NULL
 );
 
-CREATE TABLE teachers (
+CREATE TABLE IF NOT EXISTS teachers (
     id SERIAL PRIMARY KEY,
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
@@ -43,12 +43,12 @@ CREATE TABLE teachers (
 	birthdate date NOT NULL
 );
 
-CREATE TABLE subjects (
+CREATE TABLE IF NOT EXISTS subjects (
     id SERIAL PRIMARY KEY,
     title character varying(50) NOT NULL
 );
 
-CREATE TABLE journals (
+CREATE TABLE IF NOT EXISTS journals (
     id SERIAL PRIMARY KEY,
     type character varying(50),
     date date NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE journals (
 	FOREIGN KEY (id_subject) REFERENCES subjects (id) ON DELETE CASCADE
 );
 
-CREATE TABLE students_groups (
+CREATE TABLE IF NOT EXISTS students_groups (
     id SERIAL PRIMARY KEY,
     id_student bigint NOT NULL,
     id_group bigint NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE students_groups (
 );
 
 
-CREATE TABLE subjects_teachers (
+CREATE TABLE IF NOT EXISTS subjects_teachers (
     id SERIAL PRIMARY KEY,
     id_subject bigint NOT NULL,
     id_teacher bigint NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE subjects_teachers (
 
 -- TEMP TABLES
 
-CREATE TABLE temp_departaments (
+CREATE TABLE IF NOT EXISTS temp_departaments (
     id bigint NOT NULL,
     title character varying(50) NOT NULL,
 
@@ -92,7 +92,7 @@ CREATE TABLE temp_departaments (
 
 
 
-CREATE TABLE temp_speciality (
+CREATE TABLE IF NOT EXISTS temp_speciality (
     id bigint NOT NULL,
     title character varying(50) NOT NULL,
     instrument character varying(40) NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE temp_speciality (
 	op_id SERIAL PRIMARY KEY
 );
 
-CREATE TABLE temp_groups (
+CREATE TABLE IF NOT EXISTS temp_groups (
     id bigint NOT NULL,
     form character varying(10) NOT NULL,
     year integer NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE temp_groups (
 	op_id SERIAL PRIMARY KEY
 );
 
-CREATE TABLE temp_students (
+CREATE TABLE IF NOT EXISTS temp_students (
     id bigint NOT NULL,
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE temp_students (
     op_id SERIAL PRIMARY KEY
 );
 
-CREATE TABLE temp_teachers (
+CREATE TABLE IF NOT EXISTS temp_teachers (
     id bigint NOT NULL,
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE temp_teachers (
 	op_id SERIAL PRIMARY KEY
 );
 
-CREATE TABLE temp_subjects (
+CREATE TABLE IF NOT EXISTS temp_subjects (
     id bigint NOT NULL,
     title character varying(50) NOT NULL,
 
@@ -152,7 +152,7 @@ CREATE TABLE temp_subjects (
 	op_id SERIAL PRIMARY KEY
 );
 
-CREATE TABLE temp_journals (
+CREATE TABLE IF NOT EXISTS temp_journals (
     id bigint NOT NULL,
     type character varying(50),
     date date NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE temp_journals (
 	op_id SERIAL PRIMARY KEY
 );
 
-CREATE TABLE temp_students_groups (
+CREATE TABLE IF NOT EXISTS temp_students_groups (
     id bigint NOT NULL,
     id_student bigint NOT NULL,
     id_group bigint NOT NULL,
@@ -176,7 +176,7 @@ CREATE TABLE temp_students_groups (
 );
 
 
-CREATE TABLE temp_subjects_teachers (
+CREATE TABLE IF NOT EXISTS temp_subjects_teachers (
     id bigint NOT NULL,
     id_subject bigint NOT NULL,
     id_teacher bigint NOT NULL,
@@ -188,7 +188,7 @@ CREATE TABLE temp_subjects_teachers (
 
 -- USERS
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     login character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
@@ -196,7 +196,7 @@ CREATE TABLE users (
 		rid character varying(10)
 );
 
-CREATE TABLE temp_users (
+CREATE TABLE IF NOT EXISTS temp_users (
     id bigint NOT NULL,
     login character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
@@ -228,7 +228,7 @@ CREATE OR REPLACE FUNCTION departaments_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER departaments_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS departaments_audit AFTER INSERT OR UPDATE OR DELETE 
 ON departaments for EACH ROW EXECUTE 
 PROCEDURE departaments_audit_function();
 
@@ -250,7 +250,7 @@ CREATE OR REPLACE FUNCTION speciality_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER speciality_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS speciality_audit AFTER INSERT OR UPDATE OR DELETE 
 ON speciality for EACH ROW EXECUTE 
 PROCEDURE speciality_audit_function();
 
@@ -271,7 +271,7 @@ CREATE OR REPLACE FUNCTION groups_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER groups_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS groups_audit AFTER INSERT OR UPDATE OR DELETE 
 ON groups for EACH ROW EXECUTE 
 PROCEDURE groups_audit_function();
 
@@ -292,7 +292,7 @@ CREATE OR REPLACE FUNCTION students_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER students_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS students_audit AFTER INSERT OR UPDATE OR DELETE 
 ON students for EACH ROW EXECUTE 
 PROCEDURE students_audit_function();
 
@@ -313,7 +313,7 @@ CREATE OR REPLACE FUNCTION teachers_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER teachers_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS teachers_audit AFTER INSERT OR UPDATE OR DELETE 
 ON teachers for EACH ROW EXECUTE 
 PROCEDURE teachers_audit_function();
 
@@ -334,7 +334,7 @@ CREATE OR REPLACE FUNCTION subjects_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER subjects_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS subjects_audit AFTER INSERT OR UPDATE OR DELETE 
 ON subjects for EACH ROW EXECUTE 
 PROCEDURE subjects_audit_function();
 
@@ -355,7 +355,7 @@ CREATE OR REPLACE FUNCTION journals_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER journals_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS journals_audit AFTER INSERT OR UPDATE OR DELETE 
 ON journals for EACH ROW EXECUTE 
 PROCEDURE journals_audit_function();
 
@@ -376,7 +376,7 @@ CREATE OR REPLACE FUNCTION students_groups_audit_function() RETURNS TRIGGER AS $
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER students_groups_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS students_groups_audit AFTER INSERT OR UPDATE OR DELETE 
 ON students_groups for EACH ROW EXECUTE 
 PROCEDURE students_groups_audit_function();
 
@@ -396,7 +396,7 @@ CREATE OR REPLACE FUNCTION subjects_teachers_audit_function() RETURNS TRIGGER AS
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER subjects_teachers_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS subjects_teachers_audit AFTER INSERT OR UPDATE OR DELETE 
 ON subjects_teachers for EACH ROW EXECUTE 
 PROCEDURE subjects_teachers_audit_function();
 
@@ -417,149 +417,7 @@ CREATE OR REPLACE FUNCTION users_audit_function() RETURNS TRIGGER AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER users_audit AFTER INSERT OR UPDATE OR DELETE 
+CREATE TRIGGER IF NOT EXISTS users_audit AFTER INSERT OR UPDATE OR DELETE 
 ON users for EACH ROW EXECUTE 
 PROCEDURE users_audit_function();
 
-
--- CREATE OR REPLACE FUNCTION revert_departaments() RETURNS TRIGGER AS $$
--- 	DECLARE
--- 	curr_id integer;
--- 	BEGIN
--- 		curr_id = (SELECT id from old_table ot where op_id = (SELECT ot.op_id frm old_table ot));
--- 		IF (SELECT operation from old_table ot where op_id = (SELECT ot.op_id frm old_table ot)) = 'INSERT' THEN
--- 			DELETE FROM departaments where id = curr_id;
--- 		ELSIF (SELECT operation from old_table ot where op_id = (SELECT ot.op_id frm old_table ot)) = 'UPDATE' THEN
--- 			UPDATE departaments SET title = (SELECT title from temp_departaments where stamp = (SELECT MAX(stamp) from temp_departaments where id = curr_id));
--- 		ELSIF TG_OP = 'DELETE' THEN
--- 			INSERT INTO departaments values (curr_id, 
--- 			(SELECT title from temp_departaments where stamp = (SELECT MAX(stamp) from temp_departaments where id = curr_id));
--- 		END IF;
--- 		RETURN NULL;
--- 	END;
--- $$ LANGUAGE plpgsql;
-
-
-
-
--- Старые ненужные таблицы
-
--- Планы
-
--- CREATE TABLE plans (
---     id SERIAL PRIMARY KEY,
---     number integer,
---     year integer
--- );
-
--- CREATE TABLE subjects_plans (
---     id SERIAL PRIMARY KEY,
---     id_subject bigint NOT NULL,
---     id_plan bigint NOT NULL,
--- 	FOREIGN KEY (id_subject) REFERENCES subjects (id) ON DELETE CASCADE,
--- 	FOREIGN KEY (id_plan) REFERENCES plans (id) ON DELETE CASCADE
--- );
-
--- CREATE TABLE temp_plans (
---     id bigint NOT NULL,
---     number integer,
---     year integer,
-
---     operation         char(6)   NOT NULL,
---     stamp             timestamp NOT NULL,
--- 	op_id SERIAL PRIMARY KEY
--- );
-
--- CREATE TABLE temp_subjects_plans (
---     id bigint NOT NULL,
--- 	id_subject bigint NOT NULL,
---     id_plan bigint NOT NULL,
-
---     operation         char(6)   NOT NULL,
---     stamp             timestamp NOT NULL,
--- 	op_id SERIAL PRIMARY KEY
--- );
-
--- CREATE OR REPLACE FUNCTION subjects_plans_audit_function() RETURNS TRIGGER AS $$
--- 	BEGIN
--- 		IF TG_OP = 'INSERT' THEN
--- 			INSERT INTO temp_subjects_plans
--- 			SELECT NEW.*, 'INSERT', now();
--- 		ELSIF TG_OP = 'UPDATE' THEN
--- 			INSERT INTO temp_subjects_plans
--- 			SELECT OLD.*, 'UPDATE', now();
--- 		ELSIF TG_OP = 'DELETE' THEN
--- 			INSERT INTO temp_subjects_plans
--- 			SELECT OLD.*,'DELETE',now();
--- 		END IF;
--- 		RETURN NULL;
--- 	END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER subjects_plans_audit AFTER INSERT OR UPDATE OR DELETE 
--- ON subjects_plans for EACH ROW EXECUTE 
--- PROCEDURE subjects_plans_audit_function();
-
-
--- CREATE OR REPLACE FUNCTION plans_audit_function() RETURNS TRIGGER AS $$
--- 	BEGIN
--- 		IF TG_OP = 'INSERT' THEN
--- 			INSERT INTO temp_plans
--- 			SELECT NEW.*, 'INSERT', now();
--- 		ELSIF TG_OP = 'UPDATE' THEN
--- 			INSERT INTO temp_plans
--- 			SELECT OLD.*, 'UPDATE', now();
--- 		ELSIF TG_OP = 'DELETE' THEN
--- 			INSERT INTO temp_plans
--- 			SELECT OLD.*,'DELETE',now();
--- 		END IF;
--- 		RETURN NULL;
--- 	END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER plans_audit AFTER INSERT OR UPDATE OR DELETE 
--- ON plans for EACH ROW EXECUTE 
--- PROCEDURE plans_audit_function();
-
--- Кабинеты
-
--- CREATE TABLE classrooms (
---     id SERIAL PRIMARY KEY,
---     number int NOT NULL,
---     type character varying(50) NOT NULL,
---     id_departament bigint NOT NULL,
--- 	FOREIGN KEY (id_departament) REFERENCES departaments (id) ON DELETE CASCADE
--- );
-
-
--- CREATE TABLE temp_classrooms (
---     id bigint NOT NULL,
---     number int NOT NULL,
---     type character varying(50) NOT NULL,
---     id_departament bigint NOT NULL,
-    
--- 	operation         char(6)   NOT NULL,
---     stamp             timestamp NOT NULL,
--- 	op_id SERIAL PRIMARY KEY
--- );
-
-
--- CREATE OR REPLACE FUNCTION classrooms_audit_function() RETURNS TRIGGER AS $$
--- 	BEGIN
--- 		IF TG_OP = 'INSERT' THEN
--- 			INSERT INTO temp_classrooms
--- 			SELECT NEW.*, 'INSERT', now();
--- 		ELSIF TG_OP = 'UPDATE' THEN
--- 			INSERT INTO temp_classrooms
--- 			SELECT OLD.*, 'UPDATE', now();
--- 		ELSIF TG_OP = 'DELETE' THEN
--- 			INSERT INTO temp_classrooms
--- 			SELECT OLD.*,'DELETE',now();
--- 		END IF;
--- 		RETURN NULL;
--- 	END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER classrooms_audit AFTER INSERT OR UPDATE OR DELETE 
--- ON classrooms for EACH ROW EXECUTE 
--- PROCEDURE classrooms_audit_function();

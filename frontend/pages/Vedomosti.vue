@@ -169,8 +169,8 @@ export default {
         const obj = {};
         for (const data of journalsData) {
           if (
-            data.id_subject == this.activeSubject.id &&
-            data.id_student == item.id
+            data.id_subject === this.activeSubject.id &&
+            data.id_student === item.id
           ) {
             obj[data.date] = data.grade;
             obj[`${data.date}-id_journal`] = data.id;

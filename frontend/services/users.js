@@ -67,9 +67,9 @@ class UsersService {
   }
 
   async editData(user) {
-    const oldPass = !!this.data.filter((item) => {
-      item.password === user.password;
-    }).length;
+    const oldPass = !!this.data.filter(
+      (item) => item.password === user.password
+    ).length;
     const newUser = {
       ...user,
       password: oldPass

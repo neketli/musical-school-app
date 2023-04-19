@@ -11,7 +11,7 @@ export enum DefaultServiceType {
   subjects_teachers,
 }
 
-export const DefaultServiceTypes = Object.freeze({
+export const DefaultServices = Object.freeze({
   [DefaultServiceType.departaments]: {
     label: "Отделения",
     url: "/departaments",

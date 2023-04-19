@@ -1,10 +1,10 @@
 import { Axios } from "axios";
-import { DefaultServiceType } from "./tables";
+import { DefaultServiceType, DefaultServices } from "./tables";
 
 interface Column {
   label: string;
   value: string;
-  type: string;
+  type?: string;
 }
 
 export interface IDefaultService {
@@ -82,6 +82,9 @@ export class DefaultService implements IDefaultService {
   };
 }
 
-export const DefaultServiceFactory = (type: DefaultServiceType) => {
-  return type;
+export const DefaultServiceFactory = (
+  axios: Axios,
+  type: DefaultServiceType
+) => {
+  return new DefaultService({ axios, ...DefaultServices[type] });
 };

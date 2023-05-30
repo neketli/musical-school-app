@@ -1,14 +1,8 @@
-import axios from "axios";
 import CryptoJS from "crypto-js";
 
-class UsersService {
-  constructor() {
+export default class UsersService {
+  constructor({ axios }) {
     this.data = [];
-    this.columns = [];
-    this.label = "Пользователи";
-  }
-
-  getColumns() {
     this.columns = [
       {
         label: "Логин",
@@ -38,35 +32,35 @@ class UsersService {
         ],
       },
     ];
-    return this.columns;
+    this.url = `/users`;
+
+    this.label = "Пользователи";
+    this.axios = axios;
   }
 
-  async updateData() {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+  async fetch() {
+    const { data } = await this.axios.get(this.url);
     this.data = data;
   }
 
   async getData() {
     if (!this.data.length) {
-      await this.updateData();
+      await this.fetch();
     }
     return this.data;
   }
 
-  async addData(user) {
+  async create(user) {
     const userInfo = {
       ...user,
       password: CryptoJS.MD5(user.password).toString(),
     };
-    const newUser = await axios.post(
-      `${import.meta.env.VITE_API_URL}/users`,
-      userInfo
-    );
+    const newUser = await this.axios.post(this.url, userInfo);
     this.data.push(newUser.data);
     return newUser.data;
   }
 
-  async editData(user) {
+  async update(user) {
     const oldPass = !!this.data.filter(
       (item) => item.password === user.password
     ).length;
@@ -77,10 +71,7 @@ class UsersService {
         : CryptoJS.MD5(user.password).toString(),
     };
 
-    await axios.put(
-      `${import.meta.env.VITE_API_URL}/users/${user.id}`,
-      newUser
-    );
+    await this.axios.put(`${this.url}/${user.id}`, newUser);
 
     this.data = this.data.map(
       (item) => (item = item.id === newUser.id ? newUser : item)
@@ -88,16 +79,14 @@ class UsersService {
     return newUser;
   }
 
-  async removeData(id) {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/users/${id}`);
+  async remove(id) {
+    await this.axios.delete(`${this.url}/${id}`);
     this.data = this.data.filter((user) => user.id !== id);
   }
 
-  async revertData(value = {}) {
-    await axios.post(`${import.meta.env.VITE_API_URL}/users/undo`, value);
-    await this.updateData();
+  async revert(value = {}) {
+    await this.axios.post(`${this.url}/undo`, value);
+    await this.fetch();
     return this.data;
   }
 }
-
-export default new UsersService();

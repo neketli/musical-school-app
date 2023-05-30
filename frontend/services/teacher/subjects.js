@@ -1,13 +1,7 @@
-import axios from "axios";
-
-class TSService {
-  constructor() {
+export default class TeachersService {
+  constructor(axios) {
     this.data = [];
-    this.columns = [];
-    this.label = "Список преподавателей и предметы которые они ведут";
-  }
-
-  getColumns() {
+    this.axios = axios;
     this.columns = [
       {
         label: "Фамилия",
@@ -22,22 +16,23 @@ class TSService {
         label: "Предмет",
       },
     ];
-    return this.columns;
+    this.label = "Список преподавателей и предметы которые они ведут";
+    this.url = "/subjects_teachers";
   }
 
-  async updateData() {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/subjects_teachers?teachers=true`
-    );
+  async fetch() {
+    const { data } = await this.axios.get(this.url, {
+      params: {
+        teachers: true,
+      },
+    });
     this.data = data;
   }
 
   async getData() {
     if (!this.data.length) {
-      await this.updateData();
+      await this.fetch();
     }
     return this.data;
   }
 }
-
-export default new TSService();

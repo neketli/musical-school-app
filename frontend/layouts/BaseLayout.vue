@@ -1,8 +1,8 @@
 <template>
   <div class="bg-sky-50 relative min-h-full">
-    <TheHeader :data="headerData" @onLogOut="logOut" />
+    <BaseHeader :data="headerData" @onLogOut="logOut" />
     <div class="flex container py-10">
-      <TheSidebar
+      <BaseSidebar
         v-if="sidebarData"
         v-model="activeFilter"
         :data="sidebarData"
@@ -10,9 +10,7 @@
         @setSubTab="setSubTab"
       />
       <div class="content w-full px-10">
-        <transition-group name="fade-page">
-          <slot />
-        </transition-group>
+        <slot />
       </div>
     </div>
   </div>
@@ -21,11 +19,12 @@
 <script>
 import { mapActions } from "pinia";
 import { useUserStore } from "~/stores/user";
+import { BaseHeader, BaseSidebar } from "~/components";
 
 export default {
   components: {
-    TheHeader,
-    TheSidebar,
+    BaseHeader,
+    BaseSidebar,
   },
   props: {
     sidebarData: {

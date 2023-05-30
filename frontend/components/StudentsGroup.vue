@@ -37,9 +37,10 @@ export default {
 
   async created() {
     this.isLoading = true;
-    this.tableColumns = GroupStudentService.getColumns();
-    await GroupStudentService.updateData(this.getUserInfo.rid);
-    this.tableData = await GroupStudentService.getData(this.getUserInfo.rid);
+    const service = new GroupStudentService(this.$api);
+    this.tableColumns = service.columns();
+    await service.fetch(this.getUserInfo.rid);
+    this.tableData = await service.getData(this.getUserInfo.rid);
 
     this.isLoading = false;
   },

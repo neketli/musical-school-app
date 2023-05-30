@@ -72,7 +72,8 @@ import {
   VedomostiTable,
 } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { GroupsService, JournalsService } from "@/services";
+import { DefaultServiceFactory } from "@/services";
+import { DefaultServiceType } from "@/services/tables";
 
 export default {
   components: {
@@ -100,6 +101,7 @@ export default {
       activeGroup: null,
       subjects: [],
       activeSubject: null,
+      JournalsService: null,
 
       isLoading: true,
       isModalShow: false,
@@ -130,16 +132,25 @@ export default {
             },
           ]
         : [];
+    const GroupsService = new DefaultServiceFactory(
+      this.$api,
+      DefaultServiceType.groups
+    );
+
+    this.JournalsService = new DefaultServiceFactory(
+      this.$api,
+      DefaultServiceType.journals
+    );
 
     this.groupsData = await GroupsService.getData();
-    this.groupColumns = GroupsService.getColumns();
+    this.groupColumns = GroupsService.columns();
 
     if (this.getUserInfo.role === "teacher") {
-      const { data } = await this.$axios.get(
-        `${import.meta.env.VITE_API_URL}/subjects_teachers?id_teacher=${
-          this.getUserInfo.rid
-        }`
-      );
+      const { data } = await this.$api.get(`/subjects_teachers`, {
+        params: {
+          id_teacher: this.getUserInfo.rid,
+        },
+      });
       this.subjects = data.map((item) => {
         return {
           id: item.id,
@@ -147,9 +158,7 @@ export default {
         };
       });
     } else if (this.getUserInfo.role === "admin") {
-      const { data } = await this.$axios.get(
-        `${import.meta.env.VITE_API_URL}/subjects`
-      );
+      const { data } = await this.$api.get(`/subjects`);
       this.subjects = data.map((item) => {
         return {
           id: item.id,
@@ -163,7 +172,7 @@ export default {
   methods: {
     async getData() {
       this.isLoading = true;
-      const journalsData = await JournalsService.getData();
+      const journalsData = await this.JournalsService.getData();
 
       this.tableData = this.tableData.map((item) => {
         const obj = {};
@@ -197,7 +206,7 @@ export default {
 
       this.tableData.forEach((i) => {
         this.tableColumns.forEach((j) => {
-          if (i[j.label] == undefined) {
+          if (i[j.label] === undefined) {
             i[j.label] = "";
           }
         });
@@ -211,9 +220,9 @@ export default {
       await this.$router.push(`/`);
     },
     async setGroup({ id }) {
-      const { data } = await this.$axios.get(
-        `${import.meta.env.VITE_API_URL}/students_groups?id_group=${id}`
-      );
+      const { data } = await this.$api.get(`/students_groups`, {
+        params: { id_group: id },
+      });
       this.activeGroup = true;
       this.tableData = data.map((item) => {
         return {
@@ -221,11 +230,11 @@ export default {
         };
       });
     },
-    async remove(label) {
+    remove(label) {
       this.tableColumns = this.tableColumns.filter(
         (item) => item.label !== label
       );
-      this.tableData.forEach(async (item) => {
+      this.tableData.forEach((item) => {
         this.removeList.push(item[`${label}-id_journal`]);
         if (item[label]) {
           delete item[label];
@@ -238,7 +247,7 @@ export default {
         label: "",
       });
     },
-    async saveColumn({ label, old }) {
+    saveColumn({ label, old }) {
       if (!old.label) {
         this.tableColumns = this.tableColumns.filter(
           (item) => item.label !== ""
@@ -253,7 +262,7 @@ export default {
       if (old.label !== label) {
         this.tableData.forEach(async (item) => {
           const oldDate = old.label;
-          await JournalsService.editData({
+          await this.JournalsService.update({
             id: item[`${oldDate}-id_journal`],
             grade: item[oldDate],
             date: label,
@@ -272,22 +281,22 @@ export default {
         this.tableColumns.push({ label });
       }
     },
-    async save() {
+    save() {
       this.isLoading = true;
       if (this.removeList.length) {
         this.removeList.forEach(async (id) => {
-          await JournalsService.removeData(id);
+          await this.JournalsService.delete(id);
         });
       }
 
-      await this.tableData.forEach(async (item) => {
+      this.tableData.forEach((item) => {
         Object.keys(item)
           .filter((i) => i !== "id" && i !== "name")
           .forEach(async (data) => {
             if (this.removeList.filter((k) => k === item[data]).length) return;
             if (data.includes("-id_journal")) {
               const date = data.replace("-id_journal", "");
-              await JournalsService.editData({
+              await this.JournalsService.update({
                 id: item[data],
                 grade: item[date],
                 date,
@@ -296,7 +305,7 @@ export default {
                 id_subject: this.activeSubject.id,
               });
             } else if (!item[`${data}-id_journal`]) {
-              await JournalsService.addData({
+              await this.JournalsService.create({
                 grade: item[data],
                 date: data,
                 type: "",
@@ -308,7 +317,6 @@ export default {
       });
 
       this.removeList = [];
-      //   await this.getData();
       this.isLoading = false;
     },
   },

@@ -89,14 +89,8 @@ import { useUserStore } from "~/stores/user";
 import { SetupTable, BaseTable, BaseButton, BaseSkelet } from "@/components";
 import "vue-select/dist/vue-select.css";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import {
-  GroupsService,
-  SubjectsService,
-  TeachersService,
-  StudentsService,
-  SGService,
-  STService,
-} from "@/services";
+import { DefaultServiceFactory } from "@/services";
+import { DefaultServiceType } from "@/services/tables";
 
 export default {
   components: {
@@ -165,7 +159,7 @@ export default {
         icon: "fa-chevron-left",
       },
     ];
-    await this.setService(this.$route.hash);
+    this.setService(this.$route.hash);
     await this.initActiveTable();
     this.isLoading = false;
   },
@@ -177,17 +171,17 @@ export default {
     async save(row) {
       this.isLoading = true;
       if (row.id_student) {
-        await this.activeService.editData(row.id, {
+        await this.activeService.update(row.id, {
           id_student: +row.id_student.split(" ")[0],
           id_group: +row.id_group.split(" ")[0],
         });
       } else if (row.id_teacher) {
-        await this.activeService.editData(row.id, {
+        await this.activeService.update(row.id, {
           id_teacher: +row.id_teacher.split(" ")[0],
           id_subject: +row.id_subject.split(" ")[0],
         });
       } else {
-        await this.activeService.editData(row);
+        await this.activeService.update(row);
       }
       await this.updateTableData();
       this.isLoading = false;
@@ -211,7 +205,7 @@ export default {
           item[1].split(" ")[0],
         ])
       );
-      await this.activeService.addData(item);
+      await this.activeService.create(item);
       await this.updateTableData();
 
       this.clearNewItem();
@@ -242,7 +236,7 @@ export default {
 
     async initActiveTable() {
       this.isLoading = true;
-      this.tableColumns = this.activeService.getColumns();
+      this.tableColumns = this.activeService.columns;
       this.tableData = await this.activeService.getData();
 
       await this.firstService.getData();
@@ -262,7 +256,7 @@ export default {
 
     async updateTableData() {
       this.isLoading = true;
-      await this.activeService.updateData();
+      await this.activeService.fetch();
       this.tableData = await this.activeService.getData();
 
       this.tableData = this.tableData.map((item) => {
@@ -277,19 +271,37 @@ export default {
       this.isLoading = false;
     },
 
-    async setService(value) {
+    setService(value) {
       if (value === "#students_groups") {
-        this.activeService = SGService;
-        this.firstService = StudentsService;
-        this.secondService = GroupsService;
+        this.activeService = new DefaultServiceFactory(
+          this.$api,
+          DefaultServiceType.students_groups
+        );
+        this.firstService = new DefaultServiceFactory(
+          this.$api,
+          DefaultServiceType.students
+        );
+        this.secondService = new DefaultServiceFactory(
+          this.$api,
+          DefaultServiceType.groups
+        );
 
         this.firstField = "id_student";
         this.secondField = "id_group";
       }
       if (value === "#subjects_teachers") {
-        this.activeService = STService;
-        this.firstService = SubjectsService;
-        this.secondService = TeachersService;
+        this.activeService = new DefaultServiceFactory(
+          this.$api,
+          DefaultServiceType.subjects_teachers
+        );
+        this.firstService = new DefaultServiceFactory(
+          this.$api,
+          DefaultServiceType.subjects_teachers
+        );
+        this.secondService = new DefaultServiceFactory(
+          this.$api,
+          DefaultServiceType.teachers
+        );
 
         this.firstField = "id_subject";
         this.secondField = "id_teacher";

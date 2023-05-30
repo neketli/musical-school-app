@@ -21,7 +21,7 @@ class AuthController {
       };
       const token = jwt.sign(resUser, process.env.JWT_KEY);
 
-      res?.json({
+      res?.status(200).json({
         user: resUser,
         token,
       });

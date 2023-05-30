@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-sky-50 flex justify-center items-center h-[100%]">
+  <div class="bg-sky-50 flex justify-center items-center h-[100vh]">
     <div class="container h-full sm:h-auto transition-all">
       <div
         class="flex flex-col justify-center items-center mx-auto text-center bg-white shadow-sm hover:shadow-md rounded-lg overflow-hidden py-16 px-10 gap-10 sm:px-12 md:px-[60px] h-full w-full sm:h-auto sm:max-w-[525px] transition-all"
@@ -39,8 +39,10 @@ export default {
       password: "",
     };
   },
+  mounted() {},
   methods: {
     ...mapActions(useUserStore, { loginAction: "login" }),
+
     async auth() {
       try {
         await this.loginAction({

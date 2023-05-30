@@ -1,13 +1,7 @@
-import axios from "axios";
-
-class GroupStudentService {
-  constructor() {
+export default class GroupStudentService {
+  constructor(axios) {
     this.data = [];
-    this.columns = [];
-    this.label = "Мои группы";
-  }
-
-  getColumns() {
+    this.axios = axios;
     this.columns = [
       {
         label: "Номер группы",
@@ -30,31 +24,27 @@ class GroupStudentService {
         type: "input",
       },
     ];
-    return this.columns;
+    this.label = "Мои группы";
+    this.url = "/students_groups";
   }
 
-  async updateData(value) {
-    const groups = await axios.get(
-      `${import.meta.env.VITE_API_URL}/students_groups?id_student=${value}`
-    );
+  async fetch(idStudent) {
+    const groups = await this.axios.get(this.url, {
+      params: { id_student: idStudent },
+    });
     this.data = groups.data;
   }
 
   async getData(value, isUpdate = false) {
     if (!this.data.length || isUpdate) {
-      await this.updateData(value);
+      await this.fetch(value);
     }
     return this.data;
   }
 
   async revertData(value = {}) {
-    await axios.post(
-      `${import.meta.env.VITE_API_URL}/students_groups/undo`,
-      value
-    );
-    await this.updateData();
+    await axios.post(`${this.url}/undo`, value);
+    await this.fetch();
     return this.data;
   }
 }
-
-export default new GroupStudentService();

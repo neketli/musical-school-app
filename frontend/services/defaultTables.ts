@@ -39,7 +39,7 @@ export class DefaultService implements IDefaultService {
     this.data = [];
     this.columns = columns;
     this.label = label;
-    this.url = `${import.meta.env.VITE_API_URL}${url}`;
+    this.url = url;
     this.axios = axios;
   }
 

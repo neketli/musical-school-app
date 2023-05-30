@@ -1,13 +1,7 @@
-import axios from "axios";
-
-class StudentJournalService {
-  constructor() {
+export default class StudentJournalService {
+  constructor(axios) {
+    this.axios = axios;
     this.data = [];
-    this.columns = [];
-    this.label = "Дневник";
-  }
-
-  getColumns() {
     this.columns = [
       {
         label: "Тип оценки",
@@ -30,27 +24,23 @@ class StudentJournalService {
         type: "input",
       },
     ];
-    return this.columns;
+    this.label = "Дневник";
+    this.url = "journals";
   }
 
-  async updateData(value) {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/journals`,
-      {
-        params: {
-          id_student: value,
-        },
-      }
-    );
+  async fetch(value) {
+    const { data } = await axios.get(this.url, {
+      params: {
+        id_student: value,
+      },
+    });
     this.data = data;
   }
 
   async getData(value) {
     if (!this.data.length) {
-      await this.updateData(value);
+      await this.fetch(value);
     }
     return this.data;
   }
 }
-
-export default new StudentJournalService();

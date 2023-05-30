@@ -65,7 +65,7 @@
     <div class="flex mt-10 justify-between gap-10">
       <BaseTable
         v-if="!isLoading"
-        :columns="firstService.getColumns()"
+        :columns="firstService.columns"
         :data="firstService.data || []"
         :title="firstService.label"
       />
@@ -73,7 +73,7 @@
 
       <BaseTable
         v-if="!isLoading"
-        :columns="secondService.getColumns()"
+        :columns="secondService.columns"
         :data="secondService.data || []"
         :title="secondService.label"
       />
@@ -273,15 +273,15 @@ export default {
 
     setService(value) {
       if (value === "#students_groups") {
-        this.activeService = new DefaultServiceFactory(
+        this.activeService = DefaultServiceFactory(
           this.$api,
           DefaultServiceType.students_groups
         );
-        this.firstService = new DefaultServiceFactory(
+        this.firstService = DefaultServiceFactory(
           this.$api,
           DefaultServiceType.students
         );
-        this.secondService = new DefaultServiceFactory(
+        this.secondService = DefaultServiceFactory(
           this.$api,
           DefaultServiceType.groups
         );
@@ -290,15 +290,15 @@ export default {
         this.secondField = "id_group";
       }
       if (value === "#subjects_teachers") {
-        this.activeService = new DefaultServiceFactory(
+        this.activeService = DefaultServiceFactory(
           this.$api,
           DefaultServiceType.subjects_teachers
         );
-        this.firstService = new DefaultServiceFactory(
+        this.firstService = DefaultServiceFactory(
           this.$api,
           DefaultServiceType.subjects_teachers
         );
-        this.secondService = new DefaultServiceFactory(
+        this.secondService = DefaultServiceFactory(
           this.$api,
           DefaultServiceType.teachers
         );

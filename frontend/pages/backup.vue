@@ -276,28 +276,23 @@ export default {
     },
     async updateTable() {
       this.tableLoaded = false;
-      this.tableData = await History.getData({
+      const service = new History(this.$api);
+      this.tableData = await service.getData({
         table: this.selectedTable.value,
       });
-      this.tableColumns = await History.getColumns();
+      this.tableColumns = await service.colums;
       this.tableLoaded = true;
     },
     async revertByLimit() {
-      await this.$axios.post(
-        `${import.meta.env.VITE_API_URL}/${this.selectedTable.value}/undo`,
-        {
-          limit: this.historyLimit > 1 ? this.historyLimit : 1,
-        }
-      );
+      await this.$api.post(`/${this.selectedTable.value}/undo`, {
+        limit: this.historyLimit > 1 ? this.historyLimit : 1,
+      });
       await this.updateTable();
     },
     async revertById() {
-      await this.$axios.post(
-        `${import.meta.env.VITE_API_URL}/${this.selectedTable.value}/undo`,
-        {
-          op_id: this.opId,
-        }
-      );
+      await this.$api.post(`/${this.selectedTable.value}/undo`, {
+        op_id: this.opId,
+      });
       await this.updateTable();
     },
   },

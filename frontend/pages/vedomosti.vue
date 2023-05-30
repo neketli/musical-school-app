@@ -132,18 +132,18 @@ export default {
             },
           ]
         : [];
-    const GroupsService = new DefaultServiceFactory(
+    const GroupsService = DefaultServiceFactory(
       this.$api,
       DefaultServiceType.groups
     );
 
-    this.JournalsService = new DefaultServiceFactory(
+    this.JournalsService = DefaultServiceFactory(
       this.$api,
       DefaultServiceType.journals
     );
 
     this.groupsData = await GroupsService.getData();
-    this.groupColumns = GroupsService.columns();
+    this.groupColumns = GroupsService.columns;
 
     if (this.getUserInfo.role === "teacher") {
       const { data } = await this.$api.get(`/subjects_teachers`, {

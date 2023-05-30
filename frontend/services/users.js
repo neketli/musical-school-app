@@ -1,7 +1,7 @@
 import CryptoJS from "crypto-js";
 
 export default class UsersService {
-  constructor({ axios }) {
+  constructor(axios) {
     this.data = [];
     this.columns = [
       {

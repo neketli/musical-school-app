@@ -73,7 +73,11 @@ import { mapState } from "pinia";
 import { useUserStore } from "~/stores/user";
 import { BaseTable, BaseModal, BaseInput, BaseSkelet } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { UsersService, TSService, DefaultServiceFactory } from "@/services";
+import {
+  UsersService,
+  TeachersService,
+  DefaultServiceFactory,
+} from "@/services";
 
 import { DefaultServiceType } from "@/services/tables";
 
@@ -361,7 +365,7 @@ export default {
     setService(value) {
       switch (value) {
         case "users":
-          this.activeService = UsersService;
+          this.activeService = new UsersService(this.$api);
           this.canEdit = this.sidebarData
             .find((item) => item.value === "users")
             .editAccess.includes(this.getUserInfo.role);
@@ -431,7 +435,7 @@ export default {
           this.activeService = ["student", "teacher"].includes(
             this.getUserInfo.role
           )
-            ? TSService
+            ? new TeachersService(this.$api)
             : DefaultServiceFactory(this.$api, DefaultServiceType.teachers);
 
           this.canEdit = this.sidebarData

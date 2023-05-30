@@ -19,6 +19,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  plugins: ["~/plugins/pinia-persist-plugin.client"],
   colorMode: {
     classSuffix: "",
   },

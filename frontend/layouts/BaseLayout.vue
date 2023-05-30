@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from "pinia";
+import { useUserStore } from "~/stores/user";
 
 export default {
   components: {
@@ -43,9 +44,9 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["logout"]),
-    async logOut() {
-      await this.logout();
+    ...mapActions(useUserStore, { logOutAction: "logout" }),
+    logOut() {
+      this.logOutAction();
       this.$router.push("/auth");
     },
     setFilter() {

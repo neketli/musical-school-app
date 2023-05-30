@@ -36,5 +36,7 @@
     "vue-final-modal": "^4.1.1",
     "vue-select": "^3.20.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "pinia-plugin-persist": "^1.0.0"
+  }
 }

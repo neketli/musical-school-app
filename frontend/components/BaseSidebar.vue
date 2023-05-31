@@ -12,7 +12,7 @@
           }"
           :to="item.link"
         >
-          <Icon :name="item.icon" />
+          <Icon class="h-5 w-5" :name="item.icon" />
           {{ item.label }}
         </NuxtLink>
         <button
@@ -24,7 +24,7 @@
           }"
           @click="setActiveTab(item)"
         >
-          <Icon :name="item.icon" />
+          <Icon class="h-5 w-5" :name="item.icon" />
           {{ item.label }}
         </button>
 

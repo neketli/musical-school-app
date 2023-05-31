@@ -35,7 +35,7 @@ export default {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
 
-  async mounted() {
+  async created() {
     this.isLoading = true;
     const service = new GroupStudentService(this.$api);
     this.tableColumns = service.columns;

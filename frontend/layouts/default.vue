@@ -1,6 +1,6 @@
 <template>
   <div class="bg-sky-50 relative min-h-full">
-    <div class="content w-full px-10">
+    <div class="content w-full">
       <slot />
     </div>
   </div>

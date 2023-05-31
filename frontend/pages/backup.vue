@@ -96,7 +96,7 @@
 <script>
 import { mapState } from "pinia";
 import vSelect from "vue-select";
-import { useAuthUserStore } from "~/stores/user";
+import { useUserStore } from "~/stores/user";
 import {
   BaseTable,
   BaseInput,
@@ -209,7 +209,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useAuthUserStore, ["getUserInfo"]),
+    ...mapState(useUserStore, ["getUserInfo"]),
   },
   async mounted() {
     this.selectedTable = this.tablesList[0];
@@ -226,8 +226,8 @@ export default {
     },
     async download() {
       const a = this.$refs.download;
-      const data = await this.$axios({
-        url: `${import.meta.env.VITE_API_URL}/dump`,
+      const data = await this.$api({
+        url: `/dump`,
         method: "GET",
         responseType: "blob",
       });
@@ -246,10 +246,7 @@ export default {
       const formData = new FormData();
       formData.append("file", this.file);
       try {
-        const data = await this.$axios.post(
-          `${import.meta.env.VITE_API_URL}/dump`,
-          formData
-        );
+        const data = await this.$api.post(`/dump`, formData);
         this.code = data.status;
       } catch (error) {
         this.code = error.request.status;

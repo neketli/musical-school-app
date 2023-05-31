@@ -11,7 +11,7 @@
           />
           Musical School
         </NuxtLink>
-        <template v-if="data">
+        <template v-if="data.length">
           <NuxtLink
             v-for="item in data"
             :key="item.value"

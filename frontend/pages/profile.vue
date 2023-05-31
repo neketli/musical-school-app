@@ -56,10 +56,8 @@ export default {
   async mounted() {
     const role = this.getUserInfo.role;
 
-    const { data } = await this.$axios.get(
-      `${import.meta.env.VITE_API_URL}/${
-        role === "student" ? "students/" : "teachers/"
-      }${this.getUserInfo.rid}`
+    const { data } = await this.$api.get(
+      `/${role === "student" ? "students" : "teachers"}/${this.getUserInfo.rid}`
     );
     this.userData = {
       ...data,

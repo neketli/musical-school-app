@@ -33,11 +33,11 @@ export default {
 
   async mounted() {
     this.isLoading = true;
-    const { data } = await this.$axios.get(
-      `${import.meta.env.VITE_API_URL}/subjects_teachers?id_teacher=${
-        this.getUserInfo.rid
-      }`
-    );
+    const { data } = await this.$api.get(`/subjects_teachers`, {
+      params: {
+        id_teacher: this.getUserInfo.rid,
+      },
+    });
     this.sujectsList = data;
     this.isLoading = false;
   },

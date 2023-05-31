@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="flex items-center"
-    @click.self="enterEditMode"
-  >
+  <div class="flex items-center" @click.self="enterEditMode">
     <div v-if="!editMode">
       {{ dataSource.label }}
     </div>
@@ -14,33 +11,21 @@
       class="min-w-[150px]"
       @keyup.enter="save"
     />
-    <div
-      v-if="editMode"
-      class="flex text-right justify-end"
-    >
+    <div v-if="editMode" class="flex text-right justify-end">
       <template v-if="editMode">
-        <BaseButton
-          class="text-green-400 mx-2"
-          @click="save"
-        >
-          <i class="fa fa-check" />
+        <BaseButton class="text-green-400 mx-2" @click="save">
+          <Icon name="mdi:check" />
         </BaseButton>
-        <BaseButton
-          class="text-red-400 mx-2"
-          @click="cancel"
-        >
-          <i class="fa fa-times" />
+        <BaseButton class="text-red-400 mx-2" @click="cancel">
+          <Icon name="mdi:close" />
         </BaseButton>
-        <BaseButton
-          class="text-red-400 mx-2"
-          @click="remove"
-        >
-          <i class="fa fa-trash-o" />
+        <BaseButton class="text-red-400 mx-2" @click="remove">
+          <Icon name="mdi:delete" />
         </BaseButton>
       </template>
       <template v-else>
         <BaseButton class="mx-2">
-          <i class="fa fa-pencil" />
+          <Icon name="mdi:lead-pencil" />
         </BaseButton>
       </template>
     </div>
@@ -72,7 +57,7 @@ export default {
       oldData: {},
     };
   },
-  created() {
+  mounted() {
     this.dataSource = { ...this.data };
     if (!this.dataSource.label) {
       this.editMode = true;

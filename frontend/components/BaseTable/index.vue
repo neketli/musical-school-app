@@ -43,23 +43,23 @@
     >
       <div v-if="isEditable" class="flex gap-3">
         <BaseButton class="text-green-400" @click="add">
-          <i class="fa fa-plus" />
+          <Icon name="mdi:plus-thick" />
         </BaseButton>
 
         <BaseButton class="text-yellow-400" @click="undo">
-          <i class="fa fa-undo" />
+          <Icon name="mdi:undo" />
         </BaseButton>
       </div>
 
       <div v-if="isPagination" class="flex justify-center items-center gap-3">
         <BaseButton class="text-black" @click="prev">
-          <i class="fa fa-angle-left" />
+          <Icon name="mdi:chevron-left" />
         </BaseButton>
         <div class="flex text-gray-500">
           {{ currentPage }} / {{ totalPages }}
         </div>
         <BaseButton class="text-black" @click="next">
-          <i class="fa fa-angle-right" />
+          <Icon name="mdi:chevron-right" />
         </BaseButton>
       </div>
     </div>
@@ -67,8 +67,8 @@
 </template>
 
 <script>
-import { BaseButton } from "@/components";
 import TableRow from "./TableRow.vue";
+import { BaseButton } from "@/components";
 
 export default {
   components: { BaseButton, TableRow },
@@ -118,7 +118,7 @@ export default {
       return this.data.length > this.paginationLimit;
     },
   },
-  created() {
+  mounted() {
     if (this.isPagination) {
       this.initPagination();
     } else {
@@ -137,7 +137,7 @@ export default {
     },
     remove(id) {
       this.$emit("onRemove", id);
-      this.dataSource = this.dataSource.filter((item) => item.id != id);
+      this.dataSource = this.dataSource.filter((item) => item.id !== id);
     },
     rowClicked(row) {
       this.$emit("onRowClicked", row);
@@ -149,7 +149,7 @@ export default {
       this.totalPages = Math.ceil(this.data.length / this.paginationLimit);
       this.dataSource = this.data.slice(0, this.paginationLimit);
     },
-    async next() {
+    next() {
       if (this.currentPage === this.totalPages) return;
 
       this.currStart += this.paginationLimit;
@@ -159,7 +159,7 @@ export default {
       );
       this.currentPage += 1;
     },
-    async prev() {
+    prev() {
       if (this.currentPage === 1) return;
       this.currStart -= this.paginationLimit;
 

@@ -90,7 +90,7 @@ export default {
   computed: {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
-  async created() {
+  async mounted() {
     this.JournalsService = DefaultServiceFactory(
       this.$api,
       DefaultServiceType.journals
@@ -99,7 +99,7 @@ export default {
       {
         value: "back",
         label: "Назад",
-        icon: "fa-chevron-left",
+        icon: "mdi:reply",
       },
     ];
 

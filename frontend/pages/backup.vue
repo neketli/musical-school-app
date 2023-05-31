@@ -40,13 +40,13 @@
         <p class="text-gray-500 text-xl">
           На этой странице вы можете
           <span class="font-bold"
-            >скачать <i class="fa fa-cloud-download" />
+            >скачать <Icon name="mdi:cloud-download" />
           </span>
           резервную копию школьной базы данных для дальнейшего восстановления
         </p>
         <a ref="download" class="hidden" />
         <BaseButton class="w-[30%]" @click="download">
-          Скачать <i class="fa fa-download" />
+          Скачать <Icon name="mdi:download" />
         </BaseButton>
       </div>
       <div
@@ -134,17 +134,17 @@ export default {
         {
           value: "backup",
           label: "Создать резервную копию",
-          icon: "fa-database",
+          icon: "mdi:database",
         },
         {
           value: "restore",
           label: "Восстановить резервную копию",
-          icon: "fa-reply",
+          icon: "mdi:reply",
         },
         {
           value: "history",
           label: "История изменений",
-          icon: "fa-history",
+          icon: "mdi:history",
         },
       ],
       tablesList: [
@@ -211,7 +211,7 @@ export default {
   computed: {
     ...mapState(useAuthUserStore, ["getUserInfo"]),
   },
-  async created() {
+  async mounted() {
     this.selectedTable = this.tablesList[0];
     await this.updateTable(this.selectedTable);
     this.setFilter(this.sidebarData[0]);

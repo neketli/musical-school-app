@@ -2,10 +2,7 @@
   <div
     class="overflow-x-auto flex-auto relative bg-white shadow-md sm:rounded-lg"
   >
-    <div
-      v-if="title"
-      class="text-xl font-bold my-5 mx-3"
-    >
+    <div v-if="title" class="text-xl font-bold my-5 mx-3">
       {{ title }}
     </div>
     <table class="overflow-x-auto w-full text-sm text-left text-gray-500">
@@ -19,11 +16,7 @@
           >
             {{ item.label }}
           </th>
-          <th
-            v-if="isEditable"
-            scope="col"
-            class="py-3 px-6 text-right"
-          />
+          <th v-if="isEditable" scope="col" class="py-3 px-6 text-right" />
         </tr>
       </thead>
       <tbody>
@@ -49,43 +42,25 @@
       v-if="isEditable || isPagination"
       class="flex justify-between px-5 py-3"
     >
-      <div
-        v-if="isEditable"
-        class="flex gap-3"
-      >
-        <BaseButton
-          class="text-green-400"
-          @click="add"
-        >
-          <i class="fa fa-plus" />
+      <div v-if="isEditable" class="flex gap-3">
+        <BaseButton class="text-green-400" @click="add">
+          <Icon name="mdi:plus-thick" />
         </BaseButton>
 
-        <BaseButton
-          class="text-yellow-400"
-          @click="undo"
-        >
-          <i class="fa fa-undo" />
+        <BaseButton class="text-yellow-400" @click="undo">
+          <Icon name="mdi:undo" />
         </BaseButton>
       </div>
 
-      <div
-        v-if="isPagination"
-        class="flex justify-center items-center gap-3"
-      >
-        <BaseButton
-          class="text-black"
-          @click="prev"
-        >
-          <i class="fa fa-angle-left" />
+      <div v-if="isPagination" class="flex justify-center items-center gap-3">
+        <BaseButton class="text-black" @click="prev">
+          <Icon name="mdi:chevron-left" />
         </BaseButton>
         <div class="flex text-gray-500">
           {{ currentPage }} / {{ totalPages }}
         </div>
-        <BaseButton
-          class="text-black"
-          @click="next"
-        >
-          <i class="fa fa-angle-right" />
+        <BaseButton class="text-black" @click="next">
+          <Icon name="mdi:chevron-right" />
         </BaseButton>
       </div>
     </div>
@@ -93,8 +68,8 @@
 </template>
 
 <script>
-import { BaseButton } from "@/components";
 import TableRow from "./TableRow.vue";
+import { BaseButton } from "@/components";
 
 export default {
   components: { BaseButton, TableRow },
@@ -148,7 +123,7 @@ export default {
       return this.data.length > this.paginationLimit;
     },
   },
-  created() {
+  mounted() {
     if (this.isPagination) {
       this.initPagination();
     } else {

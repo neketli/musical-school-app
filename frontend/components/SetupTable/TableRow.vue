@@ -27,37 +27,25 @@
       </td>
     </template>
     <!-- Edit mode buttons -->
-    <div
-      v-if="isEditable"
-      class="flex gap-5 px-5 py-3 text-right justify-end"
-    >
+    <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
       <template v-if="editMode">
-        <BaseButton
-          class="text-green-400 mx-2"
-          @click="save"
-        >
-          <i class="fa fa-check" />
+        <BaseButton class="text-green-400 mx-2" @click="save">
+          <Icon name="mdi:check" />
         </BaseButton>
-        <BaseButton
-          class="text-red-400 mx-2"
-          @click="cancel"
-        >
-          <i class="fa fa-times" />
+        <BaseButton class="text-red-400 mx-2" @click="cancel">
+          <Icon name="mdi:close" />
         </BaseButton>
         <BaseButton
           v-if="!isButtonDisabled"
           class="text-red-400 mx-2"
           @click="remove"
         >
-          <i class="fa fa-trash-o" />
+          <Icon name="mdi:delete" />
         </BaseButton>
       </template>
       <template v-else>
-        <BaseButton
-          class="mx-2"
-          @click="toggleEditMode"
-        >
-          <i class="fa fa-pencil" />
+        <BaseButton class="mx-2" @click="toggleEditMode">
+          <Icon name="mdi:lead-pencil" />
         </BaseButton>
       </template>
     </div>
@@ -65,8 +53,8 @@
 </template>
 
 <script>
-import { BaseButton } from "@/components";
 import vSelect from "vue-select";
+import { BaseButton } from "@/components";
 import "vue-select/dist/vue-select.css";
 export default {
   components: {
@@ -108,7 +96,7 @@ export default {
       return false;
     },
   },
-  created() {
+  mounted() {
     this.row = { ...this.rowData };
     if (Object.values(this.row).some((item) => !item)) {
       // this.toggleEditMode();

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <BaseTable
     v-if="!isLoading"
     title="Мои группы"
@@ -11,8 +11,8 @@
 <script>
 import { mapState } from "pinia";
 import { useUserStore } from "~/stores/user";
-import { BaseTable, BaseSkelet } from "@/components";
-import { GroupStudentService } from "@/services";
+import { BaseTable, BaseSkelet } from "~/components";
+import { GroupStudentService } from "~/services";
 
 export default {
   components: {
@@ -24,7 +24,7 @@ export default {
       tableInfo: {
         value: "student_group",
         label: "Мои группы",
-        icon: "fa-users",
+        icon: "mdi:account-group",
       },
       tableData: [],
       tableColumns: [],
@@ -35,7 +35,7 @@ export default {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
 
-  async created() {
+  async mounted() {
     this.isLoading = true;
     const service = new GroupStudentService(this.$api);
     this.tableColumns = service.columns;
@@ -45,4 +45,7 @@ export default {
     this.isLoading = false;
   },
 };
-</script>
+</script> -->
+<template>
+  <div>hello</div>
+</template>

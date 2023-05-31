@@ -111,12 +111,12 @@ export default {
   computed: {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
-  async created() {
+  async mounted() {
     this.sidebarData = [
       {
         value: "back",
         label: "Назад",
-        icon: "fa-chevron-left",
+        icon: "mdi:reply",
       },
     ];
     this.headerData =

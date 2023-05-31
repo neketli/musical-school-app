@@ -113,7 +113,7 @@ export default {
   computed: {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
-  async created() {
+  async mounted() {
     this.sidebarData = TABLES.filter(
       (item) =>
         item?.editAccess?.includes(this.getUserInfo.role) ||

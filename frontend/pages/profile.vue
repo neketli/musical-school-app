@@ -5,7 +5,7 @@
 
       <div class="flex gap-10 px-8">
         <div class="flex h-[100px] items-center px-8 rounded-lg bg-sky-200">
-          <i class="fa fa-user text-6xl text-blue-400" />
+          <Icon name="mdi:account" class="text-6xl text-blue-400" />
         </div>
         <div class="flex flex-col gap-4">
           <div class="font-bold font-2xl block">
@@ -53,7 +53,7 @@ export default {
   computed: {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
-  async created() {
+  async mounted() {
     const role = this.getUserInfo.role;
 
     const { data } = await this.$axios.get(

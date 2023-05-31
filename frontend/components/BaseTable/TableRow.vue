@@ -65,22 +65,22 @@
     <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
       <template v-if="editMode">
         <BaseButton class="text-green-400 mx-2" @click="save">
-          <i class="fa fa-check" />
+          <Icon name="mdi:check" />
         </BaseButton>
         <BaseButton class="text-red-400 mx-2" @click="cancel">
-          <i class="fa fa-times" />
+          <Icon name="mdi:close" />
         </BaseButton>
         <BaseButton
           v-if="!isButtonDisabled"
           class="text-red-400 mx-2"
           @click="remove"
         >
-          <i class="fa fa-trash-o" />
+          <Icon name="mdi:delete" />
         </BaseButton>
       </template>
       <template v-else>
         <BaseButton class="mx-2" @click="toggleEditMode">
-          <i class="fa fa-pencil" />
+          <Icon name="mdi:lead-pencil" />
         </BaseButton>
       </template>
     </div>
@@ -88,11 +88,12 @@
 </template>
 
 <script>
-import { BaseButton, BaseInput } from "@/components";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import { BaseButton, BaseInput } from "@/components";
+
 export default {
   components: {
     BaseButton,
@@ -131,7 +132,7 @@ export default {
       return false;
     },
   },
-  created() {
+  mounted() {
     this.row = { ...this.rowData };
     if (Object.values(this.row).some((item) => !item)) {
       // this.toggleEditMode();

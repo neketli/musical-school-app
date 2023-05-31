@@ -18,36 +18,24 @@
               @onRemove="remove"
             />
           </th>
-          <th
-            v-if="isEditable"
-            class="py-3 px-6 min-w-[100px]"
-          >
-            <BaseButton
-              class="text-green-400"
-              @click="add"
-            >
-              <i class="fa fa-plus" />
+          <th v-if="isEditable" class="py-3 px-6 min-w-[100px]">
+            <BaseButton class="text-green-400" @click="add">
+              <Icon name="mdi:plus-thick" />
             </BaseButton>
           </th>
         </tr>
       </thead>
-      <tbody
-        v-for="row in dataSource"
-        :key="row"
-      >
-        <TableRow
-          :isEditable="isEditable"
-          :rowData="row"
-        />
+      <tbody v-for="row in dataSource" :key="row">
+        <TableRow :isEditable="isEditable" :rowData="row" />
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
-import { BaseButton } from "@/components";
 import TableRow from "./TableRow.vue";
 import TableCell from "./TableCell.vue";
+import { BaseButton } from "@/components";
 
 export default {
   components: { BaseButton, TableRow, TableCell },
@@ -89,7 +77,7 @@ export default {
       return this.data.length > this.paginationLimit;
     },
   },
-  created() {
+  mounted() {
     if (this.isPagination) {
       this.initPagination();
     } else {

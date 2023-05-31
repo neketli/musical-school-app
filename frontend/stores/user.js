@@ -5,6 +5,7 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore("userStore", {
   persist: {
     storage: persistedState.localStorage,
+    enabled: true,
   },
   state: () => ({
     user: {},

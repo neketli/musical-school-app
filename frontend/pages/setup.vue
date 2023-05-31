@@ -51,10 +51,10 @@
           <!-- Buttons -->
           <div class="gap-5 flex justify-center items-center">
             <BaseButton class="text-green-600 w-[20%]" @click="add">
-              <i class="fa fa-check" />
+              <Icon name="mdi:check" />
             </BaseButton>
             <BaseButton class="text-red-600 w-[20%]" @click="cancel">
-              <i class="fa fa-times" />
+              <Icon name="mdi:close" />
             </BaseButton>
           </div>
         </div>
@@ -148,7 +148,7 @@ export default {
       return !["student", "teacher"].includes(this.getUserInfo.role);
     },
   },
-  async created() {
+  async mounted() {
     if (this.getUserInfo.role === "student") {
       await this.$router.push(`/`);
     }
@@ -156,7 +156,7 @@ export default {
       {
         value: "back",
         label: "Назад",
-        icon: "fa-chevron-left",
+        icon: "mdi:reply",
       },
     ];
     this.setService(this.$route.hash);

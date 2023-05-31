@@ -39,7 +39,7 @@
           class="log-out p-3 rounded-md text-gray-300 hover:text-white hover:bg-sky-100 hover:bg-opacity-10 transition-all cursor-pointer font-normal"
           @click="logOut"
         >
-          <i class="fa fa-sign-out" />
+          <Icon name="mdi:logout" />
         </button>
       </div>
     </div>

@@ -42,7 +42,7 @@
     v-cloak
     class="p-10 w-full text-center bg-gray-100 border rounded-md border-gray-300 text-md text-gray-500 flex gap-5 justify-center"
   >
-    <i class="fa fa-file" />
+    <Icon name="mdi:file" />
     {{ fileList[0].name }}
     <button
       class="text-red-500"

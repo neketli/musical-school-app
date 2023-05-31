@@ -4,7 +4,7 @@
     <div class="flex flex-col gap-4">
       <ul>
         <li v-for="subject in sujectsList" :key="subject.id" class="ml-4">
-          <i class="fa fa-check-circle-o" /> {{ subject.title }}
+          <Icon name="mdi:check-circle-outline" /> {{ subject.title }}
         </li>
       </ul>
     </div>
@@ -31,7 +31,7 @@ export default {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
 
-  async created() {
+  async mounted() {
     this.isLoading = true;
     const { data } = await this.$axios.get(
       `${import.meta.env.VITE_API_URL}/subjects_teachers?id_teacher=${

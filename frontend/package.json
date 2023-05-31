@@ -28,7 +28,7 @@
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.8.0",
     "nuxt": "^3.3.1",
-    "nuxt-icon": "^0.3.3",
+    "nuxt-icon": "^0.4.1",
     "nuxt-vitest": "^0.6.8",
     "pinia": "^2.0.33",
     "sass": "^1.60.0",

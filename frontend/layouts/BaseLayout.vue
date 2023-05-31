@@ -3,7 +3,7 @@
     <BaseHeader :data="headerData" @onLogOut="logOut" />
     <div class="flex container py-10">
       <BaseSidebar
-        v-if="sidebarData"
+        v-if="sidebarData.length"
         v-model="activeFilter"
         :data="sidebarData"
         @input="setFilter"

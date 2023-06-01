@@ -1,9 +1,5 @@
 <template>
-  <BaseLayout
-    :sidebarData="sidebarData"
-    :headerData="headerData"
-    @setFilter="setFilter"
-  >
+  <BaseLayout :sidebarData="sidebarData" :headerData="headerData">
     <h2 class="text-xl font-bold my-5 mx-3">
       {{ activeService.label }}
     </h2>
@@ -24,41 +20,43 @@
 
     <!-- Dropdown Menu -->
     <Transition name="slide-fade">
-      <div v-show="isMenuShow && !isLoading" class="-mt-1 w-full">
-        <div class="flex flex-col gap-5 rounded-b-xl p-10 bg-white shadow-md">
-          <!-- Content -->
-          <div class="flex w-full justify-between items-center gap-5">
-            <div class="flex flex-col gap-2 w-[50%]">
-              <!-- 1 sevice -->
-              <span class="text-gray-500">{{ firstService.label }}</span>
-              <vSelect
-                v-model="newItem[tableColumns[0]?.value]"
-                class="min-w-[25%]"
-                :options="firstSelect"
-              />
-            </div>
+      <template v-if="!isLoading">
+        <div v-show="isMenuShow" class="-mt-1 w-full">
+          <div class="flex flex-col gap-5 rounded-b-xl p-10 bg-white shadow-md">
+            <!-- Content -->
+            <div class="flex w-full justify-between items-center gap-5">
+              <div class="flex flex-col gap-2 w-[50%]">
+                <!-- 1 sevice -->
+                <span class="text-gray-500">{{ firstService.label }}</span>
+                <vSelect
+                  v-model="newItem[tableColumns[0]?.value]"
+                  class="min-w-[25%]"
+                  :options="firstSelect"
+                />
+              </div>
 
-            <div class="flex flex-col gap-2 w-[50%]">
-              <!-- 2 sevice -->
-              <span class="text-gray-500">{{ secondService.label }}</span>
-              <vSelect
-                v-model="newItem[tableColumns[1]?.value]"
-                class="min-w-[25%]"
-                :options="secondSelect"
-              />
+              <div class="flex flex-col gap-2 w-[50%]">
+                <!-- 2 sevice -->
+                <span class="text-gray-500">{{ secondService.label }}</span>
+                <vSelect
+                  v-model="newItem[tableColumns[1]?.value]"
+                  class="min-w-[25%]"
+                  :options="secondSelect"
+                />
+              </div>
             </div>
-          </div>
-          <!-- Buttons -->
-          <div class="gap-5 flex justify-center items-center">
-            <BaseButton class="text-green-600 w-[20%]" @click="add">
-              <Icon name="mdi:check" />
-            </BaseButton>
-            <BaseButton class="text-red-600 w-[20%]" @click="cancel">
-              <Icon name="mdi:close" />
-            </BaseButton>
+            <!-- Buttons -->
+            <div class="gap-5 flex justify-center items-center">
+              <BaseButton class="text-green-600 w-[20%]" @click="add">
+                <Icon name="mdi:check" />
+              </BaseButton>
+              <BaseButton class="text-red-600 w-[20%]" @click="cancel">
+                <Icon name="mdi:close" />
+              </BaseButton>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </Transition>
 
     <!-- Bottom tables -->
@@ -85,9 +83,9 @@
 <script>
 import { mapState } from "pinia";
 import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 import { useUserStore } from "~/stores/user";
 import { SetupTable, BaseTable, BaseButton, BaseSkelet } from "@/components";
-import "vue-select/dist/vue-select.css";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import { DefaultServiceFactory } from "@/services";
 import { DefaultServiceType } from "@/services/tables";
@@ -105,11 +103,11 @@ export default {
     return {
       headerData: [
         {
-          value: "/",
+          link: "/",
           label: "Школа",
         },
         {
-          value: "/backup",
+          link: "/backup",
           label: "Резервные копии",
         },
       ],
@@ -135,12 +133,14 @@ export default {
   computed: {
     ...mapState(useUserStore, ["getUserInfo"]),
     firstSelect() {
-      return this.firstService.data.map((item) =>
+      if (!this.firstService?.data) return [];
+      return this.firstService?.data?.map((item) =>
         Object.values(item).join(" ")
       );
     },
     secondSelect() {
-      return this.secondService.data.map((item) =>
+      if (!this.secondService?.data) return [];
+      return this.secondService?.data?.map((item) =>
         Object.values(item).join(" ")
       );
     },
@@ -152,22 +152,19 @@ export default {
     if (this.getUserInfo.role === "student") {
       await this.$router.push(`/`);
     }
+    this.setService(this.$route.hash);
+
     this.sidebarData = [
       {
-        value: "back",
+        link: "/",
         label: "Назад",
         icon: "mdi:reply",
       },
     ];
-    this.setService(this.$route.hash);
     await this.initActiveTable();
     this.isLoading = false;
   },
   methods: {
-    async setFilter() {
-      await this.$router.push(`/`);
-    },
-
     async save(row) {
       this.isLoading = true;
       if (row.id_student) {

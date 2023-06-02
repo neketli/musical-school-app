@@ -22,6 +22,9 @@ export default defineNuxtConfig({
     "~/assets/css/normalize.css",
     "~/assets/css/tailwind.css",
     "vue-final-modal/style.css",
+    "vue-select/dist/vue-select.css",
+    "@vuepic/vue-datepicker/dist/main.css",
+    "vue3-toastify/dist/index.css",
   ],
   postcss: {
     plugins: {

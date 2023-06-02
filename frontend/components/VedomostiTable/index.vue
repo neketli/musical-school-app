@@ -113,7 +113,7 @@ export default {
       this.totalPages = Math.ceil(this.data.length / this.paginationLimit);
       this.dataSource = this.data.slice(0, this.paginationLimit);
     },
-    async next() {
+    next() {
       if (this.currentPage === this.totalPages) return;
 
       this.currStart += this.paginationLimit;
@@ -123,7 +123,7 @@ export default {
       );
       this.currentPage += 1;
     },
-    async prev() {
+    prev() {
       if (this.currentPage === 1) return;
       this.currStart -= this.paginationLimit;
 

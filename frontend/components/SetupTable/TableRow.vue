@@ -55,7 +55,6 @@
 <script>
 import vSelect from "vue-select";
 import { BaseButton } from "@/components";
-import "vue-select/dist/vue-select.css";
 export default {
   components: {
     BaseButton,

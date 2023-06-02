@@ -64,6 +64,7 @@
 <script>
 import { mapState } from "pinia";
 import vSelect from "vue-select";
+import { toast } from "vue3-toastify";
 import { useUserStore } from "~/stores/user";
 import {
   BaseTable,
@@ -153,7 +154,7 @@ export default {
       });
       this.subjects = data.map((item) => {
         return {
-          id: item.id,
+          id: `${item.id}`,
           label: item.title,
         };
       });
@@ -161,7 +162,7 @@ export default {
       const { data } = await this.$api.get(`/subjects`);
       this.subjects = data.map((item) => {
         return {
-          id: item.id,
+          id: `${item.id}`,
           label: item.title,
         };
       });
@@ -317,6 +318,13 @@ export default {
       });
 
       this.removeList = [];
+
+      toast.success("Успешно сохранено!", {
+        position: "top-right",
+        timeout: 2000,
+        closeOnClick: true,
+      });
+
       this.isLoading = false;
     },
   },

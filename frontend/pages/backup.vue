@@ -19,19 +19,6 @@
           </template>
         </BaseFileInput>
         <BaseButton @click="fileSubmit"> Отправить </BaseButton>
-        <Transition name="fade">
-          <span
-            v-if="message"
-            class="text-xl text-clip mt-5"
-            :class="{
-              'text-green-500': code === 200,
-              'text-orange-500': code === 500,
-              'text-red-500': code === 415,
-            }"
-          >
-            {{ message }}</span
-          >
-        </Transition>
       </div>
       <div
         v-if="filter.value === 'backup'"
@@ -95,6 +82,7 @@
 
 <script>
 import { mapState } from "pinia";
+import { toast } from "vue3-toastify";
 import vSelect from "vue-select";
 import { useUserStore } from "~/stores/user";
 import {
@@ -106,7 +94,6 @@ import {
 } from "@/components";
 import { History } from "@/services";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import "vue-select/dist/vue-select.css";
 
 export default {
   components: {
@@ -201,7 +188,6 @@ export default {
       file: {},
       selectedTable: {},
       code: "",
-      message: "",
       historyLimit: 1,
       opId: "",
       isLoading: true,
@@ -254,20 +240,28 @@ export default {
 
       switch (this.code) {
         case 500:
-          this.message = "Возможна ошибка восстановления...";
+          toast.warning("Возможна ошибка восстановления...", {
+            position: "top-right",
+            timeout: 2000,
+            closeOnClick: true,
+          });
           break;
         case 415:
-          this.message = "Ошибка восстановления, неверный тип файла!";
+          toast.error("Ошибка восстановления, неверный тип файла!", {
+            position: "top-right",
+            timeout: 2000,
+            closeOnClick: true,
+          });
           break;
 
         default:
-          this.message = "База данных успешно восстановлена!";
+          toast.success("База данных успешно восстановлена!", {
+            position: "top-right",
+            timeout: 2000,
+            closeOnClick: true,
+          });
           break;
       }
-
-      setTimeout(() => {
-        this.message = "";
-      }, 10000);
 
       this.isLoading = false;
     },

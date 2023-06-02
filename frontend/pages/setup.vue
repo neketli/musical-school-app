@@ -83,7 +83,6 @@
 <script>
 import { mapState } from "pinia";
 import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
 import { useUserStore } from "~/stores/user";
 import { SetupTable, BaseTable, BaseButton, BaseSkelet } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";

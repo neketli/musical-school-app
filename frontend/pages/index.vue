@@ -21,6 +21,7 @@
       @onUndo="undo"
     />
     <BaseSkelet v-else :size="200" />
+    <ModalsContainer />
     <template v-if="canEdit && isModalShow">
       <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
         <template #title> Добавить </template>

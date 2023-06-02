@@ -18,7 +18,11 @@ export default defineNuxtConfig({
   experimental: {
     reactivityTransform: true,
   },
-  css: ["~/assets/css/normalize.css", "~/assets/css/tailwind.css"],
+  css: [
+    "~/assets/css/normalize.css",
+    "~/assets/css/tailwind.css",
+    "vue-final-modal/style.css",
+  ],
   postcss: {
     plugins: {
       tailwindcss: {},

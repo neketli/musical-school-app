@@ -1,9 +1,5 @@
 <template>
-  <BaseLayout
-    :sidebarData="sidebarData"
-    :headerData="headerData"
-    @setFilter="setFilter"
-  >
+  <BaseLayout :sidebarData="sidebarData" :headerData="headerData">
     <div class="flex flex-col gap-8 justify-center">
       <div class="flex flex-col gap-4">
         <h3 class="text-lg">Выбор предмета</h3>
@@ -12,20 +8,20 @@
           class="min-w-[25%] bg-white"
           :options="subjects"
           placeholder="Предмет"
-          @option:selected="getData"
+          @option:selected="formatData"
         />
       </div>
 
       <div v-if="activeSubject" class="flex">
         <div class="flex flex-col bg-white h-full">
           <div
-            class="py-2 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[45px] min-w-[200px]"
+            class="py-2 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px]"
           >
             Дата занятий:
           </div>
           <template v-for="item in tableData" :key="item.name">
             <div
-              class="py-2 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[45px] min-w-[200px] rounded-sm"
+              class="py-2 px-6 flex items-center border-b-[1px] border-b-grey-400 h-[75px] min-w-[200px] rounded-sm"
             >
               {{ item.name }}
             </div>
@@ -37,9 +33,6 @@
             v-if="!isLoading"
             :columns="tableColumns"
             :data="tableData"
-            @onRemove="remove"
-            @onAdd="add"
-            @onColumnSave="saveColumn"
           />
           <BaseSkelet v-else :size="200" />
         </div>
@@ -54,7 +47,7 @@ import vSelect from "vue-select";
 import { useUserStore } from "~/stores/user";
 import { BaseSkelet, VedomostiTable } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import JournalsService from "@/services/student/journal";
+import { StudentJournalService } from "@/services";
 
 export default {
   components: {
@@ -80,79 +73,85 @@ export default {
       subjects: [],
       activeSubject: null,
       service: null,
+      journalsData: [],
 
       isLoading: true,
       isModalShow: false,
       canEdit: false,
+      name: "",
     };
   },
   computed: {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
   async mounted() {
-    this.service = new JournalsService(this.$api);
+    this.service = new StudentJournalService(this.$api);
     this.sidebarData = [
       {
-        value: "back",
+        link: "/",
         label: "Назад",
         icon: "mdi:reply",
       },
     ];
 
-    this.setGroup();
-
-    const { data } = await this.$api.get(`/subjects`);
-    this.subjects = data.map((item) => {
-      return {
-        id: item.id,
-        label: item.title,
-      };
-    });
+    await this.getData();
 
     this.isLoading = false;
   },
   methods: {
     async getData() {
       this.isLoading = true;
-      const journalsData = await this.service.getData();
+      this.journalsData = await this.service.getData(this.getUserInfo.rid);
+
+      const subjects = await this.$api.get(`/subjects`);
+      this.subjects = subjects.data.map((item) => {
+        return {
+          id: item.id,
+          label: item.title,
+        };
+      });
 
       const { data } = await this.$api.get(`/students/${this.getUserInfo.rid}`);
-      const name = `${
+      this.name = `${
         data.last_name
       } ${data.first_name[0].toUpperCase()}. ${data.patronymic[0].toUpperCase()}.`;
+
+      this.formatData();
+
+      this.isLoading = false;
+    },
+    formatData() {
+      this.isLoading = true;
 
       this.tableData = [
         {
           id: this.getUserInfo.rid,
-          name,
+          name: this.name,
         },
-      ]
-        .map((item) => {
-          const obj = {};
-          for (const data of journalsData) {
-            if (
-              data.id_subject === this.activeSubject.id &&
-              data.id_student === item.id
-            ) {
-              obj[data.date] = data.grade;
-            }
+      ].map((item) => {
+        const obj = {};
+        for (const data of this.journalsData) {
+          if (data.id === this.activeSubject?.id) {
+            const dayjs = useDayjs();
+            obj[dayjs(data.date).format("DD/MM/YYYY")] = data.grade;
           }
+        }
 
-          return {
-            id: item.id,
-            name: item.name,
-            ...obj,
-          };
-        })
-        .map((item) => {
-          Object.keys(item).forEach((element) => {
-            if (!item[element]) {
-              delete item[element];
-            }
-          });
+        return {
+          id: item.id,
+          name: item.name,
+          ...obj,
+        };
+      });
+      // .map((item) => {
+      //   Object.keys(item).forEach((element) => {
+      //     if (!item[element]) {
+      //       delete item[element];
+      //     }
+      //   });
 
-          return item;
-        });
+      //   return item;
+      // });
 
       this.tableColumns = Object.keys(this.tableData[0])
         .filter(
@@ -173,110 +172,9 @@ export default {
         });
       });
 
-      this.isLoading = false;
-    },
-    async setFilter() {
-      await this.$router.push(`/`);
-    },
-    async setGroup({ id }) {
-      const { data } = await this.$api.get(`/students_groups`, {
-        params: { id_group: id },
-      });
-      this.activeGroup = true;
-      this.tableData = data.map((item) => {
-        return {
-          ...item,
-        };
-      });
-    },
-    remove(label) {
-      this.tableColumns = this.tableColumns.filter(
-        (item) => item.label !== label
-      );
-      this.tableData.forEach((item) => {
-        this.removeList.push(item[`${label}-id_journal`]);
-        if (item[label]) {
-          delete item[label];
-          delete item[`${label}-id_journal`];
-        }
-      });
-    },
-    add() {
-      this.tableColumns.push({
-        label: "",
-      });
-    },
-    saveColumn({ label, old }) {
-      if (!old.label) {
-        this.tableColumns = this.tableColumns.filter(
-          (item) => item.label !== ""
-        );
-        this.tableColumns.push({ label });
-
-        this.tableData.forEach((item) => {
-          item[label] = "";
-        });
-        return;
-      }
-      if (old.label !== label) {
-        this.tableData.forEach(async (item) => {
-          const oldDate = old.label;
-          await this.service.update({
-            id: item[`${oldDate}-id_journal`],
-            grade: item[oldDate],
-            date: label,
-            type: "",
-            id_student: item.id,
-            id_subject: this.activeSubject.id,
-          });
-          item[`${label}-id_journal`] = item[`${oldDate}-id_journal`];
-          item[label] = item[oldDate];
-          delete item[oldDate];
-          delete item[`${oldDate}-id_journal`];
-        });
-        this.tableColumns = this.tableColumns.filter(
-          (item) => item.label !== old.label
-        );
-        this.tableColumns.push({ label });
-      }
-    },
-    save() {
-      this.isLoading = true;
-      if (this.removeList.length) {
-        this.removeList.forEach(async (id) => {
-          await this.service.remove(id);
-        });
-      }
-
-      this.tableData.forEach((item) => {
-        Object.keys(item)
-          .filter((i) => i !== "id" && i !== "name")
-          .forEach(async (data) => {
-            if (this.removeList.filter((k) => k === item[data]).length) return;
-            if (data.includes("-id_journal")) {
-              const date = data.replace("-id_journal", "");
-              await this.service.update({
-                id: item[data],
-                grade: item[date],
-                date,
-                type: "",
-                id_student: item.id,
-                id_subject: this.activeSubject.id,
-              });
-            } else if (!item[`${data}-id_journal`]) {
-              await this.service.create({
-                grade: item[data],
-                date: data,
-                type: "",
-                id_student: item.id,
-                id_subject: this.activeSubject.id,
-              });
-            }
-          });
-      });
-
-      this.removeList = [];
-      this.isLoading = false;
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 10);
     },
   },
 };

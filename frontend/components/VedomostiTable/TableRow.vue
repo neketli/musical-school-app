@@ -10,7 +10,7 @@
           :class="getClassByKey(rowData[key])"
           type="number"
         />
-        <div v-else :class="getClassByKey(rowData[key])">
+        <div v-else :class="getClassByKey(rowData[key])" class="pl-2">
           {{ rowData[key] }}
         </div>
       </td>

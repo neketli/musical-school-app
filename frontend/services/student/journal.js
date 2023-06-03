@@ -29,7 +29,7 @@ export default class StudentJournalService {
   }
 
   async fetch(value) {
-    const { data } = await axios.get(this.url, {
+    const { data } = await this.axios.get(this.url, {
       params: {
         id_student: value,
       },

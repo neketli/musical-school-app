@@ -9,7 +9,7 @@
             v-for="item in columns"
             :key="item.label"
             scope="col"
-            class="py-3 px-6 min-w-[250px]"
+            class="py-3 px-6"
           >
             <TableCell
               :isEditable="isEditable"

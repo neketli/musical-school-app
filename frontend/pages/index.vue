@@ -51,11 +51,8 @@
               class="flex flex-col text-gray-600 gap-2"
             >
               {{ column.label }}
-              <VueDatePicker
-                v-model="newItem[column.value]"
-                :enableTimePicker="false"
-                locale="ru"
-              />
+
+              <BaseDatePicker v-model="newItem[column.value]" />
             </div>
           </template>
         </div>
@@ -66,11 +63,16 @@
 
 <script>
 import vSelect from "vue-select";
-import VueDatePicker from "@vuepic/vue-datepicker";
 
 import { mapState } from "pinia";
 import { useUserStore } from "~/stores/user";
-import { BaseTable, BaseModal, BaseInput, BaseSkelet } from "@/components";
+import {
+  BaseTable,
+  BaseModal,
+  BaseInput,
+  BaseSkelet,
+  BaseDatePicker,
+} from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
 import {
   UsersService,
@@ -89,8 +91,8 @@ export default {
     BaseModal,
     BaseInput,
     BaseSkelet,
+    BaseDatePicker,
     vSelect,
-    VueDatePicker,
   },
   data() {
     return {

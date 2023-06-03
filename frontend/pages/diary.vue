@@ -54,8 +54,7 @@ import vSelect from "vue-select";
 import { useUserStore } from "~/stores/user";
 import { BaseSkelet, VedomostiTable } from "@/components";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { DefaultServiceFactory } from "@/services";
-import { DefaultServiceType } from "@/services/tables";
+import JournalsService from "@/services/student/journal";
 
 export default {
   components: {
@@ -80,7 +79,7 @@ export default {
       activeGroup: null,
       subjects: [],
       activeSubject: null,
-      JournalsService: null,
+      service: null,
 
       isLoading: true,
       isModalShow: false,
@@ -91,10 +90,7 @@ export default {
     ...mapState(useUserStore, ["getUserInfo"]),
   },
   async mounted() {
-    this.JournalsService = DefaultServiceFactory(
-      this.$api,
-      DefaultServiceType.journals
-    );
+    this.service = new JournalsService(this.$api);
     this.sidebarData = [
       {
         value: "back",
@@ -118,7 +114,7 @@ export default {
   methods: {
     async getData() {
       this.isLoading = true;
-      const journalsData = await this.JournalsService.getData();
+      const journalsData = await this.service.getData();
 
       const { data } = await this.$api.get(`/students/${this.getUserInfo.rid}`);
       const name = `${
@@ -225,7 +221,7 @@ export default {
       if (old.label !== label) {
         this.tableData.forEach(async (item) => {
           const oldDate = old.label;
-          await this.JournalsService.update({
+          await this.service.update({
             id: item[`${oldDate}-id_journal`],
             grade: item[oldDate],
             date: label,
@@ -248,7 +244,7 @@ export default {
       this.isLoading = true;
       if (this.removeList.length) {
         this.removeList.forEach(async (id) => {
-          await this.JournalsService.remove(id);
+          await this.service.remove(id);
         });
       }
 
@@ -259,7 +255,7 @@ export default {
             if (this.removeList.filter((k) => k === item[data]).length) return;
             if (data.includes("-id_journal")) {
               const date = data.replace("-id_journal", "");
-              await this.JournalsService.update({
+              await this.service.update({
                 id: item[data],
                 grade: item[date],
                 date,
@@ -268,7 +264,7 @@ export default {
                 id_subject: this.activeSubject.id,
               });
             } else if (!item[`${data}-id_journal`]) {
-              await this.JournalsService.create({
+              await this.service.create({
                 grade: item[data],
                 date: data,
                 type: "",

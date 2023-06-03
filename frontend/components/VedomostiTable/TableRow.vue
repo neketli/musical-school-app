@@ -8,6 +8,7 @@
           :key="key"
           v-model="rowData[key]"
           :class="getClassByKey(rowData[key])"
+          type="number"
         />
         <div v-else :class="getClassByKey(rowData[key])">
           {{ rowData[key] }}

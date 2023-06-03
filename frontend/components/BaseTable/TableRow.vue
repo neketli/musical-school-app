@@ -1,5 +1,11 @@
 <template>
-  <tr class="overflow-x-auto bg-white border-b hover:bg-gray-50">
+  <tr
+    :class="{
+      'overflow-x-auto bg-white border-b': true,
+      'transition-all cursor-pointer hover:bg-gray-100 hover:ring-1 hover:ring-blue-300':
+        isClickable,
+    }"
+  >
     <template v-if="editMode">
       <template v-for="key in rowKeys">
         <td
@@ -28,15 +34,9 @@
         <td
           v-if="key.includes('date')"
           :key="key"
-          class="px-5 py-3 min-w-[100px]"
+          class="px-5 py-3 min-w-[200px]"
         >
-          <VueDatePicker
-            v-model="row[key]"
-            class="z-10"
-            :enableTimePicker="false"
-            locale="ru"
-            format="dd/MM/yyyy"
-          />
+          <BaseDatePicker v-model="row[key]" />
         </td>
       </template>
     </template>
@@ -57,12 +57,12 @@
           v-if="(key !== 'id' || includeId) && key.includes('date')"
           class="px-5 py-3"
         >
-          {{ new Date(row[key]).toLocaleDateString("ru-RU") }}
+          {{ dayjs(row[key], "DD/MM/YYYY").format("DD.MM.YYYY") }}
         </td>
       </template>
     </template>
     <!-- Edit mode buttons -->
-    <div v-if="isEditable" class="flex gap-5 px-5 py-3 text-right justify-end">
+    <div v-if="isEditable" class="flex gap-2 px-5 py-3 text-right justify-end">
       <template v-if="editMode">
         <BaseButton class="text-green-400 mx-2" @click="save">
           <Icon name="mdi:check" />
@@ -89,16 +89,15 @@
 
 <script>
 import vSelect from "vue-select";
-import VueDatePicker from "@vuepic/vue-datepicker";
 
-import { BaseButton, BaseInput } from "@/components";
+import { BaseButton, BaseInput, BaseDatePicker } from "@/components";
 
 export default {
   components: {
     BaseButton,
     BaseInput,
+    BaseDatePicker,
     vSelect,
-    VueDatePicker,
   },
   props: {
     rowData: {
@@ -106,6 +105,10 @@ export default {
       required: true,
     },
     isEditable: {
+      type: Boolean,
+      default: false,
+    },
+    isClickable: {
       type: Boolean,
       default: false,
     },
@@ -120,6 +123,7 @@ export default {
       editMode: false,
       row: {},
       oldRow: {},
+      dayjs: useDayjs(),
     };
   },
   computed: {
@@ -133,6 +137,10 @@ export default {
   },
   mounted() {
     this.row = { ...this.rowData };
+
+    if (this.row.birthdate) {
+      this.row.birthdate = this.dayjs(this.row.birthdate).format("DD/MM/YYYY");
+    }
     if (Object.values(this.row).some((item) => !item)) {
       // this.toggleEditMode();
     }

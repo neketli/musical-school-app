@@ -5,11 +5,11 @@ class dumpController {
   async getDump(req, res) {
     try {
       const fileName = await dbDump.backup();
-      await res?.download(`./${fileName}`);
+      await res?.download(fileName);
       setTimeout(() => {
         execute(`rm -rf ${fileName}`);
         // eslint-disable-next-line no-console
-        console.log(`Removed backup succefuly! Path: ./${fileName}`);
+        console.log(`Removed backup succefuly! Path: ${fileName}`);
       }, 30000);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -22,7 +22,7 @@ class dumpController {
     let file;
     try {
       file = req.files.files;
-      file.mv(file.name);
+      file.mv(`./data/${file.name}`);
 
       if (!file.name.match("[a-zA-Z0-9-_]*.tar")) {
         res?.status(415).send("Invalid file type!");
@@ -36,20 +36,20 @@ class dumpController {
     }
 
     try {
-      await dbDump.restore(file.name);
+      await dbDump.restore(`./data/${file.name}`);
       res?.sendStatus(200);
 
       setTimeout(() => {
-        execute(`rm -rf ${file.name}`);
+        execute(`rm -rf ./data/${file.name}`);
         // eslint-disable-next-line no-console
-        console.log(`Removed backup succefuly! Path: ./${file.name}`);
+        console.log(`Removed backup succefuly! Path: ./data/${file.name}`);
       }, 30000);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      execute(`rm -rf ${file.name}`);
+      execute(`rm -rf ./data/${file.name}`);
       // eslint-disable-next-line no-console
-      console.log(`Removed backup succefuly! Path: ./${file.name}`);
+      console.log(`Removed backup succefuly! Path: ./data/${file.name}`);
       res?.status(500);
       return;
     }

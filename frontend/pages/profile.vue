@@ -59,10 +59,12 @@ export default {
     const { data } = await this.$api.get(
       `/${role === "student" ? "students" : "teachers"}/${this.getUserInfo.rid}`
     );
+
     this.userData = {
       ...data,
       role: role === "student" ? "Ученик" : "Преподаватель",
       full_name: `${data.last_name} ${data.first_name} ${data.patronymic}`,
+      birthdate: new Date(data.birthdate).toLocaleDateString("ru-RU"),
     };
 
     if (role === "admin") {

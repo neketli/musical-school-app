@@ -78,7 +78,7 @@ export const TABLES = [
     value: "student_journal",
     label: "Мои оценки",
     icon: "mdi:book-account-outline",
-    link: "/dnevnik",
+    link: "/diary",
     readAccess: ["student"],
   },
 ];

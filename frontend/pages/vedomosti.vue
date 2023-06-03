@@ -54,6 +54,7 @@
         :data="groupsData"
         :columns="groupColumns"
         includeId
+        isRowsClickable
         @onRowClicked="setGroup"
       />
       <BaseSkelet v-else :size="200" />
@@ -182,8 +183,10 @@ export default {
             data.id_subject === this.activeSubject.id &&
             data.id_student === item.id
           ) {
-            obj[data.date] = data.grade;
-            obj[`${data.date}-id_journal`] = data.id;
+            const dayjs = useDayjs();
+            const date = dayjs(data.date).format("DD/MM/YYYY");
+            obj[date] = data.grade;
+            obj[`${date}-id_journal`] = data.id;
           }
         }
 
@@ -286,7 +289,7 @@ export default {
       this.isLoading = true;
       if (this.removeList.length) {
         this.removeList.forEach(async (id) => {
-          await this.JournalsService.delete(id);
+          await this.JournalsService.remove(id);
         });
       }
 

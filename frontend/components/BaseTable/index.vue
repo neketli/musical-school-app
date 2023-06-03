@@ -26,6 +26,7 @@
         >
           <TableRow
             :isEditable="isEditable"
+            :isClickable="isRowsClickable"
             :rowData="row"
             :includeId="includeId"
             @onSave="save"
@@ -82,6 +83,10 @@ export default {
       required: true,
     },
     isEditable: {
+      type: Boolean,
+      default: false,
+    },
+    isRowsClickable: {
       type: Boolean,
       default: false,
     },

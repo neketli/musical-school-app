@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-sky-50 relative min-h-full">
+  <div class="bg-sky-50 relative min-h-[100vh]">
     <BaseHeader :data="headerData" @onLogOut="logOut" />
     <div class="flex container py-10">
       <BaseSidebar

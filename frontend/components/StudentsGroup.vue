@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <BaseTable
     v-if="!isLoading"
     title="Мои группы"
@@ -45,7 +45,4 @@ export default {
     this.isLoading = false;
   },
 };
-</script> -->
-<template>
-  <div>hello</div>
-</template>
+</script>

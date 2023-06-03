@@ -1,22 +1,16 @@
 <template>
-  <div class="flex items-center" @click.self="enterEditMode">
+  <div class="flex items-center cursor-pointer p-2" @click.self="enterEditMode">
     <div v-if="!editMode">
-      {{ dataSource.label }}
+      {{ dayjs(dataSource.label, "DD/MM/YYYY").format("DD.MM.YYYY") }}
     </div>
+    <BaseDatePicker v-else v-model="dataSource.label" class="min-w-[200px]" />
 
-    <BaseInput
-      v-else
-      v-model="dataSource.label"
-      placeholder="dd.mm.year"
-      class="min-w-[150px]"
-      @keyup.enter="save"
-    />
     <div v-if="editMode" class="flex text-right justify-end">
       <template v-if="editMode">
         <BaseButton class="text-green-400 mx-2" @click="save">
           <Icon name="mdi:check" />
         </BaseButton>
-        <BaseButton class="text-red-400 mx-2" @click="cancel">
+        <BaseButton class="text-red-400" @click="cancel">
           <Icon name="mdi:close" />
         </BaseButton>
         <BaseButton class="text-red-400 mx-2" @click="remove">
@@ -33,11 +27,12 @@
 </template>
 
 <script>
-import { BaseButton, BaseInput } from "@/components";
+import { BaseButton, BaseDatePicker } from "@/components";
+
 export default {
   components: {
     BaseButton,
-    BaseInput,
+    BaseDatePicker,
   },
   props: {
     data: {
@@ -55,6 +50,7 @@ export default {
       editMode: false,
       dataSource: {},
       oldData: {},
+      dayjs: useDayjs(),
     };
   },
   mounted() {

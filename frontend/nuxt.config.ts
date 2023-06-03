@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     "nuxt-icon",
     "nuxt-vitest",
     "@nuxt/devtools",
+    "dayjs-nuxt",
   ],
   experimental: {
     reactivityTransform: true,
@@ -41,6 +42,10 @@ export default defineNuxtConfig({
       sameSite: "strict",
     },
     storage: "localStorage",
+  },
+
+  dayjs: {
+    plugins: ["customParseFormat"],
   },
 
   devtools: {

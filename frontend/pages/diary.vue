@@ -60,24 +60,16 @@ export default {
     return {
       headerData: [],
       sidebarData: [],
-      filter: {},
 
       tableColumns: [],
       tableData: [],
-      newItem: {},
 
-      groupsData: {},
-      removeList: [],
-      groupsColumns: {},
-      activeGroup: null,
       subjects: [],
       activeSubject: null,
       service: null,
       journalsData: [],
 
       isLoading: true,
-      isModalShow: false,
-      canEdit: false,
       name: "",
     };
   },

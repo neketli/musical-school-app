@@ -230,9 +230,14 @@ export default {
       this.isLoading = true;
 
       const formData = new FormData();
-      formData.append("file", this.file);
+      formData.append("files", this.file);
+
       try {
-        const data = await this.$api.post(`/dump`, formData);
+        const data = await this.$api.post(`/dump`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
         this.code = data.status;
       } catch (error) {
         this.code = error.request.status;
@@ -241,6 +246,13 @@ export default {
       switch (this.code) {
         case 500:
           toast.warning("Возможна ошибка восстановления...", {
+            position: "top-right",
+            timeout: 2000,
+            closeOnClick: true,
+          });
+          break;
+        case 503:
+          toast.error("Произошла внутренняя ошибка, попробуйте позднее", {
             position: "top-right",
             timeout: 2000,
             closeOnClick: true,

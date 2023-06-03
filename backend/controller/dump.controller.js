@@ -21,17 +21,17 @@ class dumpController {
   async setDump(req, res) {
     let file;
     try {
-      file = req.files.file;
+      file = req.files.files;
       file.mv(file.name);
 
       if (!file.name.match("[a-zA-Z0-9-_]*.tar")) {
         res?.status(415).send("Invalid file type!");
-        return
+        return;
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
-      res?.status(500).send(error);
+      res?.status(503).send(error);
       return;
     }
 

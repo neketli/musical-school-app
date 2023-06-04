@@ -9,7 +9,7 @@
     selectText="Выбрать"
     cancelText="Отмена"
     autoApply
-    teleport
+    :teleport="true"
   />
 </template>
 

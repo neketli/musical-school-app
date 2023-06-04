@@ -31,7 +31,6 @@
             :rowData="row"
             :includeId="includeId"
             @onSave="save"
-            @onCancel="cancel"
             @onRemove="remove"
             @click="rowClicked(row)"
           />
@@ -137,9 +136,6 @@ export default {
     },
     add() {
       this.$emit("onAdd");
-    },
-    cancel() {
-      this.dataSource.pop();
     },
     remove(id) {
       this.$emit("onRemove", id);

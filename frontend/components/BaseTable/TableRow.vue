@@ -6,12 +6,7 @@
         isClickable,
     }"
   >
-    <BaseModal
-      v-model="editMode"
-      @confirm="save"
-      @cancel="cancel"
-      @close="cancel"
-    >
+    <BaseModal v-model="editMode" @confirm="save" @cancel="cancel">
       <template #title> Редактировать </template>
       <div v-for="key in rowKeys" :key="key" class="flex flex-col">
         <td
@@ -55,7 +50,6 @@
         </td>
       </div>
       <BaseButton
-        v-if="!isButtonDisabled"
         class="flex gap-2 items-center justify-center w-full text-red-400 mt-2"
         @click="remove"
       >
@@ -156,19 +150,12 @@ export default {
         return acc;
       }, {});
     },
-    isButtonDisabled() {
-      // return Object.values(this.row).some((item) => !item);
-      return false;
-    },
   },
   mounted() {
     this.row = { ...this.rowData };
 
     if (this.row.birthdate) {
       this.row.birthdate = this.dayjs(this.row.birthdate).format("DD/MM/YYYY");
-    }
-    if (Object.values(this.row).some((item) => !item)) {
-      // this.toggleEditMode();
     }
   },
   methods: {
@@ -180,16 +167,13 @@ export default {
       this.editMode = !this.editMode;
     },
     save() {
-      if (this.isButtonDisabled) return;
       this.$emit("onSave", { ...this.row });
       this.toggleEditMode();
     },
     cancel() {
-      if (this.isButtonDisabled) {
-        this.$emit("onCancel");
-      }
+      this.$emit("onCancel");
       this.row = { ...this.oldRow };
-      this.toggleEditMode();
+      this.editMode = false;
     },
     remove() {
       this.$emit("onRemove", this.row.id);

@@ -18,6 +18,7 @@ const emit = defineEmits<{
     overlayTransition="vfm-fade"
     contentClass="relative flex flex-col max-h-full mx-4 p-4 border rounded bg-white"
     @update:modelValue="(val) => emit('update:modelValue', val)"
+    @beforeClose="emit('cancel')"
     ><h4 class="mr-8 text-2xl font-bold border-b-2 py-3">
       <slot name="title">
         {{ title }}
@@ -29,16 +30,16 @@ const emit = defineEmits<{
     <div
       class="flex-shrink-0 gap-5 border-t-2 flex justify-center items-center pt-4"
     >
-      <BaseButton class="text-green-600" @click="$emit('confirm')">
+      <BaseButton class="text-green-600" @click="emit('confirm')">
         Подтвердить
       </BaseButton>
-      <BaseButton class="text-red-600" @click="$emit('cancel')">
+      <BaseButton class="text-red-600" @click="emit('cancel')">
         Отмена
       </BaseButton>
     </div>
     <button
       class="absolute top-0 right-0 mt-2 mr-2 hover:text-blue-600"
-      @click="$emit('cancel')"
+      @click="emit('cancel')"
     >
       <Icon name="mdi:close" />
     </button>

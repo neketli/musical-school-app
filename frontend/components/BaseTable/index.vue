@@ -27,6 +27,7 @@
           <TableRow
             :isEditable="isEditable"
             :isClickable="isRowsClickable"
+            :columns="columns"
             :rowData="row"
             :includeId="includeId"
             @onSave="save"

@@ -50,7 +50,13 @@ class UsersController {
           `SELECT (first_name, last_name, patronymic, birthdate) FROM ${table} WHERE id = $1`,
           [rid]
         );
-        const rid_select = peoples.rows[0].row.replaceAll(",", " ");
+        const rid_select = {
+          label: peoples.rows[0].row
+            .replaceAll(",", " ")
+            .replaceAll("(", "")
+            .replaceAll(")", ""),
+          rid,
+        };
 
         delete item["role"];
         delete item["rid"];

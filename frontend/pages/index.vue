@@ -21,7 +21,6 @@
       @onUndo="undo"
     />
     <BaseSkelet v-else :size="200" />
-    <ModalsContainer />
     <template v-if="canEdit && isModalShow">
       <BaseModal v-model="isModalShow" @confirm="add" @cancel="cancel">
         <template #title> Добавить </template>
@@ -203,9 +202,11 @@ export default {
           DefaultServiceType.speciality
         );
         const data = await SpecialityService.getData();
-        this.selectOptions = data.map((item) =>
-          Object.values(item).slice(0, 2).join(" ")
-        );
+        this.selectOptions = data.map((item) => ({
+          id: item.id,
+          label: item.title,
+          key: "id_speciality",
+        }));
       }
 
       if (this.tableColumns.find((item) => item.value === "role_select")) {
@@ -299,9 +300,10 @@ export default {
         this.tableData = this.tableData.map((item) => {
           return {
             ...item,
-            "id_departament_select-options": data.map((item) =>
-              Object.values(item).join(" ")
-            ),
+            "id_departament_select-options": data.map((item) => ({
+              label: item.title,
+              id: item.id,
+            })),
           };
         });
       }
@@ -315,9 +317,10 @@ export default {
         this.tableData = this.tableData.map((item) => {
           return {
             ...item,
-            "id_speciality_select-options": data.map((item) =>
-              Object.values(item).slice(0, 2).join(" ")
-            ),
+            "id_speciality_select-options": data.map((item) => ({
+              label: item.title,
+              id: item.id,
+            })),
           };
         });
       }

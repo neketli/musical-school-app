@@ -6,13 +6,21 @@
         isClickable,
     }"
   >
-    <template v-if="editMode">
-      <template v-for="key in rowKeys">
+    <BaseModal
+      v-model="editMode"
+      @confirm="save"
+      @cancel="cancel"
+      @close="cancel"
+    >
+      <template #title> Редактировать </template>
+      <div v-for="key in rowKeys" :key="key" class="flex flex-col">
         <td
           v-if="key === 'id' && includeId"
           :key="key"
           class="px-5 py-3 min-w-[100px]"
         >
+          <span class="m-2 text-lg text-gray-500">{{ rowCols[key] }}</span>
+
           {{ row[key] }}
         </td>
         <td
@@ -22,6 +30,8 @@
           :key="key"
           class="px-5 py-3 min-w-[100px]"
         >
+          <span class="m-2 text-lg text-gray-500">{{ rowCols[key] }}</span>
+
           <BaseInput v-model="row[key]" />
         </td>
         <td
@@ -29,6 +39,9 @@
           :key="key"
           class="px-5 py-3 min-w-[100px]"
         >
+          <span class="m-2 text-lg text-gray-500">{{
+            rowCols[getKey(key)]
+          }}</span>
           <vSelect v-model="row[key]" :options="row[`${key}-options`]" />
         </td>
         <td
@@ -36,53 +49,55 @@
           :key="key"
           class="px-5 py-3 min-w-[200px]"
         >
+          <span class="m-2 text-lg text-gray-500">{{ rowCols[key] }}</span>
+
           <BaseDatePicker v-model="row[key]" />
         </td>
-      </template>
-    </template>
+      </div>
+      <BaseButton
+        v-if="!isButtonDisabled"
+        class="flex gap-2 items-center justify-center w-full text-red-400 mt-2"
+        @click="remove"
+      >
+        Удалить запись
+        <Icon name="mdi:delete" />
+      </BaseButton>
+    </BaseModal>
 
-    <template v-else>
-      <template v-for="key in rowKeys" :key="key">
-        <td
-          v-if="
-            (key !== 'id' || includeId) &&
-            !key.includes('-options') &&
-            !key.includes('date')
-          "
-          class="px-5 py-3"
-        >
-          {{ row[key] }}
-        </td>
-        <td
-          v-if="(key !== 'id' || includeId) && key.includes('date')"
-          class="px-5 py-3"
-        >
-          {{ dayjs(row[key], "DD/MM/YYYY").format("DD.MM.YYYY") }}
-        </td>
-      </template>
+    <template v-for="key in rowKeys" :key="key">
+      <td
+        v-if="
+          (key !== 'id' || includeId) &&
+          !key.includes('-options') &&
+          !key.includes('_select') &&
+          !key.includes('date')
+        "
+        class="px-5 py-3"
+      >
+        {{ row[key] }}
+      </td>
+      <td
+        v-if="
+          (key !== 'id' || includeId) &&
+          key.includes('_select') &&
+          !key.includes('-options')
+        "
+        class="px-5 py-3"
+      >
+        {{ row[key].label || row[key] }}
+      </td>
+      <td
+        v-if="(key !== 'id' || includeId) && key.includes('date')"
+        class="px-5 py-3"
+      >
+        {{ dayjs(row[key], "DD/MM/YYYY").format("DD.MM.YYYY") }}
+      </td>
     </template>
     <!-- Edit mode buttons -->
     <div v-if="isEditable" class="flex gap-2 px-5 py-3 text-right justify-end">
-      <template v-if="editMode">
-        <BaseButton class="text-green-400 mx-2" @click="save">
-          <Icon name="mdi:check" />
-        </BaseButton>
-        <BaseButton class="text-red-400 mx-2" @click="cancel">
-          <Icon name="mdi:close" />
-        </BaseButton>
-        <BaseButton
-          v-if="!isButtonDisabled"
-          class="text-red-400 mx-2"
-          @click="remove"
-        >
-          <Icon name="mdi:delete" />
-        </BaseButton>
-      </template>
-      <template v-else>
-        <BaseButton class="mx-2" @click="toggleEditMode">
-          <Icon name="mdi:lead-pencil" />
-        </BaseButton>
-      </template>
+      <BaseButton class="mx-2" @click="toggleEditMode">
+        <Icon name="mdi:lead-pencil" />
+      </BaseButton>
     </div>
   </tr>
 </template>
@@ -90,18 +105,23 @@
 <script>
 import vSelect from "vue-select";
 
-import { BaseButton, BaseInput, BaseDatePicker } from "@/components";
+import { BaseModal, BaseButton, BaseInput, BaseDatePicker } from "@/components";
 
 export default {
   components: {
     BaseButton,
     BaseInput,
+    BaseModal,
     BaseDatePicker,
     vSelect,
   },
   props: {
     rowData: {
       type: Object,
+      required: true,
+    },
+    columns: {
+      type: Array,
       required: true,
     },
     isEditable: {
@@ -130,6 +150,12 @@ export default {
     rowKeys() {
       return Object.keys(this.row);
     },
+    rowCols() {
+      return this.columns.reduce((acc, curr) => {
+        acc[curr.value] = curr.label;
+        return acc;
+      }, {});
+    },
     isButtonDisabled() {
       // return Object.values(this.row).some((item) => !item);
       return false;
@@ -146,6 +172,9 @@ export default {
     }
   },
   methods: {
+    getKey(key) {
+      return key.split("_").slice(0, -1).join("_");
+    },
     toggleEditMode() {
       this.oldRow = { ...this.row };
       this.editMode = !this.editMode;

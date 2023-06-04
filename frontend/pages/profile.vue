@@ -35,7 +35,8 @@
 import { mapState } from "pinia";
 import { useUserStore } from "~/stores/user";
 import BaseLayout from "@/layouts/BaseLayout.vue";
-import { StudentsGroup, TeachersSubjects } from "@/components";
+import { TeachersSubjects } from "@/components";
+import StudentsGroup from "@/components/StudentsGroup";
 
 export default {
   components: {
@@ -47,7 +48,6 @@ export default {
     return {
       headerData: [],
       userData: {},
-      isLoading: true,
     };
   },
   computed: {

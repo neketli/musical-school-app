@@ -9,7 +9,6 @@ export { default as BaseSpinner } from "./BaseSpinner.vue";
 export { default as BaseFileInput } from "./BaseFileInput.vue";
 export { default as BaseDatePicker } from "./BaseDatePicker.vue";
 
-export { default as StudentsGroup } from "./StudentsGroup.vue";
 export { default as TeachersSubjects } from "./TeachersSubjects.vue";
 export { default as VedomostiTable } from "./VedomostiTable/index.vue";
 export { default as SetupTable } from "./SetupTable/index.vue";

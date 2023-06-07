@@ -210,7 +210,7 @@ export default {
 
     async remove(id) {
       this.isLoading = true;
-      await this.activeService.removeData(id);
+      await this.activeService.remove(id);
       await this.updateTableData();
 
       this.isLoading = false;
@@ -284,6 +284,7 @@ export default {
 
         this.firstField = "id_student";
         this.secondField = "id_group";
+        return;
       }
       if (value === "#subjects_teachers") {
         this.activeService = DefaultServiceFactory(
@@ -301,7 +302,11 @@ export default {
 
         this.firstField = "id_subject";
         this.secondField = "id_teacher";
+
+        return;
       }
+
+      this.$router.push("/");
     },
   },
 };

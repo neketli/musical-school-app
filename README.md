@@ -1,4 +1,4 @@
-# Musical school app :notes:
+# Musical school app :notes
 
 [![Render](https://img.shields.io/badge/Render_deploy-success-success.svg)](https://www.render.com)
 [![frontend](https://img.shields.io/website?down_message=offline&label=client&up_message=online&url=https%3A%2F%2Fimg.shields.io%2Fwebsite%3Fstyle%3Dfor-the-badge%26url%3Dhttps%3A%2F%2Fmusical-school-app.onrender.com)](https://musical-school-app.onrender.com)
@@ -10,7 +10,7 @@
 
 ![musical-school-preview](https://user-images.githubusercontent.com/48692866/191684382-1ee908b1-c6cb-47ba-947f-d9e820cb347b.gif)
 
-## Фишечки :hammer_and_wrench:
+## Фишечки :hammer_and_wrench
 
 Реализовано на стеке PEVN.
 
@@ -18,9 +18,9 @@ PosgreSQL, ExpressJS, Vue3, NodeJS.
 
 ![pevn](https://user-images.githubusercontent.com/48692866/192093796-b049dea0-6110-480e-9fcd-023b59ec362a.png)
 
-Полностью самостоятельная и автономная фуллстек релаизация проекта. 
+Полностью самостоятельная и автономная фуллстек релаизация проекта.
 
-#### Что в целом интересного? :star2:
+#### Что в целом интересного? :star2
 
 - JWT авторизация, от паролей хранится хэш.
 - Возможность бэкапа в любое время, с загрузкой на сревер бэкапа и скачиванием соответсвенно.
@@ -28,7 +28,7 @@ PosgreSQL, ExpressJS, Vue3, NodeJS.
 - Разделена логика роаботы по ролям: (admin, student, teacher ...).
 - Лёгкий деплой приложения. (кстати сейчас приложение как раз задеплено с помощью [render](https://render.com/))
 
-#### Frontend :desktop_computer:
+#### Frontend :desktop_computer
 
 На фронте использовался стек vue3, vuex, vue-router, axios, tailwind, vite, cryptoJS, vue-final-modal, vue-select.
 
@@ -37,7 +37,7 @@ PosgreSQL, ExpressJS, Vue3, NodeJS.
 
 Остальное по-классике vue приложений.
 
-#### Backend :gear:
+#### Backend :gear
 
 NodeJs, Express, pg, cors, dotenv, jsonwebtoken.
 
@@ -48,17 +48,19 @@ NodeJs, Express, pg, cors, dotenv, jsonwebtoken.
 После выполнения стандартной настройки и подключения к бд (нужно вписать нужное в `.env`) были настроены роуты и соответсвующие контроллеры для полноценного CRUD цикла на каждую таблицу и отношение.
 
 Специфические контроллеры только:
+
 - Auth нужен для авторизации пользователя и выдачи токенов. Так же есть такой же middleware который этот самый токен проверяет.
 - Dump реализует логику работы с загружаемыми или скачиваемы файлов бэкапа. Логику бэкапа бд реализует db_dump.js в корневой директории  с помощью execute утилит pg_dump/pg_restore.
 - History обеспечивает просмотр истории изменений запрашиваемой таблицы.
 
 Есть ещё доп. роут: /uptime - возвращает аптайм работы приложения, отвечает 200 если всё ок, нужен для поддержания проверки работоспособности сервера.
 
- #### Общее :large_blue_diamond:
+#### Общее :large_blue_diamond
 
 Менеджер пакетов: `yarn`
 
 ***Если вы хотите запустить проект у себя в режиме разработки:***
+
 ```bash
 // Установите зависимости в проекте на клиенте и на сервере
 yarn 
@@ -75,5 +77,4 @@ yarn start
 
 **Если остались какие либо вопросы или предложения пишите мне**
 
- ### :musical_keyboard: Приятного пользования! :sunrise:
- 
+### :musical_keyboard: Приятного пользования! :sunrise

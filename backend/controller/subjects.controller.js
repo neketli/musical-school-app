@@ -39,7 +39,7 @@ class SubjectsController {
       res?.status(500).send(error);
     }
   }
-  async getAllSubjectss(req, res) {
+  async getAllSubjects(_, res) {
     try {
       const subjects = await db.query("SELECT * FROM subjects");
 

@@ -1,0 +1,38 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/vue3-recommended",
+    "@nuxtjs/eslint-config-typescript",
+    "prettier"
+  ],
+  "rules": {
+    "vue/html-self-closing": [
+      "error",
+      {
+        "html": {
+          "void": "always",
+          "normal": "always",
+          "component": "always"
+        },
+        "svg": "always",
+        "math": "always"
+      }
+    ],
+    "vue/multi-word-component-names": "off",
+    "vue/v-on-event-hyphenation": [
+      "error",
+      "never",
+      {
+        "autofix": false,
+        "ignore": []
+      }
+    ],
+    "vue/attribute-hyphenation": [
+      "error",
+      "never",
+      {
+        "ignore": []
+      }
+    ]
+  }
+}

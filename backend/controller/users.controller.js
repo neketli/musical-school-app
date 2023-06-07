@@ -41,6 +41,7 @@ class UsersController {
     try {
       const users = await db.query("SELECT * FROM users");
       const response = [];
+
       for (const item of users.rows) {
         const role_select = item.role;
         const rid = item.rid;
@@ -51,10 +52,11 @@ class UsersController {
           [rid]
         );
         const rid_select = {
-          label: peoples.rows[0].row
-            .replaceAll(",", " ")
-            .replaceAll("(", "")
-            .replaceAll(")", ""),
+          label:
+            peoples?.rows[0]?.row
+              .replaceAll(",", " ")
+              .replaceAll("(", "")
+              .replaceAll(")", "") || "",
           rid,
         };
 

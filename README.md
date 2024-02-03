@@ -1,16 +1,10 @@
-# Musical school app :notes
-
-[![Render](https://img.shields.io/badge/Render_deploy-success-success.svg)](https://www.render.com)
-[![frontend](https://img.shields.io/website?down_message=offline&label=client&up_message=online&url=https%3A%2F%2Fimg.shields.io%2Fwebsite%3Fstyle%3Dfor-the-badge%26url%3Dhttps%3A%2F%2Fmusical-school-app.onrender.com)](https://musical-school-app.onrender.com)
-![backend](https://img.shields.io/website?down_color=critical&label=server&up_color=success&url=https://musical-school.onrender.com/uptime)
-[![license](https://img.shields.io/github/license/neketli/musical-school-app-vue3.svg)](https://github.com/neketli/musical-school-app-vue3/blob/main/LICENSE)
-[![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
+# Musical school app :notes:
 
 Приложение для учеников и сотрудников музыкальной школы. Реализовано в виде web-приложения.
 
 ![musical-school-preview](https://user-images.githubusercontent.com/48692866/191684382-1ee908b1-c6cb-47ba-947f-d9e820cb347b.gif)
 
-## Фишечки :hammer_and_wrench
+## Фишечки :hammer_and_wrench:
 
 Реализовано на стеке PEVN.
 
@@ -20,15 +14,15 @@ PosgreSQL, ExpressJS, Vue3, NodeJS.
 
 Полностью самостоятельная и автономная фуллстек релаизация проекта.
 
-#### Что в целом интересного? :star2
+#### Что в целом интересного? :star2:
 
 - JWT авторизация, от паролей хранится хэш.
 - Возможность бэкапа в любое время, с загрузкой на сревер бэкапа и скачиванием соответсвенно.
 - Обеспечена темпоральность данных, т.е. можно отследить историю изменений и отменить любое действие.
 - Разделена логика роаботы по ролям: (admin, student, teacher ...).
-- Лёгкий деплой приложения. (кстати сейчас приложение как раз задеплено с помощью [render](https://render.com/))
+- Клиент и сервер собираются и деплоятся с помощью сервиса [render](https://render.com/)
 
-#### Frontend :desktop_computer
+#### Frontend :desktop_computer:
 
 На фронте использовался стек vue3, vuex, vue-router, axios, tailwind, vite, cryptoJS, vue-final-modal, vue-select.
 
@@ -37,7 +31,7 @@ PosgreSQL, ExpressJS, Vue3, NodeJS.
 
 Остальное по-классике vue приложений.
 
-#### Backend :gear
+#### Backend :gear:
 
 NodeJs, Express, pg, cors, dotenv, jsonwebtoken.
 
@@ -55,7 +49,7 @@ NodeJs, Express, pg, cors, dotenv, jsonwebtoken.
 
 Есть ещё доп. роут: /uptime - возвращает аптайм работы приложения, отвечает 200 если всё ок, нужен для поддержания проверки работоспособности сервера.
 
-#### Общее :large_blue_diamond
+#### Общее :large_blue_diamond:
 
 Менеджер пакетов: `yarn`
 
@@ -77,4 +71,4 @@ yarn start
 
 **Если остались какие либо вопросы или предложения пишите мне**
 
-### :musical_keyboard: Приятного пользования! :sunrise
+### :musical_keyboard: Приятного пользования! :sunrise:
